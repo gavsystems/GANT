@@ -2639,7 +2639,7 @@ function slotSkeleton(sun){
   const odd = mod(w,2) === 1, half = Math.floor(w/2);
   const pick2 = (arr,off) => arr[mod(half+off, arr.length)];
   return { focus, slots: [
-    S(1,'ig',DOMAIN_FMT[focus],focus,'תחום השבוע', D.ig),
+    S(2,'ig',DOMAIN_FMT[focus],focus,'תחום השבוע', D.ig),
     odd ? S(3,'ig','קרוסלה','brand','טיפים ומספרים', pick2(SERIES.igCarousel,3)) : S(3,'ig','רילס','brand','רילס אנשים ותרבות', pick2(SERIES.igReel,2)),
     S(2,'tt','טיקטוק',focus,'תחום השבוע', D.tt),
     S(4,'tt','טיקטוק','brand','סדרת טיקטוק', pick(SERIES.ttSeries,5,4)),
@@ -2714,6 +2714,8 @@ function eventItems(sun, evs){
 /* ===== עדכונים ידניים: מה שפורסם בפועל, העברות ותקופות ללא פרסומים ===== */
 const BLACKOUTS = [['2026-11-24','2026-11-30']];
 function inBlackout(d){ const k = iso(d); return BLACKOUTS.some(([a,b]) => k >= a && k <= b); }
+// ימים בלי פרסומים ברשתות: תקופות חסומות + כל יום שני
+function noPost(d){ return inBlackout(d) || d.getDay() === 1; }
 const MANUAL_ADD = [
   { mid:'2026-11-19-ig-tip', date:'2026-11-19', replaces:'2026-11-18', p:'ig', f:'פוסט', dom:'hr', ser:'פורסם בפועל', pub:true, g:'גיוס',
     t:'טיפ של רכזת גיוס', h:'טיפ של רכזת גיוס', v:'תבנית “טיפ של רכזת גיוס”', c:'פורסם בפועל ביום חמישי, 19 בנובמבר.' },
@@ -2740,7 +2742,7 @@ function applyManual(sun, list){
     if (src) res.push({ ...src, day:dayOf(m.to), manual:true, mid:'move-'+m.p+'-'+m.from, ser:(src.ser||'')+' · הועבר מ-'+dm(m.from) });
   }
   for (const a of MANUAL_ADD) if (inWeek(a.date)) res.push({ ...a, day:dayOf(a.date), manual:true });
-  return res.filter(it => !inBlackout(addDays(sun, it.day)));
+  return res.filter(it => !noPost(addDays(sun, it.day)));
 }
 
 function buildWeek(sun, aiSlots){
@@ -2752,12 +2754,12 @@ function buildWeek(sun, aiSlots){
   base = base.filter(s => !(s.p==='ig' && s.f==='סטורי' && storyDays.ig.has(s.day)));
   const br = bridgeItems(sun, solemnDays);
   // תקרה של 2 פריטים לרשת: ימי זיכרון קודמים, אחריהם חגים ומועדים, אחריהם אירועים פנימיים, ואז התוכן הקבוע
-  const rank = it => it.manual ? -1 : it.ev === 'solemn' ? 0 : it.ev === 'holiday' ? 1 : it.ev ? 2 : it.br ? (/יום הולדת|Happy Hour/.test(it.ser) ? 5 : 3) : 4;
+  const rank = it => it.manual ? -1 : it.ev === 'solemn' ? 0 : (it.ev && it.f === 'סטורי') ? 4.5 : it.ev === 'holiday' ? 1 : it.ev ? 2 : it.br ? (/יום הולדת|Happy Hour/.test(it.ser) ? 5 : 3) : 4;
   const fmtRank = it => it.f === 'סטורי' ? 1 : 0;
   const items = [];
   for (const p of Object.keys(PLATFORMS)){
     const cand = applyManual(sun, [...base, ...out, ...br]).filter(i => i.p === p).sort((a,b) => rank(a)-rank(b) || fmtRank(a)-fmtRank(b) || a.day-b.day);
-    items.push(...cand.slice(0, 2).sort((a,b) => a.day-b.day));
+    items.push(...cand.slice(0, 1));
   }
   const src = aiSlots ? 'ai' : 'base';
   items.forEach((it,i) => { if (it.manual){ it.id = 'm-'+it.mid; return; } if (it.br){ it.id = 'br-'+it.p+'-'+it.day+'-'+slug(it.t); return; } it.id = (it.ev ? 'ev' : src) + '-' + it.p + '-' + it.day + '-' + (it.ev ? i : slots.findIndex(s=>s.day===it.day&&s.p===it.p&&s.f===it.f)); });
@@ -2805,7 +2807,7 @@ function renderGantt(){
   let html = '<div class="gh"></div>', todayCol = -1;
   for (let d=0; d<7; d++){
     const dt = addDays(w.sun,d), isT = iso(dt) === today; if (isT) todayCol = d;
-    html += '<div class="gh'+(isT?' today':'')+(inBlackout(dt)?' blk':'')+'" style="grid-column:'+(d+2)+';grid-row:1"><div class="dn">'+DAYS[d]+'</div>'+dateLabel(dt)+(inBlackout(dt)?'<div class="bo">ללא פרסומים</div>':'')+'</div>';
+    html += '<div class="gh'+(isT?' today':'')+(noPost(dt)?' blk':'')+'" style="grid-column:'+(d+2)+';grid-row:1"><div class="dn">'+DAYS[d]+'</div>'+dateLabel(dt)+(noPost(dt)?'<div class="bo">ללא פרסומים</div>':'')+'</div>';
   }
   let r = 2;
   const sat = addDays(w.sun,6), dIdx = d => Math.round((d - w.sun)/DAYMS);
@@ -3055,7 +3057,7 @@ async function generateWeek(){
   const sun = state.sun, { focus, slots } = slotSkeleton(sun);
   const evs = eventsOverlapping(sun);
   const solemn = new Set(evs.filter(e=>e.k==='solemn'&&e.inWeek).map(e=>e.day));
-  const skel = slots.filter(s=>!solemn.has(s.day) && !inBlackout(addDays(sun,s.day))).map((s,i)=>({ n:i, day:s.day, dayName:DAYS[s.day], date:dateLabel(addDays(sun,s.day)), platform:s.p, format:s.f, series:s.ser, domain:s.dom }));
+  const skel = slots.filter(s=>!solemn.has(s.day) && !noPost(addDays(sun,s.day))).map((s,i)=>({ n:i, day:s.day, dayName:DAYS[s.day], date:dateLabel(addDays(sun,s.day)), platform:s.p, format:s.f, series:s.ser, domain:s.dom }));
   const prompt = `את/ה מנהל/ת הסושיאל של גב מערכות וכותב/ת את כל המלל לשבוע.
 כללי המותג:
 ${BRAND_RULES}
