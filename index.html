@@ -1,0 +1,3335 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>גאנט תקשורת – גב מערכות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#F4F5FB; --surface2:#ECEEF8; --ink:#141834; --muted:#5A6086; --line:#E1E4F1;
+  --turq:#10B2C8; --purple:#7547DF; --mag:#DD3E8E;
+  --grad:linear-gradient(90deg,var(--turq),var(--purple) 55%,var(--mag));
+  --p-ig:#D23A88; --p-tt:#0C9EB1; --p-li:#2D6CD3; --p-fb:#4F55D8;
+  --today:rgba(117,71,223,.07); --solemn:#4A4F66; --card:#FFFFFF; --shadow:0 1px 2px rgba(20,24,52,.08);
+  --focus:#7547DF;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#080C26; --surface:#0F1538; --surface2:#151C46; --ink:#EEF0FF; --muted:#A0A6CF; --line:#242C5C;
+    --card:#121942; --today:rgba(117,71,223,.16); --solemn:#9CA1BD; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#080C26; --surface:#0F1538; --surface2:#151C46; --ink:#EEF0FF; --muted:#A0A6CF; --line:#242C5C;
+  --card:#121942; --today:rgba(117,71,223,.16); --solemn:#9CA1BD; --shadow:none; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Hebrew",Arial,"Segoe UI",sans-serif;font-size:15px;line-height:1.55}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 20px 48px}
+
+/* Header */
+header.top{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+header.top svg.waves{position:absolute;inset:auto 0 0 0;width:100%;height:56px;pointer-events:none;opacity:.45}
+.head-inner{position:relative;max-width:1440px;margin:0 auto;padding:22px 20px 44px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;justify-content:space-between}
+.brand{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px}
+.brand b{font-family:"Secular One",sans-serif;font-weight:400;font-size:15px;color:var(--ink);letter-spacing:.02em}
+.brand .rule{width:46px;height:2px;background:var(--grad);border-radius:2px}
+h1{font-family:"Secular One","IBM Plex Sans Hebrew",sans-serif;font-weight:400;font-size:clamp(30px,4.6vw,54px);line-height:1.05;margin:6px 0 0;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:8px;color:var(--muted);font-size:14px}
+.sub strong{color:var(--ink);font-weight:600}
+.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 14px;border-radius:999px;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;gap:6px;min-height:38px}
+.btn:hover{border-color:var(--purple)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn svg{width:16px;height:16px}
+
+/* Toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding:16px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--surface2);border-color:transparent}
+.chip[aria-pressed="false"]{opacity:.5}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:5px 12px;border-radius:999px;cursor:pointer;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--surface2);font-weight:600}
+.note{font-size:13px;color:var(--muted)}
+
+/* Gantt */
+.gwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.gantt{display:grid;grid-template-columns:118px repeat(7,minmax(148px,1fr));min-width:1150px;position:relative}
+.gh{padding:10px 10px 8px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);position:relative;z-index:1}
+.gh .dn{font-weight:600;color:var(--ink);font-size:14px}
+.gh.today .dn::after{content:"היום";margin-inline-start:6px;font-size:11px;font-weight:600;color:#fff;background:var(--purple);padding:1px 7px;border-radius:999px}
+.gcol-today{background:var(--today);z-index:0}
+.rowlab{padding:10px;border-top:1px solid var(--line);font-size:13px;font-weight:600;display:flex;align-items:flex-start;gap:7px;position:relative;z-index:1}
+.rowlab small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.bandlab{padding:6px 10px;font-size:12px;color:var(--muted);position:relative;z-index:1;align-self:center}
+.bar{margin:3px 4px;border-radius:8px;padding:5px 10px;font-size:12.5px;position:relative;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default}
+.bar.focus{background:var(--grad);color:#fff;font-weight:600}
+.bar.holiday{background:color-mix(in srgb,var(--mag) 16%,transparent);color:var(--ink);border:1px solid color-mix(in srgb,var(--mag) 35%,transparent)}
+.bar.tech{background:color-mix(in srgb,var(--turq) 16%,transparent);border:1px solid color-mix(in srgb,var(--turq) 40%,transparent)}
+.bar.civil{background:color-mix(in srgb,var(--purple) 12%,transparent);border:1px solid color-mix(in srgb,var(--purple) 30%,transparent)}
+.bar.solemn{background:transparent;border:1px solid var(--solemn);color:var(--ink)}
+.cell{border-top:1px solid var(--line);padding:6px;display:flex;flex-direction:column;gap:6px;position:relative;z-index:1;min-height:70px}
+.card{background:var(--card);border:1px solid var(--line);border-inline-start:3px solid var(--pc);border-radius:9px;padding:7px 9px;text-align:start;cursor:pointer;box-shadow:var(--shadow);width:100%}
+.card:hover{border-color:var(--pc)}
+.card .fm{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted)}
+.card .fm svg{width:13px;height:13px;color:var(--pc)}
+.card .tt{font-size:13px;font-weight:600;line-height:1.35;margin-top:2px}
+.card .st{margin-inline-start:auto;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted)}
+.card .st.s1{background:#E8A93A;border-color:#E8A93A}
+.card .st.s2{background:#2BB673;border-color:#2BB673}
+.card.ev{background:color-mix(in srgb,var(--card) 88%,var(--mag))}
+.card.solemn{border-inline-start-color:var(--solemn);background:var(--card)}
+.card .hk{font-size:12px;color:var(--muted);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .full{font-size:12px;margin-top:6px;white-space:pre-wrap;line-height:1.5;border-top:1px dashed var(--line);padding-top:6px}
+body.fullmode .gantt{grid-template-columns:118px repeat(7,minmax(230px,1fr));min-width:1750px}
+.copybox{position:relative}
+.copybox .out{margin-top:6px}
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:18px 0 0}
+.sec-h h4{margin:0}
+.mini{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer}
+.mini:hover{border-color:var(--purple)}
+.out.en{direction:ltr;text-align:left}
+
+/* Mobile list */
+.list{display:none}
+@media (max-width:820px){
+  .gwrap{display:none}
+  .list{display:block}
+}
+.day{margin:14px 0 6px;padding:10px 12px;border-radius:12px;background:var(--surface)}
+.day h3{margin:0 0 8px;font-size:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.day h3 .d{color:var(--muted);font-weight:400;font-size:13px}
+.day .evs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.day .evs span{font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line)}
+.day .cards{display:grid;gap:7px}
+.day.today{outline:2px solid var(--purple)}
+.empty{color:var(--muted);font-size:13px;padding:4px 2px}
+
+/* Upcoming */
+.side{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:820px){.side{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.panel h2{font-family:"Secular One",sans-serif;font-weight:400;font-size:19px;margin:0 0 8px}
+.up{list-style:none;padding:0;margin:0}
+.up li{display:flex;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:14px;align-items:baseline}
+.up li:first-child{border-top:0}
+.up .when{color:var(--muted);font-size:13px;min-width:92px}
+.up .x{display:block;color:var(--muted);font-size:12.5px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{width:14px;height:14px}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(6,8,26,.42);opacity:0;pointer-events:none;transition:opacity .18s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(520px,100%);background:var(--bg);border-inline-end:1px solid var(--line);z-index:21;transform:translateX(-102%);transition:transform .22s ease;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.drawer.on{transform:none}
+@media (prefers-reduced-motion:reduce){.drawer,.scrim{transition:none}}
+.dhead{padding:16px 18px 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.dhead h2{font-family:"Secular One",sans-serif;font-weight:400;font-size:22px;line-height:1.2;margin:4px 0 0}
+.dmeta{display:flex;gap:6px;flex-wrap:wrap;font-size:12.5px}
+.dmeta span{padding:2px 9px;border-radius:999px;background:var(--surface2)}
+.x-btn{margin-inline-start:auto;border:0;background:transparent;font-size:24px;line-height:1;cursor:pointer;padding:4px 8px;color:var(--muted)}
+.dbody{padding:6px 18px 28px;overflow-y:auto;flex:1}
+.dbody h4{margin:16px 0 4px;font-size:13px;color:var(--muted);font-weight:600}
+.hook{font-size:17px;font-weight:600;border-inline-start:3px solid var(--purple);padding:4px 12px;background:var(--surface);border-radius:0 8px 8px 0;white-space:pre-wrap}
+.flag{margin-top:12px;font-size:13px;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,#E8A93A 18%,transparent)}
+.flag.solemn{background:var(--surface2)}
+.status{display:flex;gap:6px;flex-wrap:wrap}
+.status button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px}
+.status button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.out{white-space:pre-wrap;background:var(--surface);border-radius:10px;padding:12px 14px;font-size:14px;margin-top:10px;min-height:20px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.ai-state{font-size:13px;color:var(--muted)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+[data-mode="year"] .weekonly{display:none!important}
+[data-mode="week"] .yearonly{display:none!important}
+.seg.big button{padding:7px 16px;font-size:14px}
+.toolbar.filters{padding-bottom:0}
+.sel{font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.sel select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.bar.clk{cursor:pointer;text-align:start;font:inherit;font-size:12.5px;color:var(--ink)}
+.bar.intb{cursor:pointer;text-align:start;font:inherit;font-size:12.5px;color:var(--ink);background:color-mix(in srgb,var(--ac) 18%,transparent);border:1px solid color-mix(in srgb,var(--ac) 45%,transparent);border-inline-start:4px solid var(--ac)}
+.bar.intb.done{opacity:.55;text-decoration:line-through}
+.prepcell{display:flex;flex-wrap:wrap;gap:6px;padding:4px;position:relative;z-index:1}
+.pchip{font:inherit;font-size:12px;border:1px dashed var(--ac);background:color-mix(in srgb,var(--ac) 8%,transparent);color:var(--ink);border-radius:999px;padding:3px 10px;cursor:pointer}
+.card.brc{box-shadow:inset 0 3px 0 0 var(--mag)}
+.ywrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-top:12px;max-height:78vh}
+.ygrid{display:grid;grid-auto-rows:34px;min-width:1500px;position:relative}
+.ylab{position:sticky;inset-inline-start:0;z-index:3;background:var(--surface);padding:3px 10px;font-size:12.5px;font-weight:600;display:flex;flex-direction:column;justify-content:center;line-height:1.15;border-inline-end:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;grid-column:1}
+.ylab .yl1{overflow:hidden;text-overflow:ellipsis}
+.ylab small{display:block;font-weight:400;color:var(--muted);font-size:10.5px;overflow:hidden;text-overflow:ellipsis}
+.ylab .pri{display:inline-block;width:7px;height:7px;border-radius:50%;margin-inline-end:5px;vertical-align:1px}
+.pri.p-קריטית{background:#E5484D}.pri.p-גבוהה{background:#E8913A}.pri.p-בינונית{background:#C9A227}.pri.p-נמוכה{background:var(--line)}
+.yhead{z-index:5;top:0;position:sticky}
+.ylab.yarea{color:#fff;background:var(--ac);font-size:13px}
+.ylab.yarea small{color:rgba(255,255,255,.85)}
+.yarea-line{background:color-mix(in srgb,var(--ac,var(--purple)) 8%,transparent);border-top:1px solid var(--line)}
+.yrow-line{border-top:1px solid var(--line)}
+.ymonth{position:sticky;top:0;z-index:4;background:var(--surface2);font-size:12.5px;font-weight:600;padding:8px 6px;border-inline-start:1px solid var(--line);text-align:center}
+.ywk{position:sticky;top:34px;z-index:4;font:inherit;font-size:10.5px;color:var(--muted);background:var(--surface);border:0;border-inline-start:1px solid var(--line);border-bottom:1px solid var(--line);cursor:pointer;padding:0}
+.ywk:hover{background:var(--surface2);color:var(--ink)}
+.ywk.cur{background:var(--purple);color:#fff}
+.ybar{border:0;padding:0;margin:10px 0;border-radius:4px;background:var(--ac);cursor:pointer;z-index:2;min-width:6px}
+.ybar.one{width:11px;height:11px;margin:11px 0;border-radius:50%;justify-self:center}
+.ybar.done{opacity:.4}
+.ybar:hover{outline:2px solid var(--ink)}
+.yprep{margin:13px 0;border-radius:3px;z-index:1;background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--ac) 45%,transparent) 0 3px,transparent 3px 6px)}
+.ydom{border:0;margin:10px 0;border-radius:3px;background:var(--ac);opacity:.75;cursor:pointer;z-index:2}
+.ydom:hover{opacity:1}
+.ydot{border:0;width:9px;height:9px;border-radius:50%;margin:12px 0;justify-self:center;cursor:pointer;z-index:2;background:var(--turq)}
+.ydot.holiday{background:var(--mag)}.ydot.solemn{background:var(--solemn)}.ydot.civil{background:var(--purple)}
+.ytoday{width:2px;background:var(--mag);z-index:2;justify-self:center;pointer-events:none}
+.ylegend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12.5px;color:var(--muted);margin-top:10px}
+.ylegend span{display:inline-flex;align-items:center;gap:6px}
+.ylegend i{display:inline-block;width:14px;height:8px;border-radius:2px}
+</style>
+</head>
+<body>
+<header class="top">
+  <svg class="waves" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="wg" x1="0" x2="1"><stop offset="0" stop-color="#10B2C8"/><stop offset=".55" stop-color="#7547DF"/><stop offset="1" stop-color="#DD3E8E"/></linearGradient></defs>
+    <g id="dots" fill="url(#wg)"></g>
+  </svg>
+  <div class="head-inner">
+    <div>
+      <div class="brand"><b>GAV SYSTEMS</b><span class="rule"></span><span>גאנט תקשורת: רשתות חברתיות ופנים הארגון</span></div>
+      <h1 id="weekTitle">השבוע</h1>
+      <div class="sub" id="weekSub"></div>
+    </div>
+    <div class="nav">
+      <div class="seg big" id="modeSeg" aria-label="תצוגה"><button data-mode="week" aria-pressed="true">שבוע</button><button data-mode="year" aria-pressed="false">שנה</button></div>
+      <button class="btn" id="prevW" aria-label="שבוע קודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>שבוע קודם</button>
+      <button class="btn" id="thisW">השבוע</button>
+      <button class="btn" id="nextW" aria-label="שבוע הבא">שבוע הבא<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="toolbar filters">
+    <div class="seg" id="scopeSeg" aria-label="מה מציגים"><button data-scope="all" aria-pressed="true">הכל</button><button data-scope="int" aria-pressed="false">פנים הארגון</button><button data-scope="ext" aria-pressed="false">רשתות</button></div>
+    <label class="sel">אחריות <select id="ownerSel"></select></label>
+    <label class="sel">עדיפות <select id="priSel"></select></label>
+  </div>
+  <div class="toolbar weekonly">
+    <div class="chips" id="pChips" aria-label="סינון לפי רשת"></div>
+    <div class="chips" id="fChips" aria-label="סינון לפי פורמט"></div>
+    <div class="nav">
+      <div class="seg" id="viewSeg" aria-label="תצוגה">
+        <button data-view="titles" aria-pressed="true">כותרות</button>
+        <button data-view="full" aria-pressed="false">מלל מלא</button>
+      </div>
+      <div class="seg" id="srcSeg" hidden>
+        <button data-src="base" aria-pressed="true">מלל קבוע</button>
+        <button data-src="ai" aria-pressed="false">מלל מ-Claude</button>
+      </div>
+      <button class="btn primary" id="genBtn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg><span>מלל חדש לשבוע עם Claude</span></button>
+      <button class="btn" id="copyWeek">העתקת השבוע</button>
+      <button class="btn" id="csvBtn" hidden>הורדת CSV</button>
+    </div>
+  </div>
+  <div class="ai-state weekonly" id="aiState" aria-live="polite"></div>
+
+  <div class="gwrap weekonly"><div class="gantt" id="gantt"></div></div>
+  <div class="list weekonly" id="list"></div>
+  <div class="ywrap yearonly"><div class="ygrid" id="yearGrid"></div></div>
+  <div class="ylegend yearonly" id="yLegend"></div>
+
+  <div class="side">
+    <section class="panel">
+      <h2>מה מגיע בחודש הקרוב</h2>
+      <ul class="up" id="upcoming"></ul>
+    </section>
+    <section class="panel">
+      <h2>איך זה עובד</h2>
+      <p class="note" style="margin-top:0">הגאנט מחבר את הרשתות החברתיות עם התקשורת הפנים-ארגונית. בתצוגת <b>שבוע</b> רואים כל יום ברשתות עם מלל מוכן, ומעליו מה קורה בפנים הארגון ומה בהיערכות. בתצוגת <b>שנה</b> רואים את כל הפעילויות לפי תחום, עם פס מקווקו של זמן ההיערכות לפני כל אירוע. לחיצה על שבוע בשנה פותחת אותו. אירוע פנימי שמסומן כשווה תוכן מכניס לבד פריטים עם מלל לגאנט של הרשתות (מסומנים בפס צבעוני).</p>
+      <div class="legend" id="legend"></div>
+    </section>
+  </div>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <div class="dhead">
+    <div style="flex:1">
+      <div class="dmeta" id="dMeta"></div>
+      <h2 id="dTitle"></h2>
+    </div>
+    <button class="x-btn" id="dClose" aria-label="סגירה">×</button>
+  </div>
+  <div class="dbody" id="dBody"></div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// ===== נתוני תוכן – גב מערכות (גרסה 2: מלל מלא לכל פריט) =====
+// t = כותרת בגאנט | h = טקסט על הוויז׳ואל / על המסך | c = המלל לפרסום (קפשן / פוסט / טקסט סטורי)
+// s = שקפים (קרוסלה) או תסריט (רילס / טיקטוק) | en = English version (לינקדאין) | v = ויז׳ואל | g = מטרה
+const PLATFORMS = {
+  ig: { name: 'אינסטגרם', tone: 'מקצועי ורשמי, אבל צעיר ומעוצב. שורה ראשונה חזקה, משחק מילים, 2–5 אימוג׳ים (💙 כמעט תמיד), חתימה: GAV SYSTEMS | יש לכם גב. יחס 4:5 בפיד, 9:16 בסטורי ורילס.' },
+  tt: { name: 'טיקטוק', tone: 'צעיר, זורם, אותנטי ומצחיק – אבל מכבד ולא נמוך. הוק בשנייה הראשונה, עובדים אמיתיים מול המצלמה, כתוביות תמיד, 10–40 שניות, 9:16.' },
+  li: { name: 'לינקדאין', tone: 'הרשמי והמקצועי מכולם. הוק בשתי השורות הראשונות, תובנה ותוצאה, 0–3 אימוג׳ים, 3–5 האשטגים, קישור בתגובה הראשונה, וגרסה באנגלית לכל פוסט.' },
+  fb: { name: 'פייסבוק', tone: 'חם, משפחתי וקהילתי, בעברית פשוטה שכל גיל מבין. בלי סלנג ובלי מונחים באנגלית. קריאה לפעולה ברורה, 2–5 אימוג׳ים.' }
+};
+
+const DOMAINS = {
+  consult:  { name: 'יועצים ומומחים טכנולוגיים', url: 'https://gav.co.il/expert-consultants/' },
+  outsrc:   { name: 'מיקור חוץ ושירותים מנוהלים', url: 'https://gav.co.il/outsourcing-and-services/' },
+  dev:      { name: 'טכנולוגיה ופיתוח', url: 'https://gav.co.il/technology-and-development/' },
+  qa:       { name: 'בדיקות ואוטומציה', url: 'https://gav.co.il/qa-and-automation/' },
+  centers:  { name: 'מרכזי תמיכה ושירות', url: 'https://gav.co.il/service-and-support-centers/' },
+  home:     { name: 'גב מהבית', url: 'https://gav.co.il/gav-home/' },
+  digital:  { name: 'שירותי דיגיטל', url: 'https://gav.co.il/digital-service/' },
+  advisory: { name: 'ייעוץ להקמת מוקדים', url: 'https://gav.co.il/consulting-services/' },
+  hr:       { name: 'גיוס ו-HR מנוהלים', url: 'https://gav.co.il/hr-management/' },
+  brand:    { name: 'מותג ותרבות', url: 'https://gav.co.il/' }
+};
+const DOMAIN_ORDER = ['centers','dev','home','qa','digital','consult','hr','advisory','outsrc'];
+const DOMAIN_FMT = { consult:'קרוסלה', outsrc:'פוסט', dev:'רילס', qa:'קרוסלה', centers:'רילס', home:'פוסט', digital:'פוסט', advisory:'פוסט', hr:'פוסט' };
+const SIGN_IG = 'GAV SYSTEMS | יש לכם גב';
+const SIGN_LI = 'גב מערכות | GAV SYSTEMS – יש לכם גב';
+const SIGN_FB = 'גב מערכות | GAV SYSTEMS';
+const JOBS = 'https://gav.co.il/jobs/';
+
+const DOMAIN_IDEAS = {
+/* ---------- יועצים ומומחים טכנולוגיים ---------- */
+consult: {
+li: { t:'המומחה הנכון. עכשיו.', g:'לידים',
+h:'לפעמים הפרויקט לא צריך עוד עובד קבוע. הוא צריך את המומחה הנכון – עכשיו.',
+v:'רקע בהיר. כותרת: המומחה הנכון. עכשיו. מתחת – תגיות התפקידים בגרדיאנט (מנהלי פרויקטים, BI, תשתיות, פיתוח).',
+c:`לפעמים הפרויקט לא צריך עוד עובד קבוע.
+הוא צריך את המומחה הנכון – עכשיו.
+
+מנהלות ומנהלי פרויקטים, מנתחי ומנתחות מערכות, מומחי BI, מפתחים בכל סביבת פיתוח, אנשי תשתיות ורשתות, טכנאים, מדריכים ומטמיעים.
+
+בגב מערכות אנחנו מחברים ארגונים ליועצים ולמומחים טכנולוגיים כבר +38 שנים. מה שעושה את ההבדל:
+✅ רשת קשרים מסועפת שמאפשרת להגיע לאנשי מקצוע מובילים, מהר
+✅ התאמה מדויקת לצורך העסקי – לא רק לרשימת הדרישות
+✅ ליווי אישי לאורך כל הדרך, למומחה וללקוח
+
+כי מומחה טוב שמגיע בזמן הנכון שווה חודשים של עבודה.
+
+מחפשים מומחה לפרויקט הבא? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#ייעוץטכנולוגי #מומחיםטכנולוגיים #ITconsulting #גבמערכות #GAVSYSTEMS`,
+en:`Sometimes a project doesn't need another permanent hire.
+It needs the right expert – now.
+
+Project managers, systems analysts, BI specialists, developers across every stack, infrastructure and network pros, technicians, trainers and implementers.
+
+For 38+ years, GAV SYSTEMS has been connecting organizations with the technology experts they need: a wide professional network, precise matching to real business needs, and personal support from day one.
+
+Looking for an expert for your next project? Let's talk – link in the first comment.
+
+GAV SYSTEMS | We've got your back
+#ITconsulting #TechTalent #Experts #GAVSYSTEMS`},
+lic: { t:'5 שאלות לפני שמביאים יועץ', g:'לידים',
+h:'לפני שמביאים יועץ טכנולוגי – 5 שאלות שחוסכות זמן',
+v:'קרוסלת PDF בהירה, מספר גדול בגרדיאנט בכל שקף.',
+s:`שקף 1: לפני שמביאים יועץ טכנולוגי לפרויקט – 5 שאלות שכדאי לשאול
+שקף 2: מה בדיוק המטרה? השקה, שדרוג, הטמעה או פער ידע זמני?
+שקף 3: לכמה זמן? פרויקט של חודש צריך מומחה אחר מפרויקט של שנה.
+שקף 4: איזה ידע חסר לנו בפנים? BI, תשתיות, פיתוח או ניהול פרויקט?
+שקף 5: מי מלווה את היועץ מתוך הארגון?
+שקף 6: איך נדע שהצלחנו? הגדירו מדד אחד ברור מראש.
+שקף 7: את כל השאר – תשאירו לנו. גב מערכות | יש לכם גב`,
+c:`יועץ טכנולוגי טוב מתחיל בשאלה טובה.
+
+לפני שמביאים מומחה חיצוני לפרויקט, כדאי לענות על חמש שאלות פשוטות. הן חוסכות זמן וכסף – ובעיקר מבטיחות שהמומחה שמגיע הוא בדיוק מי שצריך.
+
+בגב מערכות אנחנו עוברים על השאלות האלה יחד עם כל לקוח, ורק אז מתאימים את המומחה מתוך רשת אנשי המקצוע שלנו.
+
+שמרו את הפוסט לפרויקט הבא 📌
+
+${SIGN_LI}
+#ייעוץטכנולוגי #ניהולפרויקטים #ITconsulting #גבמערכות`,
+en:`A great tech consultant starts with a great question.
+
+Before bringing an external expert into your project, answer five simple questions: the goal, the timeline, the missing knowledge, the internal owner, and how you'll measure success.
+
+At GAV SYSTEMS we go through these with every client – and only then match the right expert from our professional network.
+
+Save this for your next project.
+
+GAV SYSTEMS | We've got your back
+#ITconsulting #ProjectManagement #GAVSYSTEMS`},
+ig: { t:'מה עושים כל המומחים האלה?', g:'גיוס',
+h:'מנתחת מערכות. מטמיע. מומחית BI. מה כל אלה עושים? 🤔',
+v:'שקף פתיחה כהה עם גלי ניאון, כל שקף – תפקיד אחד עם אייקון קווי סגול.',
+s:`שקף 1: מנתחת מערכות. מטמיע. מומחית BI. מה כל אלה עושים? 🤔
+שקף 2: מנתחי מערכות – מתרגמים צורך עסקי למערכת שעובדת.
+שקף 3: מומחי BI – הופכים נתונים לתובנות שמנהלים מקבלים לפיהן החלטות.
+שקף 4: מטמיעים ומדריכים – דואגים שמערכת חדשה באמת תיכנס לשימוש.
+שקף 5: מנהלי פרויקטים – מחזיקים את כל החוטים ביחד.
+שקף 6: כולם עובדים עם ארגונים מובילים. וכולם עם גב. GAV SYSTEMS`,
+c:`מאחורי כל מערכת שעובדת יש אנשי מקצוע שלא תמיד שומעים עליהם 💡
+
+מנתחות ומנתחי מערכות, מומחי BI, מטמיעים, מדריכות ומנהלי פרויקטים – אלה התפקידים שמחזיקים את עולם ה-IT בארגונים המובילים בארץ.
+
+בגב מערכות הם חלק מקהילה של +1,200 מומחים ומומחיות, עם ליווי אישי לאורך כל הדרך 💙
+
+מכירים מישהו שזה בדיוק בשבילו? תייגו 👇
+
+${SIGN_IG}
+#גבמערכות #הייטק #קריירה #IT`},
+tt: { t:'POV: המומחה נכנס לפרויקט', g:'מודעות',
+h:'POV: הפרויקט תקוע כבר חודש',
+v:'צילום טלפון אותנטי, כתוביות גדולות.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): צוות סביב לוח מחיק מלא חצים, מבטים מיואשים | טקסט: POV: הפרויקט תקוע כבר חודש
+👤 מי מצטלם/ת: שלושה עובדים + עובד/ת שמשחק/ת את המומחה/ית
+🎬 שוט 1: הדלת נפתחת, נכנס/ת מומחה/ית עם לפטופ וקפה | טקסט: ואז הגיע/ה המומחה/ית
+🎬 שוט 2: יושבים יחד, מצביעים על המסך, מהנהנים | טקסט: 🧠💡
+🎬 שוט 3: הלוח נקי, היי-פייב | טקסט: יומיים אחר כך 😎
+🏁 סיום: המומחה/ית נשען/ת אחורה בכיסא | טקסט: יש לכם גב.
+🎵 סאונד: מוזיקה דרמטית שמתחלפת לקלילה`,
+c:`כשהמומחה הנכון נכנס לחדר 😎
+#גבמערכות #הייטק #עבודה #fyp`},
+fb: { t:'מכירים מישהו מוכשר?', g:'גיוס',
+h:'מכירים מישהו מוכשר בעולם המחשבים שמחפש את האתגר הבא? 💙',
+v:'תמונה אמיתית של צוות בישיבה.',
+c:`מכירים מישהו מוכשר בעולם המחשבים שמחפש את האתגר הבא? 💙
+
+בגב מערכות אנחנו מחברים אנשי מקצוע מעולים – מנהלי פרויקטים, מנתחי מערכות, טכנאים, מדריכים, מטמיעים ומפתחים – לעבודה בארגונים המובילים בארץ.
+
+מה מקבלים אצלנו? ליווי אישי, הכשרות מקצועיות ומשפחה של +1,200 עובדות ועובדים 🙏
+
+תייגו בתגובות מישהו שזה בדיוק בשבילו, או הגישו מועמדות כאן 👇
+${JOBS}
+
+${SIGN_FB}`}
+},
+
+/* ---------- מיקור חוץ ושירותים מנוהלים ---------- */
+outsrc: {
+li: { t:'מכניסים פנימה יכולות', g:'לידים',
+h:'מיקור חוץ טוב לא מוציא עבודה החוצה. הוא מכניס פנימה יכולות.',
+v:'רקע בהיר, שני חצים שמתכנסים לגב אחד. כותרת: מכניסים פנימה יכולות.',
+c:`מיקור חוץ טוב לא מוציא עבודה החוצה.
+הוא מכניס פנימה יכולות.
+
+ארגונים טכנולוגיים מצליחים יודעים להתמקד בליבה שלהם. את כל השאר – תמיכה טכנית, מרכזי שירות, מערכי טכנאים, גיוס טכנולוגי ורכש – הם מעבירים לשותף שזה המקצוע שלו.
+
+בגב מערכות אנחנו מספקים שירותים מנוהלים ומיקור חוץ במגוון תחומים:
+👉 תוכנה וטכנולוגיה
+👉 רשתות ותשתיות
+👉 בדיקות ואוטומציה
+👉 חומרה וקושחה
+👉 הנדסת מכונות
+👉 איכות ורגולציה
+
+הכל מתחיל באפיון מעמיק, ממשיך בבניית המערך המדויק, ונשען על אבטחת מידע לפי תקנים מחמירים.
+
+רוצים להתמקד במה שאתם הכי טובים בו? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#מיקורחוץ #שירותיםמנוהלים #outsourcing #managedservices #גבמערכות`,
+en:`Great outsourcing doesn't send work out.
+It brings capabilities in.
+
+Successful tech organizations focus on their core – and hand technical support, service centers, field technicians, tech recruitment and procurement to a partner who does it for a living.
+
+GAV SYSTEMS provides managed and outsourced services across software, networks and infrastructure, QA and automation, hardware and firmware, mechanical engineering, and quality and regulation – starting with in-depth discovery and backed by strict information-security standards.
+
+Want to focus on what you do best? Let's talk – link in the first comment.
+
+GAV SYSTEMS | We've got your back
+#Outsourcing #ManagedServices #GAVSYSTEMS`},
+lic: { t:'4 מיתוסים על מיקור חוץ', g:'לידים',
+h:'4 מיתוסים על מיקור חוץ (ומה קורה באמת)',
+v:'שקף מיתוס – רקע כהה; שקף מציאות – רקע בהיר.',
+s:`שקף 1: 4 מיתוסים על מיקור חוץ (ומה קורה באמת)
+שקף 2: מיתוס: מאבדים שליטה. ← מציאות: מגדירים יעדים ומדדים משותפים ומקבלים שקיפות מלאה.
+שקף 3: מיתוס: זה רק לחברות ענק. ← מציאות: השירות נבנה לפי הנפח והצורך של כל ארגון.
+שקף 4: מיתוס: האיכות נפגעת. ← מציאות: מקבלים אנשי מקצוע שזו בדיוק ההתמחות שלהם.
+שקף 5: מיתוס: המידע שלנו בסיכון. ← מציאות: עבודה לפי תקני אבטחת מידע מחמירים ובינלאומיים.
+שקף 6: +200 שותפויות של אמון. גב מערכות | יש לכם גב`,
+c:`"מיקור חוץ? אנחנו נאבד שליטה."
+את המשפט הזה שמענו לא מעט פעמים.
+
+אז ריכזנו את ארבעת המיתוסים הנפוצים ביותר על מיקור חוץ ושירותים מנוהלים – ומה באמת קורה כשעובדים עם שותף מקצועי.
+
+דפדפו ותגידו לנו בתגובות: איזה מיתוס שמעתם הכי הרבה?
+
+${SIGN_LI}
+#מיקורחוץ #שירותיםמנוהלים #outsourcing #גבמערכות`,
+en:`"Outsourcing? We'll lose control."
+We've heard that one more than once.
+
+So we gathered the four most common myths about outsourcing and managed services – control, size, quality and data security – and what really happens when you work with a professional partner.
+
+Swipe through and tell us: which myth have you heard the most?
+
+GAV SYSTEMS | We've got your back
+#Outsourcing #ManagedServices #GAVSYSTEMS`},
+ig: { t:'הצוות שלכם. הגב שלנו.', g:'מודעות',
+h:'הצוות שלכם. הגב שלנו.',
+v:'רקע בהיר, הכותרת בגרדיאנט, תמונת צוות אמיתית במסגרת עם אייקונים קוויים סגולים.',
+c:`הצוות שלכם. הגב שלנו. 💙
+
+מאחורי מוקדי תמיכה, מערכי טכנאים וצוותי פיתוח בארגונים מובילים, עומדים אנשים של גב מערכות.
+הם לא "ספקים".
+הם חלק מהצוות,
+חלק מהיעדים
+וחלק מההצלחה.
+
+כי מיקור חוץ אמיתי הוא קודם כל שותפות 🤝
+
+גאים באנשים שלנו. גאים בשותפויות שלנו.
+
+${SIGN_IG}
+#גבמערכות #מיקורחוץ #יש_לכם_גב`},
+tt: { t:'מיקור חוץ ב-15 שניות', g:'מודעות',
+h:'מה זה בכלל מיקור חוץ? 🤔',
+v:'דיבור למצלמה + טקסט על המסך.',
+s:`⏱️ 15 שניות | 9:16
+🎣 הוק (0–1 שנ׳): עובד/ת מול המצלמה עם כוס קפה | טקסט: מה זה בכלל מיקור חוץ? 🤔
+👤 מי מצטלם/ת: עובד/ת צעיר/ה מהחברה
+🎬 שוט 1: "תדמיינו חתונה. אתם לא מבשלים לבד 300 מנות, נכון?" | טקסט: 🍝 × 300?
+🎬 שוט 2: "מביאים קייטרינג שזה המקצוע שלו." | טקסט: מביאים מקצוענים
+🎬 שוט 3: "ככה חברות עובדות איתנו – הן מתמקדות בעיקר, ואנחנו בכל השאר."
+🏁 סיום: קריצה למצלמה | טקסט: זה מיקור חוץ. ויש לכם גב.
+🎵 סאונד: ביט קליל`,
+c:`ההסבר הכי פשוט שתשמעו היום 😄
+#מיקורחוץ #גבמערכות #עבודה #fyp`},
+fb: { t:'עובדים אצלנו, משפיעים בכל הארץ', g:'גיוס',
+h:'העבודה שלכם יכולה להשפיע על החברות המובילות בארץ 🇮🇱',
+v:'תמונה אמיתית של עובדים מחייכים.',
+c:`העבודה שלכם יכולה להשפיע על החברות המובילות בארץ 🇮🇱
+
+בגב מערכות העובדים שלנו נותנים שירות, תמיכה ופתרונות טכנולוגיים לחברות מובילות – וכל אחד ואחת מהם מקבלים מאיתנו גב אמיתי:
+✅ הכשרה מקצועית מלאה
+✅ ליווי לאורך כל הדרך
+✅ אפשרויות קידום
+✅ סיבוס, תנאים סוציאליים ומתנות בחגים
+
+רוצים להיות חלק? כל המשרות כאן 👇
+${JOBS}
+
+${SIGN_FB}`}
+},
+
+/* ---------- טכנולוגיה ופיתוח ---------- */
+dev: {
+li: { t:'פיתוח שמבין את העסק', g:'לידים',
+h:'Front End. Back End. DevOps. אבל מה שעושה פרויקט מוצלח הוא הבנה של הליבה העסקית.',
+v:'רקע כהה, שורות קוד מטושטשות בגרדיאנט. כותרת: נותנים לכם גב טכנולוגי.',
+c:`Front End. Back End. DevOps.
+אבל מה שבאמת עושה פרויקט פיתוח מוצלח הוא הבנה עמוקה של הליבה העסקית.
+
+מאז שנות השמונים אנחנו בגב מערכות מלווים ארגונים בפיתוח של מוצרים, מערכות ויישומים ארגוניים – ומספקים את אנשי הטכנולוגיה המדויקים לכל סביבת עבודה:
+✅ פיתוח Front End ו-Back End
+✅ DevOps
+✅ מערכות IT בהתאמה אישית לצרכי הארגון
+✅ פיתוח תוכנה וחומרה
+
+לצד ייעוץ בפיתוח תוכנה וטכנולוגיות, עם מתודולוגיות עבודה חדשניות וזמינות בכל רחבי הארץ.
+
+מחפשים צוות פיתוח שמבין את העסק שלכם? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#פיתוחתוכנה #DevOps #הייטק #softwaredevelopment #גבמערכות`,
+en:`Front End. Back End. DevOps.
+But what really makes a development project succeed is a deep understanding of the business core.
+
+Since the 1980s, GAV SYSTEMS has supported organizations in building products, systems and enterprise applications – providing precisely matched tech professionals for every environment: front-end and back-end development, DevOps, custom IT systems, and software and hardware development.
+
+Looking for a development team that understands your business? Let's talk – link in the first comment.
+
+GAV SYSTEMS | We've got your back
+#SoftwareDevelopment #DevOps #GAVSYSTEMS`},
+lic: { t:'מהרעיון ועד הפרודקשן', g:'לידים',
+h:'מהרעיון ועד הפרודקשן – ככה עובדים איתנו על פרויקט פיתוח',
+v:'ציר זמן אופקי בגרדיאנט, שקף לכל שלב.',
+s:`שקף 1: מהרעיון ועד הפרודקשן – ככה עובדים איתנו על פרויקט פיתוח
+שקף 2: אפיון – מבינים את הצורך העסקי לפני שכותבים שורת קוד.
+שקף 3: התאמת צוות – Front End, Back End, DevOps – לפי הסביבה שלכם.
+שקף 4: פיתוח – במתודולוגיות עבודה עדכניות ושקופות.
+שקף 5: בדיקות ואוטומציה – כי איכות היא חלק מהתהליך, לא שלב בסופו.
+שקף 6: עלייה לאוויר וליווי שוטף.
+שקף 7: נותנים לכם גב טכנולוגי. GAV SYSTEMS`,
+c:`כל פרויקט פיתוח מצליח עובר את אותם שישה שלבים.
+ההבדל הוא באנשים שמובילים אותם.
+
+ריכזנו את הדרך שלנו מהרעיון ועד הפרודקשן – מאפיון והתאמת צוות, דרך פיתוח ובדיקות, ועד ליווי אחרי העלייה לאוויר.
+
+איזה שלב הכי מאתגר אצלכם? ספרו בתגובות.
+
+${SIGN_LI}
+#פיתוחתוכנה #ניהולפרויקטים #DevOps #גבמערכות`,
+en:`Every successful development project goes through the same six stages.
+The difference is the people leading them.
+
+Here's how we take a project from idea to production at GAV SYSTEMS: discovery, team matching, development, QA and automation, go-live and ongoing support.
+
+Which stage is the most challenging for your team?
+
+GAV SYSTEMS | We've got your back
+#SoftwareDevelopment #DevOps #GAVSYSTEMS`},
+ig: { t:'יום בחיים של מפתח/ת', g:'גיוס',
+h:'קוד. קפה. גב.',
+v:'קאטים מהירים 9:16, כתוביות 2–4 מילים, מילה אחת בצבע המותג.',
+s:`⏱️ 30 שניות | 9:16
+🎣 הוק (0–2 שנ׳): כוס קפה מונחת ליד מקלדת | כתובית: קוד. קפה. גב.
+🎬 סצנה 1: הגעה למשרד, השלט של גב מערכות | כתובית: 08:45 – מתחילים
+🎬 סצנה 2: סטנדאפ צוות מול לוח | כתובית: סטנדאפ של 10 דקות
+🎬 סצנה 3: פוקוס מול שני מסכים (מסך מטושטש) | כתובית: שעתיים של פוקוס
+🎬 סצנה 4: מתייעצים עם עמית/ה | כתובית: אף אחד לא לבד
+🎬 סצנה 5: באג נפתר, אגרוף קטן באוויר | כתובית: עובד! 🎉
+🏁 סיום: לוגו + יש לכם גב
+🎵 סאונד: לו-פיי קצבי`,
+c:`קוד. קפה. גב. ☕💻
+
+ככה נראה יום של מפתח/ת בגב מערכות – פוקוס, צוות שמגבה, ואתגרים שלא נגמרים (בקטע טוב).
+
+רוצים להיות בצד השני של המסך? המשרות בלינק בביו 💙
+
+${SIGN_IG}
+#פיתוח #הייטק #יוםבחיים #גבמערכות`},
+tt: { t:'מסבירים לסבתא מה זה פיתוח', g:'מודעות',
+h:'מנסה להסביר לסבתא מה אני עושה בעבודה 👵💻',
+v:'שני אנשים מול המצלמה, כתוביות.',
+s:`⏱️ 25 שניות | 9:16
+🎣 הוק (0–1 שנ׳): מפתח/ת ליד "סבתא" (סבתא אמיתית או עובד/ת ותיק/ה שמשחק/ת אותה) | טקסט: מנסה להסביר לסבתא מה אני עושה בעבודה
+👤 מי מצטלם/ת: מפתח/ת מהחברה + "סבתא"
+🎬 שוט 1: "סבתא, אני כותב הוראות למחשב." | סבתא: "אז אתה מורה?"
+🎬 שוט 2: "לא בדיוק... אני בונה את האפליקציה שאת מזמינה בה תור לרופא." | סבתא מרימה גבה
+🎬 שוט 3: סבתא: "אז למה זה לא עבד לי אתמול?" | טקסט: 😅
+🏁 פאנץ׳: מפתח/ת מסתכל/ת למצלמה | טקסט: מחר אני מביא אותה לסטנדאפ.
+🎵 סאונד: טרנד קומי`,
+c:`הסבר לסבתא: רמת קושי – מקסימום 😂👵
+#פיתוח #הייטק #גבמערכות #fyp`},
+fb: { t:'רוצים להיכנס לעולם ההייטק?', g:'גיוס',
+h:'חלמתם להיכנס לעולם ההייטק? אפשר להתחיל מכאן 🚀',
+v:'תמונה של עמדת עבודה עם שני מסכים ועובד/ת מחייך/ת.',
+c:`חלמתם להיכנס לעולם ההייטק? אפשר להתחיל מכאן 🚀
+
+בגב מערכות יש מקום גם למי שבתחילת הדרך – בתמיכה טכנית, בבדיקות תוכנה ובשירות – עם הכשרה מקצועית ואפשרויות קידום אמיתיות.
+ולמי שכבר בתחום – פרויקטים בפיתוח ובמערכות מידע בארגונים מובילים.
+
+שתפו עם מי שמחפש את הצעד הבא 👇
+${JOBS}
+
+${SIGN_FB}`}
+},
+
+/* ---------- בדיקות ואוטומציה ---------- */
+qa: {
+li: { t:'באג שנמצא מוקדם עולה פחות', g:'לידים',
+h:'באג שנמצא בבדיקות עולה הרבה פחות מבאג שנמצא אצל הלקוח.',
+v:'רקע בהיר, זכוכית מגדלת זוהרת בגרדיאנט מעל שורת קוד.',
+c:`באג שנמצא בבדיקות עולה הרבה פחות מבאג שנמצא אצל הלקוח.
+
+בגלל זה QA ואוטומציה הם לא שלב בסוף הפיתוח – הם חלק ממנו.
+השילוב הנכון בין השניים, על ידי מומחים עם המיומנות המתאימה, מגדיל משמעותית את סיכויי ההצלחה של תהליך הפיתוח – והופך אותו לבטוח ואיכותי יותר.
+
+בגב מערכות אנחנו מספקים פתרונות בדיקות ואוטומציה מקצה לקצה:
+✅ השמת מומחי QA ואוטומציה
+✅ תהליכי בקרת איכות בהתאמה לצרכים שלכם
+✅ שירותים היברידיים – בשגרה ובחירום
+
+כדי שאתם תוכלו להתמקד במה שאתם הכי טובים בו.
+
+מחפשים את הטובים ביותר שיבדקו בשבילכם? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#QA #אוטומציה #בדיקותתוכנה #testautomation #גבמערכות`,
+en:`A bug found in testing costs far less than a bug found by your customer.
+
+That's why QA and automation aren't the last step of development – they're part of it. The right combination, delivered by the right experts, significantly raises the odds of success and makes the whole process safer.
+
+GAV SYSTEMS provides end-to-end testing and automation: placing QA and automation experts, tailored quality-control processes, and hybrid services in routine and emergency alike.
+
+Looking for the best people to test for you? Let's talk – link in the first comment.
+
+GAV SYSTEMS | We've got your back
+#QA #TestAutomation #GAVSYSTEMS`},
+lic: { t:'ידני או אוטומציה?', g:'לידים',
+h:'בדיקות ידניות או אוטומציה? התשובה הנכונה: שתיהן.',
+v:'שקפים מפוצלים לשני צדדים – ידני / אוטומציה.',
+s:`שקף 1: בדיקות ידניות או אוטומציה? התשובה הנכונה: שתיהן.
+שקף 2: ידני מנצח כש... בודקים חוויית משתמש, תרחישים חדשים ומקרים לא צפויים.
+שקף 3: אוטומציה מנצחת כש... יש רגרסיה, הרבה גרסאות ותהליכים שחוזרים על עצמם.
+שקף 4: השילוב מנצח תמיד: אוטומציה לחזרתי, עין אנושית לחדש.
+שקף 5: והכי חשוב – האנשים הנכונים לכל סוג בדיקה.
+שקף 6: מומחי QA ואוטומציה עם גב. GAV SYSTEMS`,
+c:`ידני או אוטומציה?
+זו כנראה השאלה הכי נפוצה שאנחנו שומעים מצוותי פיתוח.
+
+התשובה הקצרה: שתיהן. התשובה הארוכה – בקרוסלה 👉
+
+${SIGN_LI}
+#QA #אוטומציה #testautomation #גבמערכות`,
+en:`Manual or automated testing?
+Probably the most common question we hear from development teams.
+
+The short answer: both. Automation for what repeats, the human eye for what's new – and the right people for each.
+
+GAV SYSTEMS | We've got your back
+#QA #TestAutomation #GAVSYSTEMS`},
+ig: { t:'5 תכונות של QA מעולה', g:'גיוס',
+h:'סקרנות היא הכלי הכי חשוב של QA 🔍',
+v:'רקע כהה, זכוכית מגדלת זוהרת. כל שקף – תכונה אחת.',
+s:`שקף 1: 5 תכונות של QA מעולה 🔍
+שקף 2: סקרנות – תמיד שואלים "ומה יקרה אם...?"
+שקף 3: ירידה לפרטים – פיקסל זז? כבר שמתם לב.
+שקף 4: תקשורת טובה – מסבירים באג בלי להעליב אף מפתח 😉
+שקף 5: חשיבה של משתמש – בודקים כמו מי שישתמש במערכת באמת.
+שקף 6: למידה מתמדת – כלים חדשים, אוטומציה ו-AI.
+שקף 7: זה אתם? מחפשים אתכם. לינק בביו 💙`,
+c:`יש אנשים שפשוט לא מסוגלים לראות באג ולעבור הלאה 🔍
+
+אם גם אתם כאלה – יכול להיות שמחכה לכם קריירה בבדיקות תוכנה ואוטומציה.
+אספנו את חמש התכונות שהופכות QA טוב ל-QA מעולה.
+
+כמה מהן יש לכם? ספרו בתגובות 👇
+המשרות בלינק בביו 💙
+
+${SIGN_IG}
+#QA #בדיקותתוכנה #קריירה #גבמערכות`},
+tt: { t:'POV: באג 5 דקות לפני הדמו', g:'מודעות',
+h:'POV: את/ה QA ומצאת באג חמש דקות לפני הדמו 😱',
+v:'צילום טלפון במשרד, סאונד טרנדי.',
+s:`⏱️ 18 שניות | 9:16
+🎣 הוק (0–1 שנ׳): קלוז-אפ על פנים מול מסך, עיניים נפתחות | טקסט: POV: מצאת באג חמש דקות לפני הדמו 😱
+👤 מי מצטלם/ת: QA + מפתח/ת מהחברה
+🎬 שוט 1: הליכה מהירה במסדרון עם לפטופ | טקסט: 🏃‍♀️💨
+🎬 שוט 2: מפתח/ת מסתכל/ת, מהנהן/ת, מקליד/ה מהר | טקסט: תוקן ✅
+🎬 שוט 3: הדמו עובר, כולם מחייכים | טקסט: הדמו: מושלם
+🏁 פאנץ׳: QA למצלמה | טקסט: בגלל זה יש QA.
+🎵 סאונד: מוזיקת מתח שמתחלפת לניצחון`,
+c:`הגיבורים השקטים של כל דמו 🦸‍♀️🔍
+#QA #הייטק #גבמערכות #fyp`},
+fb: { t:'מה זה בודק תוכנה?', g:'גיוס',
+h:'שמעתם על בודקי תוכנה? זה מקצוע עם עתיד 💡',
+v:'תמונה של עובדת מול מסך.',
+c:`שמעתם על בודקי תוכנה? זה מקצוע עם עתיד 💡
+
+בודקות ובודקי תוכנה דואגים שכל מערכת, אפליקציה או אתר יעבדו כמו שצריך – לפני שהם מגיעים אלינו, המשתמשים.
+זו עבודה שמתאימה במיוחד לאנשים סקרנים, מסודרים ואוהבי פרטים, וגם למי שמחפש הסבה מקצועית לעולם הטכנולוגיה.
+
+בגב מערכות יש מגוון משרות בתחום הבדיקות והאוטומציה 👇
+${JOBS}
+
+שתפו עם מי שזה בדיוק בשבילו 🙏
+
+${SIGN_FB}`}
+},
+
+/* ---------- מרכזי תמיכה ושירות ---------- */
+centers: {
+li: { t:'המוקד הוא הקו הראשון', g:'לידים',
+h:'מוקד שירות הוא לא "מחלקת תלונות". הוא הקו הראשון של הארגון שלכם.',
+v:'רקע בהיר, אוזניות בגרדיאנט. כותרת: הקו הראשון.',
+c:`מוקד שירות הוא לא "מחלקת תלונות".
+הוא הקו הראשון של הארגון מול הלקוחות והעובדים.
+
+בתפיסה שלנו, מרכז תמיכה ושירות טוב עושה הרבה יותר ממתן מידע:
+👉 הוא מחזק לויאליות
+👉 הוא מרכז של שימור ומכירות
+👉 והוא חוסך לארגון עלויות גיוס ושיווק לטווח ארוך
+
+מתחילת שנות התשעים אנחנו בגב מערכות מקימים ומנהלים מרכזי שירות, מוקדי מכירות, שימור ותמיכה טכנית עבור חברות מובילות בארץ ובעולם – עם כוח אדם מנוסה, הדרכות מקצועיות וטכנולוגיה מתקדמת.
+
+כי ניהול מרכזי תמיכה ושירות הוא עסק למקצוענים.
+
+רוצים לשמוע איך זה נראה אצלכם? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#מוקדשירות #שירותלקוחות #callcenter #customerexperience #גבמערכות`,
+en:`A service center isn't a "complaints department".
+It's your organization's front line.
+
+A great support and service center does far more than answer questions: it builds loyalty, becomes a hub for retention and sales, and saves long-term recruitment and marketing costs.
+
+Since the early 1990s, GAV SYSTEMS has been setting up and managing service, sales, retention and technical support centers for leading companies in Israel and abroad – with experienced people, professional training and advanced technology.
+
+Want to see what that could look like for you? Let's talk – link in the first comment.
+
+GAV SYSTEMS | We've got your back
+#CustomerService #CallCenter #CX #GAVSYSTEMS`},
+lic: { t:'4 דברים שמוקד טוב עושה', g:'לידים',
+h:'4 דברים שמוקד שירות טוב עושה לארגון (חוץ מלענות לטלפון)',
+v:'שקף לכל נקודה, מספר גדול בגרדיאנט.',
+s:`שקף 1: 4 דברים שמוקד שירות טוב עושה לארגון (חוץ מלענות לטלפון)
+שקף 2: יוצר חוויית שירות חיובית – זו שלקוחות זוכרים.
+שקף 3: מחזק לויאליות ושימור לקוחות.
+שקף 4: הופך לערוץ מכירות – כל שיחה היא הזדמנות.
+שקף 5: חוסך בעלויות גיוס ושיווק לטווח ארוך.
+שקף 6: מקימים ומנהלים מוקדים מאז שנות התשעים. גב מערכות | יש לכם גב`,
+c:`מה ההבדל בין מוקד שעונה לטלפון לבין מוקד שמקדם את הארגון?
+
+ריכזנו ארבעה דברים שמרכז שירות ותמיכה טוב עושה – ושלא תמיד רואים בדוחות 👉
+
+${SIGN_LI}
+#מוקדשירות #שירותלקוחות #callcenter #גבמערכות`,
+en:`What's the difference between a center that answers calls and one that moves the business forward?
+
+Four things a great service center does that don't always show up in the reports: positive experiences, loyalty, sales opportunities and long-term savings.
+
+GAV SYSTEMS | We've got your back
+#CustomerService #CallCenter #GAVSYSTEMS`},
+ig: { t:'מאחורי האוזניות', g:'גיוס',
+h:'מאחורי כל שיחה יש אדם עם גב 🎧',
+v:'קאטים מהירים 9:16 מהמוקד. לשים לב לא לצלם לוגואים של לקוחות על המסכים או הקירות.',
+s:`⏱️ 25 שניות | 9:16
+🎣 הוק (0–2 שנ׳): קלוז-אפ על אוזניות שמונחות על הראש | כתובית: מאחורי כל שיחה...
+🎬 סצנה 1: נציגה מחייכת בשיחה | כתובית: ...יש אדם
+🎬 סצנה 2: ראש צוות מעודד/ת, היי-פייב | כתובית: ...עם צוות
+🎬 סצנה 3: הפסקת קפה, צחוקים | כתובית: ...ועם גב 💙
+🎬 סצנה 4: מבט רחב על המוקד | כתובית: ככה נראה מוקד של גב מערכות
+🏁 סיום: לוגו + יש לכם גב + "המשרות בלינק בביו"
+🎵 סאונד: פופ אופטימי`,
+c:`מאחורי כל שיחה יש אדם. ומאחורי כל אדם – צוות שמגבה 🎧💙
+
+ככה נראה יום במוקד של גב מערכות: הכשרה מקצועית, ראשי צוותים שתמיד שם, ואווירה שקשה לעזוב.
+
+רוצים להצטרף? המשרות בלינק בביו ✨
+
+${SIGN_IG}
+#מוקדשירות #עבודהראשונה #גבמערכות`},
+tt: { t:'דברים שרק נציגים מבינים', g:'גיוס',
+h:'דברים שרק מי שעבד/ה במוקד מבין/ה 🎧',
+v:'טרנד רשימה עם מעברים מהירים.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): נציג/ה מסתכל/ת למצלמה | טקסט: דברים שרק מי שעבד/ה במוקד מבין/ה 🎧
+👤 מי מצטלם/ת: נציגים מהמוקד
+🎬 שוט 1: נשארים עם האוזניות על הראש גם בהפסקה | טקסט: 1. האוזניות הן כבר חלק מהגוף
+🎬 שוט 2: לוגמים מכוס קפה ומעווים פרצוף | טקסט: 2. הקפה תמיד מתקרר באמצע שיחה
+🎬 שוט 3: אומרים "בוקר טוב" לחבר בבית בטון של מוקד | טקסט: 3. הטון המקצועי לא נכבה
+🎬 שוט 4: חיוך גדול מול המסך | טקסט: 4. הרגע שלקוח אומר "תודה, עזרת לי מאוד" 💙
+🏁 סיום: הצוות ביחד | טקסט: ומה עוד? ספרו בתגובות 👇
+🎵 סאונד: טרנד רשימות`,
+c:`תייגו את מי שעבד/ה איתכם במוקד 😂🎧
+#מוקד #שירותלקוחות #גבמערכות #fyp`},
+fb: { t:'עבודה ראשונה עם גב', g:'גיוס',
+h:'משתחררים? מסיימים י״ב? מחפשים עבודה ראשונה עם הרבה גב? 💙',
+v:'תמונה של צוות צעיר במוקד.',
+c:`משתחררים? מסיימים י״ב? מחפשים עבודה ראשונה עם הרבה גב? 💙
+
+📢 דרושים/ות: נציגי/ות שירות ותמיכה | חיפה ואתרים נוספים
+עבודה עם מגוון מותגים מובילים, בצוות שמלווה אתכם מהיום הראשון.
+✅ לא צריך ניסיון קודם – אנחנו מכשירים
+✅ משמרות ותנאים לפי המשרה [להשלים לפי מודעת המשרה]
+✅ אפשרויות קידום אמיתיות
+💙 מה מחכה לכם אצלנו: סיבוס, הכשרה, אפשרויות קידום, תנאים סוציאליים, מתנות בימי הולדת ובחגים ועוד פינוקים
+👇 להגשת מועמדות באתר: ${JOBS}
+
+${SIGN_FB}`}
+},
+
+/* ---------- גב מהבית ---------- */
+home: {
+li: { t:'מוקד שלא עוצר', g:'לידים',
+h:'השנים האחרונות לימדו אותנו שהמציאות יכולה להשתנות ברגע. השאלה אם השירות שלכם ממשיך לעבוד גם אז.',
+v:'רקע כהה, בית קטן זוהר עם אוזניות. כותרת: מוקד שלא עוצר.',
+c:`השנים האחרונות לימדו את כולנו שהמציאות יכולה להשתנות ברגע.
+השאלה היא אם השירות שלכם ממשיך לעבוד גם אז.
+
+גב מהבית הוא מוקד מקצועי היברידי שעובד מהבית – בשגרה ובחירום, במשבר בריאותי או ביטחוני, ואפילו במזג אוויר קיצוני.
+
+מה זה נותן לארגון?
+✅ רציפות שירות בכל מצב
+✅ גמישות – איוש בכל שעות היממה ובמגוון שפות
+✅ מאגר כישרונות רחב – מהצפון, מהדרום ומכל מקום
+✅ חיסכון בעלויות משרדים ותפעול
+✅ מענה מהיר לצרכי כוח אדם, גם בהתראה קצרה
+
+והלקוח שלכם? מרגיש שהוא מדבר עם מוקד מקצועי לכל דבר – בלי רעשי רקע, עם מנהלי פרויקטים שמנהלים יעדים ומדדים בדיוק כמו במוקד רגיל.
+
+רוצים מוקד שלא עוצר? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#עבודהמהבית #מוקדהיברידי #המשכיותעסקית #remotework #גבמערכות`,
+en:`Recent years taught us that reality can change in an instant.
+The question is whether your service keeps running when it does.
+
+GAV from Home is a professional hybrid service center operating from home – in routine and emergencies, health or security crises, even extreme weather. Business continuity, 24/7 staffing in multiple languages, a wider talent pool, lower overhead, and fast staffing response.
+
+Your customers? They get a fully professional service center experience – no background noise, with project managers running targets and KPIs just like on-site.
+
+GAV SYSTEMS | We've got your back
+#RemoteWork #BusinessContinuity #CustomerService #GAVSYSTEMS`},
+lic: { t:'6 יתרונות של מוקד מהבית', g:'לידים',
+h:'6 סיבות שמוקדים עוברים לעבודה היברידית מהבית',
+v:'שקף לכל יתרון, אייקון בית זוהר בפינה.',
+s:`שקף 1: 6 סיבות שמוקדים עוברים לעבודה היברידית מהבית 🏠
+שקף 2: שירות רציף – בחירום, במשבר ובמזג אוויר קיצוני.
+שקף 3: גמישות – איוש בכל שעות היממה ובמגוון שפות.
+שקף 4: כוח אדם איכותי – גם מהצפון, מהדרום ומחו״ל.
+שקף 5: יעילות כלכלית – בלי שכירות, ארנונה וביטוח מבנה.
+שקף 6: התאמה מהירה לשינויים בשטח.
+שקף 7: החורף הגיע והצוות מצונן? מענה מהיר לצרכי כוח אדם.
+שקף 8: גב מהבית – נותנים לכם גב מהבית. GAV SYSTEMS`,
+c:`"מוקד מהבית? ואיך שומרים על מקצועיות?"
+
+עם מנהלי פרויקטים מנוסים, ציוד מקצועי, תקשורת רציפה בין הצוותים למנהלים ומעקב קבוע אחר המדדים.
+וכשזה עובד – מקבלים שישה יתרונות שקשה לוותר עליהם 👉
+
+${SIGN_LI}
+#עבודהמהבית #מוקדהיברידי #גבמערכות`,
+en:`"A service center working from home? How do you keep it professional?"
+
+Experienced project managers, professional equipment, constant communication between teams and managers, and ongoing KPI tracking.
+When it works, you get six advantages that are hard to give up – swipe through.
+
+GAV SYSTEMS | We've got your back
+#RemoteWork #HybridWork #GAVSYSTEMS`},
+ig: { t:'יש לכם גב. גם מהבית.', g:'מודעות',
+h:'יש לכם גב. גם מהבית. 🏠',
+v:'רקע כהה, בית קטן זוהר עם אוזניות בגרדיאנט. כותרת: יש לכם גב. גם מהבית.',
+c:`יש לכם גב. גם מהבית. 🏠💙
+
+גב מהבית הוא המוקד ההיברידי שלנו: נציגות ונציגים מקצועיים שנותנים שירות מהבית, עם ציוד מתאים, מנהלים זמינים ותחושה של צוות אמיתי – גם מרחוק.
+
+בשגרה, בחירום,
+בחורף כשכולם מצוננים
+ובכל מצב שהמציאות מביאה.
+
+כי שירות טוב לא צריך משרד. הוא צריך אנשים טובים.
+
+${SIGN_IG}
+#גבמהבית #עבודהמהבית #גבמערכות`},
+tt: { t:'POV: המשמרת מתחילה בסלון', g:'גיוס',
+h:'POV: המשמרת שלך מתחילה בסלון 🏠',
+v:'צילום טלפון אותנטי בבית של נציג/ה (באישור).',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): נציג/ה בנעלי בית ובחולצה מסודרת | טקסט: POV: המשמרת שלך מתחילה בסלון 🏠
+👤 מי מצטלם/ת: נציג/ה של גב מהבית
+🎬 שוט 1: מכינים קפה, מדליקים מחשב, אוזניות על הראש | טקסט: 0 דקות פקקים 🚗❌
+🎬 שוט 2: שיחת וידאו קצרה עם ראש/ת הצוות | טקסט: הצוות? תמיד פה
+🎬 שוט 3: באמצע שיחה, מחייכים | טקסט: שקט, מקצועי, מהבית
+🏁 סיום: מצביע/ה למצלמה | טקסט: גב מהבית. יש לכם גב.
+🎵 סאונד: טרנד צ׳יל`,
+c:`הנסיעה הכי קצרה לעבודה 😄🏠
+#עבודהמהבית #גבמהבית #גבמערכות #fyp`},
+fb: { t:'עבודה מהבית עם צוות אמיתי', g:'גיוס',
+h:'מחפשים עבודה מהבית, עם צוות אמיתי מאחוריכם? 🏠💙',
+v:'תמונה של נציגה עובדת מהבית, אווירה חמה.',
+c:`מחפשים עבודה מהבית, עם צוות אמיתי מאחוריכם? 🏠💙
+
+בגב מהבית נציגות ונציגי שירות עובדים מהבית, מכל מקום בארץ – עם הכשרה מלאה, ציוד מתאים וליווי צמוד של מנהלים.
+מתאים במיוחד למי שגר רחוק מהמרכז, להורים ולמי שמחפש גמישות.
+
+רוצים לשמוע עוד? המשרות כאן 👇
+${JOBS}
+
+${SIGN_FB}`}
+},
+
+/* ---------- שירותי דיגיטל ---------- */
+digital: {
+li: { t:'הלקוחות כבר לא רק מתקשרים', g:'לידים',
+h:'הלקוחות שלכם כבר לא רק מתקשרים. הם כותבים, ומצפים לתשובה – 24/7.',
+v:'רקע כהה, טלפון זוהר עם בועות צ׳אט בגרדיאנט.',
+c:`הלקוחות שלכם כבר לא רק מתקשרים.
+הם כותבים, שולחים הודעה, ומצפים לתשובה – 24/7.
+
+השלב הבא של מוקדי השירות הולך יד ביד עם AI וענן. מה זה כולל אצלנו בגב מערכות:
+👉 הנדסת שירותים דיגיטליים – נייד, אינטרנט, אנליזה, ממשקי API וטלפוניה
+👉 אינטגרציה של טכנולוגיות ומערכות, עם אבטחת מידע ללא פשרות
+👉 VOC – קול הלקוח, כדי לשפר בלי הפסקה
+👉 אימון בינה מלאכותית במוקדים – במיוחד במענה כתוב
+👉 שירות עצמי, צ׳אטבוטים, IVR ועוזרים וירטואליים
+
+והחלק שלא מדברים עליו מספיק: בוט טוב צריך אימון של מומחים. זו מומחיות בפני עצמה.
+
+מוכנים לדור הבא של שירות לקוחות? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#שירותדיגיטלי #AI #צאטבוט #customerexperience #גבמערכות`,
+en:`Your customers don't just call anymore.
+They text, they message – and they expect an answer 24/7.
+
+The next generation of service centers runs on AI and cloud. At GAV SYSTEMS that means digital service engineering, technology integration with uncompromising security, Voice of Customer, AI training for contact centers, and self-service, chatbots, IVR and virtual assistants.
+
+And the part nobody talks about enough: a good bot needs expert training. That's a discipline of its own.
+
+GAV SYSTEMS | We've got your back
+#DigitalService #AI #Chatbots #CX #GAVSYSTEMS`},
+lic: { t:'בוט טוב לא נולד חכם', g:'לידים',
+h:'בוט טוב לא נולד חכם. מאמנים אותו. 🤖',
+v:'שקפים עם בועות צ׳אט בצבעי המותג.',
+s:`שקף 1: בוט טוב לא נולד חכם. מאמנים אותו. 🤖
+שקף 2: שלב 1 – מנתחים תהליכים: על מה הלקוחות באמת שואלים?
+שקף 3: שלב 2 – בוחנים פלטפורמות וערוצים: צ׳אט, אתר, אפליקציה.
+שקף 4: שלב 3 – לומדים מהאנשים: הנציגים המנוסים יודעים מה עובד.
+שקף 5: שלב 4 – מאמנים, בודקים ומשפרים לפי קול הלקוח (VOC).
+שקף 6: והכי חשוב – יודעים מתי להעביר לנציג אנושי.
+שקף 7: אימון AI במוקדים. גב מערכות | יש לכם גב`,
+c:`כולם רוצים צ׳אטבוט.
+מעטים יודעים שבוט טוב הוא פרויקט של אימון – לא של התקנה.
+
+ככה אנחנו מאמנים בינה מלאכותית בעולם המוקדים, דרך ניתוח מדויק של תהליכים, פלטפורמות ואנשים 👉
+
+${SIGN_LI}
+#AI #צאטבוט #שירותדיגיטלי #גבמערכות`,
+en:`Everyone wants a chatbot.
+Few realize a good bot is a training project, not an installation.
+
+Here's how we train AI for contact centers – through precise analysis of processes, platforms and people.
+
+GAV SYSTEMS | We've got your back
+#AI #Chatbots #CX #GAVSYSTEMS`},
+ig: { t:'יש לכם גב. גם בצ׳אט.', g:'מודעות',
+h:'יש לכם גב. גם בצ׳אט. 💬',
+v:'רקע כהה, טלפון זוהר עם התראת הודעה: "היי, איך אפשר לעזור? 💙"',
+c:`יש לכם גב. גם בצ׳אט. 💬💙
+
+שירות לקוחות דיגיטלי הוא הדור הבא של מוקדי השירות: צ׳אט, אפליקציה, עוזרים וירטואליים ובינה מלאכותית – ומאחורי כל אלה, אנשים שמאמנים, מנהלים ונותנים מענה אנושי כשצריך.
+
+מהיר כמו הודעה.
+אנושי כמו שיחה.
+
+${SIGN_IG}
+#שירותדיגיטלי #AI #גבמערכות`},
+tt: { t:'שלושה צ׳אטים ועדיין עם חיוך', g:'גיוס',
+h:'POV: את/ה נציג/ה דיגיטלי/ת ויש לך שלושה צ׳אטים פתוחים 💬💬💬',
+v:'מסך מטושטש (בלי תוכן של לקוחות) + פנים של הנציג/ה.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): שלושה צלילי הודעה ברצף, הנציג/ה מרים/ה גבה | טקסט: POV: שלושה צ׳אטים פתוחים 💬💬💬
+👤 מי מצטלם/ת: נציג/ה של שירות דיגיטלי
+🎬 שוט 1: מקליד/ה מהר, ספירה על המסך 1/3 | טקסט: נפתר ✅
+🎬 שוט 2: 2/3 | טקסט: נפתר ✅
+🎬 שוט 3: 3/3, נשען/ת אחורה | טקסט: נפתר ✅ ועוד קפה ☕
+🏁 סיום: חיוך למצלמה | טקסט: מולטיטסקינג? אצלנו זה כישרון.
+🎵 סאונד: טרנד קצבי`,
+c:`מי עוד יכול/ה ככה? 😎💬
+#שירותדיגיטלי #עבודה #גבמערכות #fyp`},
+fb: { t:'עבודה מהמחשב, עם צוות שמגבה', g:'גיוס',
+h:'אוהבים לכתוב ולעזור לאנשים? יש לנו משרה בשבילכם 💻',
+v:'תמונה של עובד/ת מול מחשב, מחייך/ת.',
+c:`אוהבים לכתוב ולעזור לאנשים? יש לנו משרה בשבילכם 💻💙
+
+בגב מערכות אנחנו מגייסים נציגות ונציגים לשירות לקוחות בצ׳אט ובהודעות – לעבודה עם מגוון מותגים מובילים.
+✅ הכשרה מלאה
+✅ צוות ומנהלים שמלווים אתכם
+✅ אפשרויות קידום
+
+להגשת מועמדות 👇
+${JOBS}
+
+${SIGN_FB}`}
+},
+
+/* ---------- ייעוץ להקמת מוקדים ---------- */
+advisory: {
+li: { t:'לפני הנציג הראשון', g:'לידים',
+h:'לפני שמגייסים נציג ראשון, צריך לדעת לאן המוקד הולך.',
+v:'רקע בהיר, מפת דרכים בשבעה צעדים בגרדיאנט.',
+c:`לפני שמגייסים את הנציג הראשון,
+צריך לדעת לאן המוקד הולך.
+
+הקמה וניהול של מוקדי שירות ומכירות דורשים מומחיות ספציפית – אבל לא תמיד צריך, או אפשר, להחזיק צוות מומחים במשרה מלאה.
+
+לכן בגב מערכות אנחנו מציעים ייעוץ תהליכי להקמה וניהול של מוקדים, שמלווה את הנהלת המוקד משלב ההקמה ועד רמת הביצועים הנדרשת:
+1️⃣ אפיון צרכים ויעדים
+2️⃣ תכנון משאבים
+3️⃣ גיבוש תהליכי עבודה
+4️⃣ גיוס והכשרה
+5️⃣ הטמעת שיטות ניהול
+6️⃣ מדידה, בקרה ואופטימיזציה
+7️⃣ הקמת צוותים שעובדים מהבית
+
+הכל עם מאפיין אחד קבוע: שירות בסטנדרט גבוה, בלי פשרות.
+
+מקימים מוקד או רוצים לשפר קיים? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#ייעוץ #הקמתמוקד #מוקדשירות #callcenter #גבמערכות`,
+en:`Before you hire your first agent,
+you need to know where your service center is headed.
+
+Building and running service and sales centers takes specific expertise – but you don't always need, or can keep, a full-time team of experts.
+
+GAV SYSTEMS offers process consulting from setup to target performance: needs and goals, resource planning, workflows, recruitment and training, management methods, measurement and optimization, and remote-team setup.
+
+GAV SYSTEMS | We've got your back
+#Consulting #CallCenter #CustomerService #GAVSYSTEMS`},
+lic: { t:'7 שלבים להקמת מוקד', g:'לידים',
+h:'7 שלבים להקמת מוקד שירות שעובד',
+v:'שקף לכל שלב, מספר ענק בגרדיאנט.',
+s:`שקף 1: 7 שלבים להקמת מוקד שירות שעובד
+שקף 2: 1. אפיון – צרכי הארגון, יעדים עסקיים, פיננסיים ושירותיים.
+שקף 3: 2. תכנון – ידע, תקציב והון אנושי, בשילוב אופטימלי.
+שקף 4: 3. תהליכי עבודה – שיטות שמותאמות לארגון ולמשאבים שלו.
+שקף 5: 4. גיוס והכשרה – איתור מהיר של כוח אדם מדויק.
+שקף 6: 5. שיטות ניהול – הכשרת מנהלים לטווח ארוך.
+שקף 7: 6. מדידה ובקרה – שיפור מתמיד.
+שקף 8: 7. עבודה מהבית – צוותים עם כל מה שצריך.
+שקף 9: מקימים מוקד? יש לכם גב. GAV SYSTEMS`,
+c:`להקים מוקד שירות זה לא רק לשכור נציגים ולחבר טלפונים.
+
+אלה שבעת השלבים שאנחנו מלווים בהם הנהלות מוקדים – מהאפיון הראשון ועד שהמוקד עובד בדיוק כמו שצריך 👉
+
+שמרו לפרויקט הבא 📌
+
+${SIGN_LI}
+#הקמתמוקד #מוקדשירות #ייעוץ #גבמערכות`,
+en:`Setting up a service center is more than hiring agents and plugging in phones.
+
+These are the seven stages we guide center managements through – from first discovery until the center performs exactly as it should.
+
+GAV SYSTEMS | We've got your back
+#CallCenter #Consulting #GAVSYSTEMS`},
+ig: { t:'שאלה טובה שווה יותר', g:'מודעות',
+h:'שאלה טובה שווה יותר מתשובה מהירה.',
+v:'רקע בהיר, המשפט בטיפוגרפיה עבה, "שאלה טובה" בגרדיאנט.',
+c:`שאלה טובה שווה יותר מתשובה מהירה. 💡
+
+לפני שמקימים מוקד, משנים תהליך או מוסיפים טכנולוגיה – אנחנו עוצרים ושואלים:
+מה הארגון באמת צריך?
+מה הלקוחות שלו מצפים לקבל?
+ואיך מודדים שהצלחנו?
+
+ככה עובדים היועצים שלנו. ככה בונים מוקדים שמחזיקים לאורך זמן 💙
+
+${SIGN_IG}
+#ייעוץ #גבמערכות #יש_לכם_גב`},
+tt: { t:'הטעות הכי נפוצה בהקמת מוקד', g:'מודעות',
+h:'הטעות הכי נפוצה כשמקימים מוקד שירות? (לא מה שחשבתם)',
+v:'דיבור למצלמה, שם ותפקיד בתיבה סגולה.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): יועץ/ת מגב מערכות מול המצלמה | טקסט: הטעות הכי נפוצה כשמקימים מוקד? 🤔
+👤 מי מצטלם/ת: יועץ/ת מהחברה (שם ותפקיד בתיבה סגולה)
+🎬 שוט 1: "רוב הארגונים מתחילים לגייס נציגים..." | טקסט: מתחילים לגייס 👥
+🎬 שוט 2: "...לפני שהגדירו מה המוקד צריך להשיג." | טקסט: בלי יעד 🎯❌
+🎬 שוט 3: "קודם אפיון ויעדים, אחר כך אנשים. ככה בונים מוקד שמחזיק." | טקסט: קודם יעד, אחר כך צוות
+🏁 סיום: לוגו | טקסט: יש לכם גב.
+🎵 סאונד: ביט שקט ברקע`,
+c:`טיפ אחד שחוסך חודשים 💡
+#מוקדשירות #ייעוץ #גבמערכות #fyp`},
+fb: { t:'+38 שנים של ניסיון בשבילכם', g:'מודעות',
+h:'+38 שנים של ניסיון. ועדיין לומדים כל יום 💙',
+v:'תמונה מהמשרדים במת״ם.',
+c:`+38 שנים של ניסיון. ועדיין לומדים כל יום 💙
+
+בגב מערכות אנחנו עוזרים לארגונים להקים ולנהל מוקדי שירות – מהתכנון, דרך הגיוס וההכשרה ועד שהכל עובד כמו שצריך.
+והכי חשוב לנו: שכל לקוח שמתקשר יקבל שירות טוב, וכל עובד יקבל גב אמיתי.
+
+תודה ללקוחות ולעובדים שהולכים איתנו כבר שנים 🙏
+
+${SIGN_FB}`}
+},
+
+/* ---------- גיוס ו-HR מנוהלים ---------- */
+hr: {
+li: { t:'HR מעולה, גם בלי מחלקה מלאה', g:'לידים',
+h:'לא כל ארגון צריך מחלקת HR מלאה. אבל כל ארגון צריך HR מעולה.',
+v:'רקע בהיר, אנשים בגרדיאנט. כותרת: המקצועיות שלנו, השקט שלכם.',
+c:`לא כל ארגון צריך מחלקת HR מלאה.
+אבל כל ארגון צריך HR מעולה.
+
+גיוס וניהול משאבי אנוש הם לב ליבו של הארגון – גם כשאין צורך, או אפשרות, להחזיק מערך קבוע.
+בגב מערכות אנחנו מספקים שירותי גיוס, סורסינג ו-HR במיקור חוץ, בהתאמה מדויקת לנפח ולצורך:
+👉 גיוס מקצה לקצה – מאיתור וסינון ועד onboarding מלא
+👉 סורסינג – משפך גיוס מדיד, מנוהל לפי SLA
+👉 HRBP – מנהלי HR מנוסים שעובדים מתוך המשרד שלכם
+👉 שימור הון אנושי – תוכנית ארוכת טווח לשביעות רצון העובדים
+👉 גיוס מומחים – הון אנושי בכיר בהתאמה מדויקת
+
+המקצועיות שלנו, השקט שלכם.
+
+מוכנים להתחיל? דברו איתנו – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#HR #גיוס #סורסינג #recruitment #גבמערכות`,
+en:`Not every organization needs a full HR department.
+But every organization needs excellent HR.
+
+GAV SYSTEMS provides outsourced recruitment, sourcing and HR services matched to your volume and needs: end-to-end recruitment through onboarding, SLA-driven sourcing, experienced HRBPs working from your office, long-term retention programs, and senior expert recruitment.
+
+Our expertise, your peace of mind.
+
+GAV SYSTEMS | We've got your back
+#HR #Recruitment #Sourcing #GAVSYSTEMS`},
+lic: { t:'גיוס מקצה לקצה', g:'לידים',
+h:'מה קורה בתהליך גיוס מקצה לקצה? 6 שלבים.',
+v:'ציר זמן בשישה שלבים, אייקונים קוויים סגולים.',
+s:`שקף 1: גיוס מקצה לקצה – 6 שלבים שאנחנו מנהלים בשבילכם
+שקף 2: איתור וסינון מועמדים
+שקף 3: תפעול תהליך הגיוס – וזיהוי פערים בדרך
+שקף 4: תיאום ראיונות ומבדקים
+שקף 5: ראיונות HR והצעות שכר
+שקף 6: onboarding מלא – כי גיוס לא נגמר בחתימה
+שקף 7: המקצועיות שלנו, השקט שלכם. GAV SYSTEMS`,
+c:`גיוס טוב לא נגמר בחתימה על חוזה.
+הוא נגמר כשהעובד/ת החדש/ה באמת נקלט/ה.
+
+אלה ששת השלבים שאנחנו מנהלים עבור ארגונים בגיוס מקצה לקצה – כולל זיהוי פערים בתהליך ופתרונות בכל שלב 👉
+
+${SIGN_LI}
+#גיוס #HR #onboarding #גבמערכות`,
+en:`Good recruitment doesn't end when the contract is signed.
+It ends when the new hire is truly onboarded.
+
+These are the six stages we manage for organizations in end-to-end recruitment – including spotting gaps and fixing them along the way.
+
+GAV SYSTEMS | We've got your back
+#Recruitment #HR #Onboarding #GAVSYSTEMS`},
+ig: { t:'טיפ של רכזת גיוס: קו״ח לכל משרה', g:'גיוס',
+h:'טיפ של רכזת גיוס: אותם קורות חיים לכל משרה? לא בדיוק.',
+v:'תבנית "טיפ של רכזת גיוס": תמונה של רכזת הגיוס בצד (אור ריבין / שירן אזולאי), הטיפ במשפט אחד, שם ותפקיד.',
+c:`שלחתם את אותם קורות חיים לעשר משרות שונות? 🤷‍♀️
+
+זה קורה לכולנו. אבל מגייסת קוראת את קורות החיים שלכם עם שאלה אחת בראש: למה דווקא הוא או היא מתאימים לתפקיד הזה?
+
+ככה עוזרים לה לענות:
+- קראו את מודעת המשרה והדגישו את מה שהכי חשוב בה
+- העלו לראש קורות החיים את הניסיון שהכי רלוונטי
+- השתמשו באותן מילים שמופיעות במודעה (אם הן נכונות לגביכם)
+- חמש דקות של התאמה שוות יותר מעשר שליחות
+
+בהצלחה במשרה הבאה,
+יש לכם גב | GAV SYSTEMS
+#טיפשלרכזתגיוס #קורותחיים #חיפושעבודה #גבמערכות`},
+tt: { t:'רכזת גיוס מגיבה לקורות חיים', g:'גיוס',
+h:'רכזת גיוס מגיבה לקורות חיים (בעדינות) 📄',
+v:'פיצול מסך: קורות חיים מומצאים לגמרי ופנים של הרכזת.',
+s:`⏱️ 25 שניות | 9:16
+🎣 הוק (0–1 שנ׳): רכזת גיוס מחזיקה דף | טקסט: רכזת גיוס מגיבה לקורות חיים (בעדינות) 📄
+👤 מי מצטלם/ת: רכזת גיוס (קורות החיים מומצאים לגמרי)
+🎬 שוט 1: מצביעה על 3 עמודים | טקסט: 3 עמודים? עמוד אחד מספיק 🙏
+🎬 שוט 2: מצביעה על "אחראי/ת ומסודר/ת" | טקסט: במקום תכונות – הישג אחד אמיתי
+🎬 שוט 3: מצביעה על מייל לא רציני | טקסט: מייל רציני = רושם ראשון רציני
+🏁 סיום: מחייכת | טקסט: רוצים שנעבור על שלכם? ספרו בתגובות 👇
+🎵 סאונד: טרנד "ביקורת"`,
+c:`שלושה תיקונים קטנים, הבדל גדול 📄✨
+#קורותחיים #חיפושעבודה #גבמערכות #fyp`},
+fb: { t:'חבר מביא חבר', g:'גיוס',
+h:'יש לכם חבר או חברה שמחפשים עבודה? 🤝',
+v:'שתי ידיים בהיי-פייב, רקע בהיר בצבעי המותג.',
+c:`יש לכם חבר או חברה שמחפשים עבודה? 🤝
+
+בגב מערכות אנחנו מאמינים שאנשים טובים מביאים אנשים טובים.
+ממליצים על מישהו שמתאים לנו – ושנינו מרוויחים: הוא מקבל מקום עבודה עם גב, ואתם מקבלים [פרטי ההטבה לממליצים].
+
+שלחו להם את הקישור, או תייגו אותם כאן בתגובות 👇
+${JOBS}
+
+${SIGN_FB}`}
+}
+};
+
+/* ===================== סדרות קבועות ===================== */
+const SERIES = {
+igReel: [
+{ t:'יש לי גב', g:'שייכות', h:'אני מרגיש/ה שיש לי גב.',
+v:'דיבור למצלמה, סיום עם צילום כיסא משרדי מאחור – משחק המילים.',
+s:`⏱️ 30 שניות | 9:16
+🎣 הוק (0–2 שנ׳): עובד/ת מסתובב/ת על כיסא משרדי לכיוון המצלמה | כתובית: אני מרגיש/ה שיש לי גב.
+🎬 סצנה 1: מספר/ת בקצרה מתי התחיל/ה ובאיזה תפקיד | שם ותפקיד בתיבה סגולה
+🎬 סצנה 2: רגע אחד שבו החברה גיבתה – קידום, הכשרה או תקופה קשה [לפי הסיפור האמיתי]
+🎬 סצנה 3: משפט סיום מהלב | כתובית: מילה אחת צבועה
+🏁 סיום: צילום של גב הכיסא + לוגו | כתובית: יש לכם גב.
+🎵 סאונד: פסנתר רך`,
+c:`יש עבודות שנותנות משכורת.
+ויש עבודות שנותנות גב. 💙
+
+[שם העובד/ת] מספר/ת על הרגע שבו הרגיש/ה שהחברה באמת שם בשבילו/ה.
+
+גאים באנשים שלנו. גאים בדרך.
+
+${SIGN_IG}
+#יש_לי_גב #גבמערכות #קריירה`},
+{ t:'מסלול: מנציג/ה לראש/ת צוות', g:'גיוס', h:'התחלתי כנציג/ה. היום אני ראש/ת צוות.',
+v:'טרנזישן טרנדי בין תמונה מהיום הראשון לתמונה מהיום.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–2 שנ׳): תמונה מהיום הראשון (אמיתית) | כתובית: [שנה]: היום הראשון שלי
+🎬 סצנה 1: מעבר בקפיצה | כתובית: נציג/ה
+🎬 סצנה 2: מעבר | כתובית: נציג/ה בכיר/ה
+🎬 סצנה 3: מעבר לתמונה מהיום, מול הצוות | כתובית: היום: ראש/ת צוות 💪
+🏁 סיום: משפט אחד למצלמה – "פה אפשר לגדול" | לוגו + יש לכם גב
+🎵 סאונד: טרנד טרנספורמציה`,
+c:`התחלתי כנציג/ה. היום אני ראש/ת צוות. 💪
+
+בגב מערכות קידום הוא לא הבטחה – הוא מסלול.
+עם הכשרה, ליווי ותוכנית פיתוח מנהלים, הרבה מראשי הצוותים שלנו התחילו בדיוק איפה שאתם אולי עומדים עכשיו.
+
+רוצים להתחיל את המסלול שלכם? המשרות בלינק בביו 💙
+
+${SIGN_IG}
+#מסלול #קידום #עבודהראשונה #גבמערכות`},
+{ t:'יום בחיים של רכזת גיוס', g:'גיוס', h:'כמה קורות חיים עוברים פה ביום? 👀',
+v:'קאטים מהירים, כתוביות 2–4 מילים.',
+s:`⏱️ 30 שניות | 9:16
+🎣 הוק (0–2 שנ׳): ערימת דפים / מסך מלא מיילים (מטושטש) | כתובית: כמה קורות חיים עוברים פה ביום? 👀
+🎬 סצנה 1: קפה ראשון | כתובית: 08:30 – קפה וסינון
+🎬 סצנה 2: שיחות טלפון | כתובית: שיחות ראשונות
+🎬 סצנה 3: ראיון (גב המועמד/ת למצלמה) | כתובית: ראיונות
+🎬 סצנה 4: שיחה עם "התקבלת!" – חיוך ענק | כתובית: הרגע הכי טוב ביום 💙
+🏁 סיום: לוגו + יש לכם גב
+🎵 סאונד: פופ קצבי`,
+c:`הרגע הכי טוב ביום של רכזת גיוס? כשמתקשרים להגיד "התקבלת!" 💙
+
+מאחורי כל גיוס יש הרבה שיחות, ראיונות ותיאומים – ואנשים שבאמת רוצים למצוא לכם את המקום הנכון.
+
+המשרות בלינק בביו ✨
+
+${SIGN_IG}
+#גיוס #יוםבחיים #גבמערכות`},
+{ t:'סיור משרדים במת״ם', g:'מודעות', h:'בואו לסיבוב קצר אצלנו 👀',
+v:'מצלמה בתנועה, קאטים מהירים. בלי לוגואים של לקוחות בפריים.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): השלט של גב מערכות בכניסה | כתובית: בואו לסיבוב 👀
+🎬 סצנה 1: מסדרון בהליכה | כתובית: מרכז אומגה, מת״ם חיפה
+🎬 סצנה 2: צוות צוחק סביב שולחן | כתובית: הצוות
+🎬 סצנה 3: מטבחון | כתובית: הקפה 😄
+🎬 סצנה 4: עמדות עם אוזניות | כתובית: והלב של הכל
+🏁 סיום: לוגו + יש לכם גב
+🎵 סאונד: טרנד אנרגטי`,
+c:`בואו לסיבוב קצר אצלנו במת״ם 👀✨
+
+מסדרונות, צוותים, קפה ובעיקר – אנשים שעושים את גב מערכות למה שהיא.
+
+רוצים לראות את זה מקרוב? המשרות בלינק בביו 💙
+
+${SIGN_IG}
+#גבמערכות #מתם #חיפה #סיורמשרדים`},
+{ t:'שאלנו את העובדים', g:'שייכות', h:'מה הדבר הכי טוב בעבודה פה?',
+v:'מיקרופון ביד, סקר רחוב בתוך המשרד.',
+s:`⏱️ 30 שניות | 9:16
+🎣 הוק (0–2 שנ׳): מיקרופון מופנה לעובד/ת | כתובית: מה הדבר הכי טוב בעבודה פה?
+🎬 סצנות 1–5: חמישה עובדים, תשובה קצרה אחת כל אחד (אמיתית, לא מתוסרטת) | שם ותפקיד בתיבה סגולה
+🏁 סיום: כולם ביחד מנופפים | כתובית: יש לכם גב 💙
+🎵 סאונד: ביט קליל`,
+c:`שאלנו את העובדים שלנו שאלה אחת פשוטה 🎤
+והתשובות? תראו בעצמכם 💙
+
+ומה התשובה שלכם? ספרו בתגובות 👇
+
+${SIGN_IG}
+#גבמערכות #אווירה #קריירה`},
+{ t:'הכיסא שתמיד יש לו גב', g:'מודעות', h:'יש דברים שתמיד יהיה להם גב.',
+v:'שוט אחד קולנועי: כיסא משרדי מסתובב לאט, תאורה רכה.',
+s:`⏱️ 12 שניות | 9:16
+🎣 הוק (0–2 שנ׳): כיסא משרדי ריק בגב למצלמה | כתובית: יש דברים...
+🎬 סצנה 1: הכיסא מסתובב לאט | כתובית: ...שתמיד יהיה להם גב
+🎬 סצנה 2: מתגלה עובד/ת מחייך/ת | כתובית: ובעיקר – אנשים 💙
+🏁 סיום: לוגו | כתובית: יש לכם גב.
+🎵 סאונד: מוזיקה קולנועית שקטה`,
+c:`יש דברים שתמיד יהיה להם גב.
+ובעיקר – אנשים. 💙
+
+${SIGN_IG}
+#יש_לכם_גב #גבמערכות`}
+],
+
+igCarousel: [
+{ t:'טיפ של רכזת גיוס: עמוד אחד', g:'גיוס', h:'קורות חיים טובים נקראים בעשר שניות.',
+v:'תבנית "טיפ של רכזת גיוס" – רכזת הגיוס בצד (אור ריבין / שירן אזולאי).',
+s:`שקף 1: טיפ של רכזת גיוס – קורות חיים טובים נקראים בעשר שניות ⏱️
+שקף 2: עמוד אחד. באמת. מספיק.
+שקף 3: הישגים במקום תיאורים – "שיפרתי", "הובלתי", "הקמתי".
+שקף 4: הניסיון הרלוונטי – למעלה.
+שקף 5: בדקו כתיב פעמיים. ואז עוד פעם.
+שקף 6: בהצלחה! יש לכם גב | GAV SYSTEMS`,
+c:`עשר שניות.
+זה הזמן שיש לקורות החיים שלכם לעשות רושם ⏱️
+
+אז איך מנצלים אותן נכון? רכזת הגיוס שלנו מסבירה בארבעה צעדים פשוטים 👉
+
+שמרו לפעם הבאה ששולחים קורות חיים 📌
+
+בהצלחה,
+יש לכם גב | GAV SYSTEMS
+#טיפשלרכזתגיוס #קורותחיים #גבמערכות`},
+{ t:'5 דברים שלא ידעתם על גב מערכות', g:'מודעות', h:'בטוחים שאתם מכירים אותנו? 🤔',
+v:'תבנית המספרים – כל שקף מספר ענק בגרדיאנט ומילה אחת מתחת.',
+s:`שקף 1: 5 דברים שלא ידעתם על גב מערכות 🤔
+שקף 2: +38 – שנים של טכנולוגיה (מאז 1988)
+שקף 3: +1,200 – מומחים ומומחיות
+שקף 4: +200 – לקוחות של אמון
+שקף 5: Top 10 – בדירוג BDI
+שקף 6: הבית שלנו – מרכז אומגה, מת״ם חיפה 📍
+שקף 7: ועוד דבר אחד: יש לכם גב. 💙`,
+c:`חושבים שאתם מכירים אותנו? 😉
+
+ריכזנו חמישה מספרים שמספרים את הסיפור של גב מערכות – מ-1988 ועד היום.
+
+איזה מהם הפתיע אתכם? ספרו בתגובות 👇
+
+${SIGN_IG}
+#גבמערכות #מספריםשמספרים`},
+{ t:'המילון של המוקד', g:'גיוס', h:'FCR, SLA, NPS – מה זה בכלל? 📖',
+v:'שקף לכל מונח, בועות מילון בצבעי המותג.',
+s:`שקף 1: המילון של המוקד 📖 – FCR, SLA, NPS... מה זה בכלל?
+שקף 2: FCR – פתרון בפנייה הראשונה. הלקוח לא צריך להתקשר שוב.
+שקף 3: SLA – ההתחייבות לזמני מענה ורמת שירות.
+שקף 4: NPS – כמה הלקוחות ימליצו עלינו לחברים.
+שקף 5: AHT – משך הטיפול הממוצע בפנייה.
+שקף 6: ועכשיו אתם מדברים "מוקדית" 😎 רוצים לעבוד עם זה? לינק בביו`,
+c:`נכנסתם למוקד ושמעתם רק ראשי תיבות? 😅
+
+הכנו לכם מילון קצר למונחים הכי נפוצים בעולם מוקדי השירות – ככה תגיעו ליום הראשון כבר מוכנים 📖
+
+שמרו ושתפו עם מי שמתחיל עבודה חדשה 💙
+
+${SIGN_IG}
+#מוקדשירות #עבודהראשונה #גבמערכות`},
+{ t:'איך לעבור ראיון בזום', g:'גיוס', h:'ראיון בזום? הנה מה שהמגייסת רואה 💻',
+v:'שקפים עם מסגרת של מסך שיחת וידאו.',
+s:`שקף 1: ראיון בזום? הנה מה שהמגייסת רואה 💻
+שקף 2: תאורה – אור מלפנים, לא מאחור.
+שקף 3: רקע – מסודר ושקט. בלי כביסה 😉
+שקף 4: מבט למצלמה – לא למסך.
+שקף 5: בדיקה טכנית חמש דקות לפני.
+שקף 6: שאלה טובה בסוף – מראה שאתם באמת מתעניינים.
+שקף 7: בהצלחה! יש לכם גב | GAV SYSTEMS`,
+c:`ראיון עבודה מהסלון? אפשר לעשות אותו מושלם 💻✨
+
+רכזות הגיוס שלנו ראו כבר המון ראיונות בזום – והנה הטיפים שהכי עושים את ההבדל 👉
+
+בהצלחה,
+יש לכם גב | GAV SYSTEMS
+#ראיוןעבודה #טיפשלרכזתגיוס #גבמערכות`},
+{ t:'טיפ של רכזת גיוס: לא רק מה יודעים', g:'גיוס', h:'לא רק מה העובד יודע... אלא איך הוא משתלב!',
+v:'תבנית "טיפ של רכזת גיוס" – רכזת הגיוס בצד, רקע כהה.',
+s:`שקף 1: טיפ של רכזת גיוס – לא רק מה אתם יודעים... אלא איך אתם משתלבים!
+שקף 2: ספרו על עבודה בצוות – דוגמה אחת אמיתית.
+שקף 3: הראו סקרנות – שאלו על הצוות ועל הדרך שבה עובדים.
+שקף 4: היו אתם – מגייסות מרגישות כשמשחקים תפקיד.
+שקף 5: בהצלחה! יש לכם גב | GAV SYSTEMS`,
+c:`בראיון עבודה כולם מתכוננים לשאלות המקצועיות.
+מעט מתכוננים לשאלה שלא נשאלת בקול: איך תשתלבו בצוות? 🤝
+
+רכזת הגיוס שלנו מסבירה למה זה חשוב לא פחות – ואיך מראים את זה 👉
+
+בהצלחה בראיון הבא,
+יש לכם גב | GAV SYSTEMS
+#טיפשלרכזתגיוס #ראיוןעבודה #גבמערכות`},
+{ t:'5 כישורים שלומדים במוקד', g:'גיוס', h:'העבודה הראשונה שלכם יכולה ללמד אתכם הכי הרבה 💡',
+v:'אייקונים קוויים סגולים, שקף לכל כישור.',
+s:`שקף 1: 5 כישורים שתיקחו מהעבודה הראשונה במוקד 💡
+שקף 2: תקשורת – לדבר עם כל אחד, בכל מצב.
+שקף 3: סבלנות – ופתרון בעיות תחת לחץ.
+שקף 4: עבודה בצוות – אף אחד לא לבד.
+שקף 5: עבודה עם מערכות – יתרון לכל המשך הקריירה.
+שקף 6: ביטחון עצמי – אחרי מוקד, ראיון עבודה זה כלום 😉
+שקף 7: מתחילים? לינק בביו 💙`,
+c:`"עבודה במוקד? זה רק לעבור את התקופה."
+ממש לא 😉
+
+העבודה הראשונה במוקד היא אחד המקומות שהכי מלמדים – והכישורים האלה יילכו איתכם לכל תפקיד הבא 👉
+
+${SIGN_IG}
+#עבודהראשונה #מוקדשירות #קריירה #גבמערכות`}
+],
+
+igStoryMid: [
+{ t:'סקר: קפה או תה?', g:'שייכות', h:'קפה או תה לפני משמרת? ☕🍵', v:'תמונה אמיתית מהמטבחון.',
+c:`טקסט על המסך: קפה או תה לפני משמרת? ☕🍵
+סטיקר: סקר – "קפה ☕" / "תה 🍵"
+בסטורי של מחר: התוצאות + תמונה מהמטבחון`},
+{ t:'חידון: כמה שנים?', g:'מודעות', h:'כמה שנים גב מערכות פועלת? 🤔', v:'רקע בהיר, שעון זוהר.',
+c:`טקסט על המסך: כמה שנים גב מערכות פועלת? 🤔
+סטיקר: חידון – 12 / 25 / +38 ✅ / 50
+סטורי המשך: "נכון! מאז 1988 💙"`},
+{ t:'שאלו את רכזת הגיוס', g:'גיוס', h:'יש לכם שאלה על ראיונות? שאלו אותנו 👇', v:'רכזת גיוס עם קופסת שאלות.',
+c:`טקסט על המסך: יש לכם שאלה על קורות חיים או ראיונות? רכזת הגיוס שלנו עונה 👇
+סטיקר: תיבת שאלות – "מה רציתם לשאול?"
+במהלך השבוע: עונים על 3–5 שאלות בסטוריז`},
+{ t:'משרות השבוע', g:'גיוס', h:'משרות חדשות עלו לאתר 💙', v:'רקע כהה, שלושה כרטיסי משרה בגרדיאנט.',
+c:`טקסט על המסך: משרות חדשות עלו לאתר 💙
+[משרה 1] | [משרה 2] | [משרה 3]
+סטיקר: קישור – ${JOBS}
+שורה תחתונה: תייגו מי שזה בשבילו 👇`},
+{ t:'זה או זה: צ׳אט או טלפון?', g:'מודעות', h:'צ׳אט או טלפון? 💬📞', v:'רקע בהיר בצבעי המותג.',
+c:`טקסט על המסך: כשאתם צריכים שירות – צ׳אט או טלפון? 💬📞
+סטיקר: סקר – "צ׳אט 💬" / "טלפון 📞"
+סטורי המשך: "אצלנו? יש לכם גב בשניהם 💙"`},
+{ t:'AI בעבודה?', g:'מודעות', h:'AI בעבודה – אוהבים או חוששים? 🤖', v:'רקע כהה, אייקון AI זוהר.',
+c:`טקסט על המסך: AI בעבודה – אוהבים או חוששים? 🤖
+סטיקר: סליידר אימוג׳י 🤖
+סטורי המשך: "אצלנו AI לא מחליף אנשים. הוא נותן להם גב 💙"`}
+],
+
+ttSeries: [
+{ t:'POV: יש לך גב בעבודה', g:'מודעות', h:'POV: סוף סוף יש לך גב בעבודה', v:'שוט אחד, כתובית גדולה.',
+s:`⏱️ 10 שניות | 9:16
+🎣 הוק (0–1 שנ׳): עובד/ת יושב/ת על שרפרף בלי גב, מתנדנד/ת | טקסט: העבודה הקודמת שלי
+🎬 שוט 1: קאט – אותו/ה עובד/ת נשען/ת אחורה בכיסא משרדי נוח, מחייך/ת | טקסט: POV: סוף סוף יש לך גב בעבודה 😌
+🏁 סיום: לוגו קטן בפינה | טקסט: יש לכם גב.
+🎵 סאונד: טרנד "glow up"`,
+c:`ההבדל מורגש 😌💙
+#יש_לכם_גב #גבמערכות #עבודה #fyp`},
+{ t:'אמת או מיתוס על עבודה במוקד', g:'גיוס', h:'אמת או מיתוס: במוקד רק עונים לטלפונים? 🤔', v:'מסך מפוצל: אמת / מיתוס.',
+s:`⏱️ 25 שניות | 9:16
+🎣 הוק (0–1 שנ׳): עובד/ת מחזיק/ה שלטים "אמת" ו"מיתוס" | טקסט: אמת או מיתוס על עבודה במוקד? 🤔
+🎬 שוט 1: "במוקד רק עונים לטלפונים" → מרים/ה "מיתוס" | טקסט: צ׳אט, מערכות, פתרון בעיות
+🎬 שוט 2: "אי אפשר להתקדם" → "מיתוס" | טקסט: הרבה ראשי צוותים התחילו כנציגים
+🎬 שוט 3: "הצוות הוא הכל" → "אמת!" | טקסט: 💙
+🏁 סיום: טקסט: עוד מיתוסים? כתבו בתגובות 👇
+🎵 סאונד: טרנד שאלות-תשובות`,
+c:`שברנו כמה מיתוסים 😎 מה עוד שמעתם?
+#מוקד #עבודהראשונה #גבמערכות #fyp`},
+{ t:'מה היית אומר/ת לעצמך ביום הראשון?', g:'שייכות', h:'מה היית אומר/ת לעצמך ביום הראשון בעבודה?', v:'סדרת פנים, כתוביות.',
+s:`⏱️ 30 שניות | 9:16
+🎣 הוק (0–1 שנ׳): שאלה על מסך שחור | טקסט: מה היית אומר/ת לעצמך ביום הראשון בעבודה?
+🎬 שוטים 1–5: חמישה עובדים, משפט אחד כל אחד (אמיתי) | שם ותפקיד קטן למטה
+🏁 סיום: טקסט: ומה אתם הייתם אומרים? 👇
+🎵 סאונד: פסנתר רגשי שקט`,
+c:`העצות הכי טובות מגיעות ממי שכבר היה שם 💙
+#עבודהראשונה #השראה #גבמערכות #fyp`},
+{ t:'טיפ לראיון ב-15 שניות', g:'גיוס', h:'טיפ לראיון עבודה ב-15 שניות ⏱️', v:'טיימר על המסך.',
+s:`⏱️ 15 שניות | 9:16
+🎣 הוק (0–1 שנ׳): טיימר 15 שניות מתחיל | טקסט: טיפ לראיון ב-15 שניות ⏱️
+👤 מי מצטלם/ת: רכזת גיוס
+🎬 שוט 1: "בסוף הראיון תמיד שואלים: יש לך שאלות?"
+🎬 שוט 2: "אל תגידו לא! שאלו משהו על הצוות או על איך נראה יום עבודה."
+🎬 שוט 3: "זה מראה שאתם באמת רוצים את המקום." | טקסט: ✅
+🏁 סיום: הטיימר נגמר | טקסט: יש לכם גב.
+🎵 סאונד: תקתוק שעון`,
+c:`הטיפ שכל מגייסת הייתה רוצה שתדעו ⏱️✨
+#ראיוןעבודה #טיפים #גבמערכות #fyp`},
+{ t:'מאחורי הקלעים של האפי האוור', g:'שייכות', h:'ככה נראה יום חמישי אצלנו 🎉', v:'קאטים מהאפי האוור או יום כיף.',
+s:`⏱️ 15 שניות | 9:16
+🎣 הוק (0–1 שנ׳): פתיחת קופסה / עוגה | טקסט: ככה נראה יום חמישי אצלנו 🎉
+🎬 שוטים 1–4: קאטים מהירים – כיבוד, צחוקים, צוות מצטלם, הרמת כוסית (שתייה קלה)
+🏁 סיום: כולם מנופפים | טקסט: נתראה שבוע הבא 💙
+🎵 סאונד: טרנד מסיבה`,
+c:`שבוע עמוס? ככה סוגרים אותו 🎉💙
+#האפיאוור #אווירה #גבמערכות #fyp`},
+{ t:'רגעים של משמרת ערב', g:'שייכות', h:'דברים שקורים בכל משמרת ערב 🌙', v:'צילום אותנטי בטלפון.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): חלון חשוך מאחורי העמדות | טקסט: דברים שקורים בכל משמרת ערב 🌙
+🎬 שוט 1: מישהו מביא נשנושים לכולם | טקסט: 1. מישהו תמיד מביא נשנוש
+🎬 שוט 2: מסדרון שקט | טקסט: 2. השקט במסדרון
+🎬 שוט 3: ראש/ת צוות עוזר/ת לנציג/ה | טקסט: 3. אף אחד לא נשאר לבד 💙
+🏁 סיום: טקסט: משמרת ערב? יש לכם גב.
+🎵 סאונד: לו-פיי לילי`,
+c:`מי עוד במשמרת ערב הערב? 🌙
+#משמרתערב #מוקד #גבמערכות #fyp`}
+],
+
+liThu: [
+{ t:'Top 10 BDI – מה מאחורי הדירוג', g:'מודעות', h:'דירוג הוא תמונת מצב. מה שמאחוריו הוא עבודה של שנים.',
+v:'תבנית המספרים: Top 10 ענק בגרדיאנט, מתחת "BDI".',
+c:`דירוג הוא תמונת מצב.
+מה שמאחוריו הוא עבודה של שנים.
+
+גב מערכות נמצאת בין 10 החברות המובילות בדירוג BDI – ואנחנו גאים בזה מאוד.
+אבל אם שואלים אותנו מה עומד מאחורי ההישג, התשובה פשוטה: +1,200 מומחים ומומחיות, +200 לקוחות שבוחרים בנו שוב ושוב, ו-+38 שנים של מחויבות.
+
+הטכנולוגיה היא נקודת ההתחלה.
+הכוח האמיתי הוא האנשים.
+
+תודה לכל מי שהוא חלק מהדרך.
+
+${SIGN_LI}
+#BDI #גבמערכות #GAVSYSTEMS #הייטק`,
+en:`A ranking is a snapshot.
+What's behind it is years of work.
+
+GAV SYSTEMS is among the Top 10 companies in the BDI ranking – and we're proud of it. What's behind it? 1,200+ experts, 200+ clients who choose us again and again, and 38+ years of commitment.
+
+Technology is the starting point. People are the real power.
+
+GAV SYSTEMS | We've got your back
+#BDI #GAVSYSTEMS`},
+{ t:'משרות טכנולוגיות השבוע', g:'גיוס', h:'מחפשים את האתגר הטכנולוגי הבא? הנה מה שפתוח השבוע.',
+v:'רקע כהה, תגיות טכנולוגיות בגרדיאנט.',
+c:`מחפשים את האתגר הטכנולוגי הבא?
+הנה מה שפתוח אצלנו השבוע 👇
+
+👉 [תפקיד 1] | [מיקום] – [משפט על האתגר והסביבה הטכנולוגית]
+👉 [תפקיד 2] | [מיקום] – [משפט על האתגר והסביבה הטכנולוגית]
+👉 [תפקיד 3] | [מיקום] – [משפט על האתגר והסביבה הטכנולוגית]
+
+בגב מערכות תעבדו על פרויקטים בארגונים מובילים, עם ליווי אישי ואפשרויות צמיחה אמיתיות.
+
+מכירים מפתח/ת או איש/אשת IT שמתאימים? תייגו בתגובות.
+להגשה – הקישור בתגובה הראשונה.
+
+${SIGN_LI}
+#משרות #הייטק #גיוסטכנולוגי #hiring #גבמערכות`,
+en:`Looking for your next tech challenge?
+Here's what's open this week: [Role 1], [Role 2], [Role 3].
+
+At GAV SYSTEMS you'll work on projects at leading organizations, with personal support and real room to grow.
+
+Know someone who fits? Tag them below – link in the first comment.
+
+GAV SYSTEMS | We've got your back
+#Hiring #TechJobs #GAVSYSTEMS`},
+{ t:'פיתוח מנהלים כאסטרטגיה', g:'מודעות', h:'מנהלות ומנהלים טובים לא מפסיקים ללמוד.',
+v:'תמונה קבוצתית אמיתית מהמפגש האחרון במסגרת עם אייקונים קוויים סגולים.',
+c:`מנהלות ומנהלים טובים לא מפסיקים ללמוד.
+
+מדי שנה אנחנו מקיימים בגב מערכות תוכנית פיתוח מנהלים – מסגרת שמוקדשת כולה ללמידה, להתפתחות ולהעצמה ניהולית.
+למה? כי ארגון שגדל צריך מנהלים שגדלים איתו.
+
+[משפט על המפגש האחרון: מה למדו, מי הוביל/ה]
+
+בשבילנו פיתוח מנהלים הוא לא "הטבה". הוא אסטרטגיה.
+
+${SIGN_LI}
+#פיתוחמנהלים #ניהול #leadership #גבמערכות`,
+en:`Great managers never stop learning.
+
+Every year, GAV SYSTEMS runs a management development program dedicated to learning, growth and leadership empowerment. A growing organization needs managers who grow with it.
+
+For us, developing managers isn't a perk. It's a strategy.
+
+GAV SYSTEMS | We've got your back
+#Leadership #ManagementDevelopment #GAVSYSTEMS`},
+{ t:'AI בשירות: מה למדנו', g:'לידים', h:'AI לא מחליף שירות טוב. הוא מגביר אותו.',
+v:'רקע כהה, רשת נוירונים זוהרת בגרדיאנט.',
+c:`AI לא מחליף שירות טוב.
+הוא מגביר אותו.
+
+כשאנחנו משלבים בינה מלאכותית במוקדים, אנחנו רואים שוב ושוב את אותו דבר:
+✅ הבוט מטפל במה שחוזר על עצמו
+✅ הנציגים מתפנים למה שדורש שיקול דעת ורגישות
+✅ ואימון נכון של ה-AI – לפי תהליכים, פלטפורמות ואנשים – הוא מה שעושה את ההבדל
+
+[דוגמה אחת מהשטח, בלי שם לקוח – לאשר]
+
+הטכנולוגיה היא נקודת ההתחלה. האנשים הם הכוח האמיתי.
+
+${SIGN_LI}
+#AI #שירותלקוחות #customerexperience #גבמערכות`,
+en:`AI doesn't replace good service.
+It amplifies it.
+
+Every time we bring AI into contact centers we see the same thing: bots handle the repetitive, agents focus on what needs judgment and empathy – and proper AI training, based on processes, platforms and people, makes the difference.
+
+Technology is the starting point. People are the real power.
+
+GAV SYSTEMS | We've got your back
+#AI #CX #GAVSYSTEMS`},
+{ t:'+1,200 מומחים. ארגון אחד.', g:'לידים', h:'1,200 מומחים ומומחיות. ארגון אחד.',
+v:'תבנית המספרים: +1,200 ענק בגרדיאנט, מתחת "מומחים."',
+c:`1,200 מומחים ומומחיות.
+ארגון אחד.
+
+מה זה אומר עבור הלקוחות שלנו?
+👉 גישה מהירה לאנשי מקצוע בכל תחום – IT, פיתוח, QA, שירות ותמיכה
+👉 גמישות בגדילה ובהתאמה לשינויים
+👉 ידע שעובר בין צוותים ופרויקטים
+
+ומה זה אומר עבור האנשים שלנו? קהילה מקצועית שאפשר ללמוד ממנה ולגדול בתוכה.
+
+גאים ב-1,200 המומחים והמומחיות שלנו.
+
+${SIGN_LI}
+#גבמערכות #מומחים #outsourcing #GAVSYSTEMS`,
+en:`1,200 experts.
+One organization.
+
+For our clients, that means fast access to professionals across IT, development, QA, service and support – plus flexibility to scale and knowledge that flows between teams.
+
+For our people, it means a professional community to learn from and grow within.
+
+GAV SYSTEMS | We've got your back
+#GAVSYSTEMS #TechTalent`},
+{ t:'38 שנים: מה השתנה ומה נשאר', g:'מודעות', h:'הטכנולוגיה השתנתה לגמרי מאז 1988. המחויבות לא.',
+v:'תמונה ישנה מהארכיון מול תמונה עדכנית, +38 בגרדיאנט באמצע.',
+c:`הטכנולוגיה השתנתה לגמרי מאז 1988.
+המחויבות לא.
+
+ב-+38 שנים ראינו את המחשב האישי נכנס לכל משרד, את האינטרנט משנה את כללי המשחק, ואת הבינה המלאכותית נכנסת למוקדי השירות.
+
+מה נשאר בדיוק אותו דבר?
+המחויבות להוביל, להתפתח ולהיות בחזית.
+והאמונה שהכוח האמיתי מאחורי כל טכנולוגיה הוא האנשים.
+
+כי בטכנולוגיה, הניסיון של אתמול הוא הבסיס לחדשנות של מחר.
+
+${SIGN_LI}
+#גבמערכות #טכנולוגיה #חדשנות #GAVSYSTEMS`,
+en:`Technology has changed completely since 1988.
+Our commitment hasn't.
+
+In 38+ years we've seen PCs enter every office, the internet rewrite the rules, and AI arrive in service centers. What stayed the same is our commitment to lead, grow and stay ahead – and the belief that people are the real power behind every technology.
+
+GAV SYSTEMS | We've got your back
+#GAVSYSTEMS #Innovation`}
+],
+
+fbCommunity: [
+{ t:'מה הייתה העבודה הראשונה שלכם?', g:'שייכות', h:'ספרו לנו: מה הייתה העבודה הראשונה שלכם? 👇', v:'תמונה נוסטלגית או משעשעת מהמשרד.',
+c:`שאלה קטנה לסוף השבוע 😊
+
+מה הייתה העבודה הראשונה שלכם?
+מלצרות? בייביסיטר? קופה בסופר? מוקד?
+
+ספרו לנו בתגובות 👇 אנחנו כבר מתים לקרוא.
+
+${SIGN_FB}`},
+{ t:'אלבום מהאירוע האחרון', g:'שייכות', h:'איזה כיף היה לנו! 🎉', v:'אלבום תמונות אמיתיות מהאירוע.',
+c:`איזה כיף היה לנו! 🎉
+
+[שם האירוע / יום הכיף] היה בדיוק מה שהיינו צריכים – צחוקים, אוכל טוב ובעיקר זמן ביחד.
+תודה לכל מי שהגיע ולכל מי שעזר להפיק 🙏
+
+מצאתם את עצמכם בתמונות? תייגו 👇
+
+${SIGN_FB}`},
+{ t:'יש לי גב – סיפור של עובד/ת', g:'שייכות', h:'יש סיפורים שפשוט מחממים את הלב 💙', v:'פורטרט חם של העובד/ת.',
+c:`יש סיפורים שפשוט מחממים את הלב 💙
+
+[שם העובד/ת] הצטרף/ה אלינו לפני [מספר] שנים בתפקיד [תפקיד].
+[משפט או שניים על הרגע שבו החברה גיבתה – קידום, הכשרה או תקופה קשה]
+
+היום [שם] [התפקיד היום], ואומר/ת: "[ציטוט אמיתי מהעובד/ת – לאשר]"
+
+גאים בך! 🙏
+
+${SIGN_FB}`},
+{ t:'מסלול: התחילה כנציגה', g:'גיוס', h:'התחילה כנציגה. היום מובילה צוות 💪', v:'תמונת לפני ואחרי.',
+c:`התחילה כנציגה. היום מובילה צוות 💪
+
+[שם] הגיעה אלינו לפני [מספר] שנים כנציגת שירות, בלי לדעת לאן זה יוביל.
+עם הכשרה, ליווי והרבה עבודה קשה – היום היא ראשת צוות ומלווה בעצמה נציגות ונציגים חדשים.
+
+אצלנו קידום הוא לא חלום. הוא מסלול.
+רוצים להתחיל את שלכם? 👇
+${JOBS}
+
+${SIGN_FB}`},
+{ t:'מה עושים ראשון בבוקר?', g:'שייכות', h:'מה הדבר הראשון שאתם עושים בבוקר בעבודה? ☕', v:'כוס קפה עם הלוגו.',
+c:`בוקר טוב! ☕
+
+שאלה קטנה: מה הדבר הראשון שאתם עושים כשאתם מגיעים לעבודה?
+קפה? מיילים? "בוקר טוב" לכל הצוות?
+
+ספרו לנו בתגובות 👇
+
+${SIGN_FB}`},
+{ t:'תודה לצוותים', g:'שייכות', h:'תודה ענקית לצוותים שלנו 💙', v:'תמונת צוות אמיתית.',
+c:`תודה ענקית לצוותים שלנו 💙
+
+לכל הנציגות והנציגים, המפתחים, הבודקים, הטכנאים, המנהלים ורכזות הגיוס –
+על עוד שבוע של מקצועיות, סבלנות והרבה לב.
+
+אתם הגב של גב מערכות 🙏
+
+${SIGN_FB}`}
+],
+
+fbJobs: [
+{ t:'משרות השבוע', g:'גיוס', h:'📢 משרות חדשות בגב מערכות!', v:'תמונה ממותגת עם רשימת תפקידים.',
+c:`📢 משרות חדשות בגב מערכות!
+
+👉 [תפקיד 1] | [מיקום]
+👉 [תפקיד 2] | [מיקום]
+👉 [תפקיד 3] | [מיקום]
+
+💙 מה מחכה לכם אצלנו: סיבוס, הכשרה, אפשרויות קידום, תנאים סוציאליים, מתנות בימי הולדת ובחגים ועוד פינוקים
+👇 להגשת מועמדות באתר: ${JOBS}
+
+מכירים מישהו מתאים? שתפו 🙏
+
+${SIGN_FB}`},
+{ t:'עבודה ראשונה אחרי צבא או י״ב', g:'גיוס', h:'השתחררתם? סיימתם י״ב? יש לנו עבודה ראשונה בשבילכם 💙', v:'צעירים מחייכים במוקד.',
+c:`השתחררתם? סיימתם י״ב? יש לנו עבודה ראשונה בשבילכם 💙
+
+בגב מערכות מתחילים עם הכשרה מלאה, צוות שמלווה מהיום הראשון ואפשרויות קידום אמיתיות.
+הרבה מהמנהלים שלנו התחילו בדיוק כמוכם.
+
+💙 סיבוס, תנאים סוציאליים, מתנות בחגים ועוד פינוקים
+👇 להגשת מועמדות: ${JOBS}
+
+הורים, סבים וסבתות – שתפו עם הצעירים במשפחה 😉
+
+${SIGN_FB}`},
+{ t:'חוזרים לשוק העבודה?', g:'גיוס', h:'חוזרים לשוק העבודה? יש לכם גב 🤝', v:'עובד/ת ותיק/ה מחייך/ת.',
+c:`חוזרים לשוק העבודה אחרי הפסקה? יש לכם גב 🤝
+
+אצלנו הניסיון שלכם שווה הרבה – ומה שחסר, אנחנו מלמדים.
+אנחנו מגייסים אנשים מכל הגילאים לתפקידי שירות, תמיכה ועוד – עם הכשרה מלאה וליווי אישי.
+
+👇 כל המשרות כאן: ${JOBS}
+
+${SIGN_FB}`},
+{ t:'חבר מביא חבר', g:'גיוס', h:'יש לכם חבר שמחפש עבודה? 🤝', v:'שתי ידיים בהיי-פייב.',
+c:`יש לכם חבר או חברה שמחפשים עבודה? 🤝
+
+אנשים טובים מביאים אנשים טובים – ובגב מערכות אנחנו יודעים להעריך את זה.
+ממליצים על מישהו שמתאים, והוא מקבל מקום עבודה עם גב אמיתי. [פרטי ההטבה לממליצים – להשלים]
+
+שלחו לו את הקישור או תייגו כאן 👇
+${JOBS}
+
+${SIGN_FB}`}
+]
+};
+
+/* ===================== בוקר טוב / שבת שלום ===================== */
+const MORNING_IG = [
+{ t:'בוקר טוב ושבוע טוב', g:'שייכות', h:'בוקר טוב ושבוע טוב! ☕', v:'תמונת בוקר אמיתית מהמשרד, טקסט לבן.',
+c:`טקסט על המסך: בוקר טוב ושבוע טוב! ☕
+שורה שנייה: יש לכם גב השבוע 💙
+סטיקר: GIF של קפה`},
+{ t:'שבוע חדש. אותו גב.', g:'שייכות', h:'שבוע חדש. אותו גב 💪', v:'בומרנג של כוס קפה עם הלוגו.',
+c:`טקסט על המסך: שבוע חדש. אותו גב 💪
+סטיקר: סליידר אימוג׳י 💪 – "כמה אנרגיות יש לכם הבוקר?"`},
+{ t:'צ׳קליסט בוקר', g:'שייכות', h:'קפה ✔️ אוזניות ✔️ חיוך ✔️', v:'עמדת עבודה בבוקר.',
+c:`טקסט על המסך:
+קפה ✔️
+אוזניות ✔️
+חיוך ✔️
+יאללה, שבוע! 🚀`},
+{ t:'מה המשימה הראשונה?', g:'שייכות', h:'בוקר טוב מחיפה! ☀️', v:'נוף מחלון המשרד במת״ם.',
+c:`טקסט על המסך: בוקר טוב מחיפה! ☀️
+שורה שנייה: מה המשימה הראשונה שלכם השבוע?
+סטיקר: תיבת שאלות – "המשימה שלי:"`},
+{ t:'גב זקוף', g:'מודעות', h:'פותחים שבוע עם גב זקוף 😉', v:'כיסא משרדי עם חץ זוהר לאורך הגב.',
+c:`טקסט על המסך: פותחים את השבוע עם גב זקוף 😉
+שורה שנייה: תזכורת קטנה – לשבת נכון מול המסך 💙
+סטיקר: סקר – "כבר תיקנתי 🧍" / "רגע, עכשיו 😅"`},
+{ t:'סקר בוקר: יום ראשון זה...', g:'שייכות', h:'יום ראשון זה... 😴 או 🚀?', v:'רקע בגרדיאנט המותג.',
+c:`טקסט על המסך: יום ראשון זה...
+סטיקר: סקר – "😴 עוד חמש דקות" / "🚀 בואו נתחיל"
+סטורי המשך: התוצאות + "אצלנו? 🚀 (אחרי הקפה)"`}
+];
+const MORNING_TT = [
+{ t:'שגרת בוקר במשרד', g:'שייכות', h:'שגרת הבוקר שלנו ב-10 שניות ☀️', v:'קאטים מהירים, סאונד טרנדי.',
+s:`⏱️ 10 שניות | 9:16
+🎣 הוק: דלת המשרד נפתחת | טקסט: שגרת הבוקר שלנו ב-10 שניות ☀️
+🎬 שוטים: כניסה ← קפה ← מחשב נדלק ← "בוקר טוב" לצוות ← אוזניות על הראש
+🏁 סיום: טקסט: שבוע טוב! 💙
+🎵 סאונד: טרנד שגרת בוקר`,
+c:`יאללה שבוע ☀️💙
+#בוקרטוב #שגרה #גבמערכות #fyp`},
+{ t:'POV: יום ראשון 08:00', g:'שייכות', h:'POV: יום ראשון, 08:00, במוקד ☕', v:'צילום טלפון.',
+s:`⏱️ 12 שניות | 9:16
+🎣 הוק: עובד/ת נכנס/ת עם עיניים חצי סגורות | טקסט: POV: יום ראשון, 08:00 😴
+🎬 שוט 1: לוגם/ת קפה | טקסט: ☕...
+🎬 שוט 2: הצוות אומר "בוקר טוב!" ביחד, העיניים נפתחות | טקסט: 08:05 🚀
+🏁 סיום: טקסט: הצוות הוא הקפה האמיתי 💙
+🎵 סאונד: טרנד "waking up"`,
+c:`מי עוד צריך/ה את הצוות כדי להתעורר? 😂☕
+#יוםראשון #בוקרטוב #גבמערכות #fyp`},
+{ t:'מה במאג שלכם?', g:'שייכות', h:'מה יש לכם במאג הבוקר? ☕', v:'קלוז-אפים של ספלים בעמדות.',
+s:`⏱️ 15 שניות | 9:16
+🎣 הוק: יד מושיטה מיקרופון לכוס | טקסט: מה יש לכם במאג הבוקר? ☕
+🎬 שוטים 1–5: מצלמים ספלים בעמדות, כל אחד עונה במילה (קפה, תה, שוקו, מים...)
+🏁 סיום: טקסט: ומה אצלכם? 👇
+🎵 סאונד: ביט קליל`,
+c:`הסקר הכי חשוב של הבוקר ☕😄
+#בוקרטוב #משרד #גבמערכות #fyp`},
+{ t:'מתיחות גב לפני שמתחילים', g:'מודעות', h:'מתיחות גב לפני שמתחילים – כי אצלנו שומרים על הגב 😉', v:'צוות בשורה, מוזיקה קלילה.',
+s:`⏱️ 15 שניות | 9:16
+🎣 הוק: צוות עומד בשורה ליד העמדות | טקסט: מתיחות גב לפני שמתחילים 🧘
+🎬 שוט 1: מותחים ידיים למעלה ביחד | טקסט: 1...
+🎬 שוט 2: מתיחה לצדדים, מישהו מאבד שיווי משקל וכולם צוחקים | טקסט: 2... 😂
+🏁 סיום: טקסט: כי אצלנו שומרים על הגב 😉 יש לכם גב.
+🎵 סאונד: טרנד ספורט`,
+c:`שומרים על הגב מהבוקר 😉💙
+#בוקרטוב #גבמערכות #fyp`}
+];
+const SHABBAT_IG = [
+{ t:'שבת שלום', g:'שייכות', h:'שבת שלום! 💙', v:'רקע כהה, נרות זוהרים בגרדיאנט.',
+c:`טקסט על המסך: שבת שלום! 💙
+שורה שנייה: ניפגש ביום ראשון עם גב חדש`},
+{ t:'תנו לגב לנוח', g:'מודעות', h:'סופ״ש נעים – תנו לגב לנוח 😌', v:'כיסא ריק במשרד, אור שקיעה.',
+c:`טקסט על המסך: סופ״ש נעים – תנו לגב לנוח 😌
+שורה שנייה: שבת שלום מכל הצוותים 💙`},
+{ t:'מה התוכניות?', g:'שייכות', h:'מה התוכניות לסופ״ש? 🌅', v:'רקע בהיר בצבעי המותג.',
+c:`טקסט על המסך: מה התוכניות שלכם לסופ״ש? 🌅
+סטיקר: תיבת שאלות – "בסופ״ש אני..."
+שורה תחתונה: שבת שלום 💙`},
+{ t:'תודה על שבוע מטורף', g:'שייכות', h:'תודה על עוד שבוע מטורף ✨', v:'תמונה מהשבוע.',
+c:`טקסט על המסך: תודה על עוד שבוע מטורף ✨
+שורה שנייה: שבת שלום! 💙`},
+{ t:'שבת שלום מכל הצוותים', g:'שייכות', h:'שבת שלום מכל הצוותים 💜', v:'קולאז׳ צוותים מנופפים.',
+c:`טקסט על המסך: שבת שלום מכל הצוותים 💜
+סטיקר: GIF של נפנוף 👋`},
+{ t:'השבוע בשלוש תמונות', g:'שייכות', h:'השבוע שלנו בשלוש תמונות 📸', v:'שלוש תמונות מהשבוע.',
+c:`סטורי 1: השבוע שלנו בשלוש תמונות 📸
+סטורי 2–3: [שתי תמונות מהשבוע]
+סטורי 4: [תמונה שלישית] + "שבת שלום 💙"`}
+];
+
+// אירועים ומועדים (מחושבים מראש לפי הלוח העברי)
+const EVENTS = [{"d": "2026-11-09", "n": "חג הסיגד", "k": "holiday", "x": ""}, {"d": "2026-11-12", "n": "יום האיכות העולמי (World Quality Day)", "k": "tech", "x": "מושלם ל-QA ואוטומציה"}, {"d": "2026-11-27", "n": "בלאק פריידי", "k": "civil", "x": "עומסים במוקדי השירות"}, {"d": "2026-12-03", "n": "היום הבינלאומי לאנשים עם מוגבלות", "k": "civil", "x": ""}, {"d": "2026-12-04", "n": "נר ראשון של חנוכה", "k": "holiday", "x": ""}, {"d": "2026-12-12", "n": "זאת חנוכה – יום אחרון", "k": "holiday", "x": ""}, {"d": "2026-12-28", "n": "סיכום שנה", "k": "civil", "x": "פוסט וסטורי סיכום שנה"}, {"d": "2027-01-01", "n": "השנה האזרחית החדשה", "k": "civil", "x": ""}, {"d": "2027-01-23", "n": "ט״ו בשבט", "k": "holiday", "x": ""}, {"d": "2027-01-28", "n": "יום הגנת המידע הבינלאומי", "k": "tech", "x": ""}, {"d": "2027-02-07", "n": "יום המשפחה", "k": "holiday", "x": ""}, {"d": "2027-02-11", "n": "היום הבינלאומי לנשים ונערות במדע", "k": "tech", "x": ""}, {"d": "2027-03-08", "n": "יום האישה הבינלאומי", "k": "civil", "x": ""}, {"d": "2027-03-23", "n": "פורים", "k": "holiday", "x": ""}, {"d": "2027-03-26", "n": "מעבר לשעון קיץ", "k": "civil", "x": ""}, {"d": "2027-03-31", "n": "יום הגיבוי העולמי (World Backup Day)", "k": "tech", "x": "משחק מילים מושלם על \"גב\""}, {"d": "2027-04-21", "n": "ערב פסח", "k": "holiday", "x": ""}, {"d": "2027-04-28", "n": "שביעי של פסח", "k": "holiday", "x": ""}, {"d": "2027-05-04", "n": "יום הזיכרון לשואה ולגבורה", "k": "solemn", "x": "בלי הומור, בלי אימוג׳ים שמחים ובלי תוכן מסחרי"}, {"d": "2027-05-11", "n": "יום הזיכרון לחללי מערכות ישראל ונפגעי פעולות האיבה", "k": "solemn", "x": "בלי הומור, בלי אימוג׳ים שמחים ובלי תוכן מסחרי"}, {"d": "2027-05-12", "n": "יום העצמאות", "k": "holiday", "x": ""}, {"d": "2027-05-25", "n": "ל״ג בעומר", "k": "holiday", "x": ""}, {"d": "2027-06-04", "n": "יום ירושלים", "k": "holiday", "x": "ממלכתי וניטרלי"}, {"d": "2027-06-10", "n": "ערב שבועות", "k": "holiday", "x": ""}, {"d": "2027-06-20", "n": "סוף שנת הלימודים – מסיימי י״ב", "k": "civil", "x": ""}, {"d": "2027-07-16", "n": "יום הערכת הבינה המלאכותית (AI Appreciation Day)", "k": "tech", "x": ""}, {"d": "2027-08-12", "n": "תשעה באב", "k": "solemn", "x": "טון שקט, בלי תוכן שמח"}, {"d": "2027-08-18", "n": "ט״ו באב", "k": "holiday", "x": ""}, {"d": "2027-09-01", "n": "פתיחת שנת הלימודים", "k": "civil", "x": ""}, {"d": "2027-09-13", "n": "יום המתכנת הבינלאומי", "k": "tech", "x": ""}, {"d": "2027-10-01", "n": "ערב ראש השנה", "k": "holiday", "x": ""}, {"d": "2027-10-01", "n": "חודש המודעות לסייבר + חודש המודעות לסרטן השד", "k": "tech", "x": ""}, {"d": "2027-10-02", "n": "ראש השנה", "k": "holiday", "x": ""}, {"d": "2027-10-04", "n": "שבוע השירות הבינלאומי (Customer Service Week)", "k": "tech", "x": "השבוע של המוקדים שלנו"}, {"d": "2027-10-10", "n": "ערב יום כיפור", "k": "solemn", "x": "גמר חתימה טובה – בלי הומור"}, {"d": "2027-10-11", "n": "יום כיפור", "k": "solemn", "x": "לא מפרסמים"}, {"d": "2027-10-15", "n": "ערב סוכות", "k": "holiday", "x": ""}, {"d": "2027-10-16", "n": "סוכות", "k": "holiday", "x": ""}, {"d": "2027-10-23", "n": "שמחת תורה", "k": "holiday", "x": "גם יום הזיכרון לנרצחי 7 באוקטובר – טון ממלכתי"}, {"d": "2027-10-25", "n": "יום הזיכרון לאירועי 7 באוקטובר", "k": "solemn", "x": "כ״ד בתשרי. ממלכתי, בלי הומור ובלי תוכן מסחרי"}, {"d": "2027-10-31", "n": "מעבר לשעון חורף", "k": "civil", "x": ""}, {"d": "2027-11-11", "n": "יום האיכות העולמי (World Quality Day)", "k": "tech", "x": "מושלם ל-QA ואוטומציה"}, {"d": "2027-11-26", "n": "בלאק פריידי", "k": "civil", "x": "עומסים במוקדי השירות"}, {"d": "2027-11-29", "n": "חג הסיגד", "k": "holiday", "x": ""}, {"d": "2027-12-03", "n": "היום הבינלאומי לאנשים עם מוגבלות", "k": "civil", "x": ""}, {"d": "2027-12-24", "n": "נר ראשון של חנוכה", "k": "holiday", "x": ""}, {"d": "2027-12-28", "n": "סיכום שנה", "k": "civil", "x": "פוסט וסטורי סיכום שנה"}, {"d": "2028-01-01", "n": "זאת חנוכה – יום אחרון", "k": "holiday", "x": ""}, {"d": "2028-01-01", "n": "השנה האזרחית החדשה", "k": "civil", "x": ""}, {"d": "2028-01-28", "n": "יום הגנת המידע הבינלאומי", "k": "tech", "x": ""}, {"d": "2028-02-11", "n": "היום הבינלאומי לנשים ונערות במדע", "k": "tech", "x": ""}, {"d": "2028-02-12", "n": "ט״ו בשבט", "k": "holiday", "x": ""}, {"d": "2028-02-27", "n": "יום המשפחה", "k": "holiday", "x": ""}, {"d": "2028-03-08", "n": "יום האישה הבינלאומי", "k": "civil", "x": ""}, {"d": "2028-03-12", "n": "פורים", "k": "holiday", "x": ""}, {"d": "2028-03-24", "n": "מעבר לשעון קיץ", "k": "civil", "x": ""}, {"d": "2028-03-31", "n": "יום הגיבוי העולמי (World Backup Day)", "k": "tech", "x": "משחק מילים מושלם על \"גב\""}, {"d": "2028-04-10", "n": "ערב פסח", "k": "holiday", "x": ""}, {"d": "2028-04-17", "n": "שביעי של פסח", "k": "holiday", "x": ""}, {"d": "2028-04-24", "n": "יום הזיכרון לשואה ולגבורה", "k": "solemn", "x": "בלי הומור, בלי אימוג׳ים שמחים ובלי תוכן מסחרי"}, {"d": "2028-05-01", "n": "יום הזיכרון לחללי מערכות ישראל ונפגעי פעולות האיבה", "k": "solemn", "x": "בלי הומור, בלי אימוג׳ים שמחים ובלי תוכן מסחרי"}, {"d": "2028-05-02", "n": "יום העצמאות", "k": "holiday", "x": ""}, {"d": "2028-05-14", "n": "ל״ג בעומר", "k": "holiday", "x": ""}, {"d": "2028-05-24", "n": "יום ירושלים", "k": "holiday", "x": "ממלכתי וניטרלי"}, {"d": "2028-05-30", "n": "ערב שבועות", "k": "holiday", "x": ""}, {"d": "2028-06-20", "n": "סוף שנת הלימודים – מסיימי י״ב", "k": "civil", "x": ""}, {"d": "2028-07-16", "n": "יום הערכת הבינה המלאכותית (AI Appreciation Day)", "k": "tech", "x": ""}, {"d": "2028-08-01", "n": "תשעה באב", "k": "solemn", "x": "טון שקט, בלי תוכן שמח"}, {"d": "2028-08-07", "n": "ט״ו באב", "k": "holiday", "x": ""}, {"d": "2028-09-01", "n": "פתיחת שנת הלימודים", "k": "civil", "x": ""}, {"d": "2028-09-12", "n": "יום המתכנת הבינלאומי", "k": "tech", "x": ""}, {"d": "2028-09-20", "n": "ערב ראש השנה", "k": "holiday", "x": ""}, {"d": "2028-09-21", "n": "ראש השנה", "k": "holiday", "x": ""}, {"d": "2028-09-29", "n": "ערב יום כיפור", "k": "solemn", "x": "גמר חתימה טובה – בלי הומור"}, {"d": "2028-09-30", "n": "יום כיפור", "k": "solemn", "x": "לא מפרסמים"}, {"d": "2028-10-01", "n": "חודש המודעות לסייבר + חודש המודעות לסרטן השד", "k": "tech", "x": ""}, {"d": "2028-10-02", "n": "שבוע השירות הבינלאומי (Customer Service Week)", "k": "tech", "x": "השבוע של המוקדים שלנו"}, {"d": "2028-10-04", "n": "ערב סוכות", "k": "holiday", "x": ""}, {"d": "2028-10-05", "n": "סוכות", "k": "holiday", "x": ""}, {"d": "2028-10-12", "n": "שמחת תורה", "k": "holiday", "x": "גם יום הזיכרון לנרצחי 7 באוקטובר – טון ממלכתי"}, {"d": "2028-10-14", "n": "יום הזיכרון לאירועי 7 באוקטובר", "k": "solemn", "x": "כ״ד בתשרי. ממלכתי, בלי הומור ובלי תוכן מסחרי"}, {"d": "2028-10-29", "n": "מעבר לשעון חורף", "k": "civil", "x": ""}, {"d": "2028-11-09", "n": "יום האיכות העולמי (World Quality Day)", "k": "tech", "x": "מושלם ל-QA ואוטומציה"}, {"d": "2028-11-18", "n": "חג הסיגד", "k": "holiday", "x": ""}, {"d": "2028-11-24", "n": "בלאק פריידי", "k": "civil", "x": "עומסים במוקדי השירות"}, {"d": "2028-12-03", "n": "היום הבינלאומי לאנשים עם מוגבלות", "k": "civil", "x": ""}, {"d": "2028-12-12", "n": "נר ראשון של חנוכה", "k": "holiday", "x": ""}, {"d": "2028-12-20", "n": "זאת חנוכה – יום אחרון", "k": "holiday", "x": ""}, {"d": "2028-12-28", "n": "סיכום שנה", "k": "civil", "x": "פוסט וסטורי סיכום שנה"}];
+
+/* ===================== מלל למועדים ===================== */
+const EVENT_IDEAS = [
+{ m:'נר ראשון של חנוכה', len:9, items:{
+ig:[['סטורי',{ t:'חנוכה שמח', g:'שייכות', h:'חנוכה שמח! 🕎', v:'רקע כהה, חנוכייה זוהרת בגרדיאנט.',
+c:`טקסט על המסך: חנוכה שמח! 🕎
+שורה שנייה: 8 נרות. +1,200 מומחים. אור אחד גדול 💙
+סטיקר: GIF של סופגנייה 🍩`}],
+['פוסט',{ t:'האור באנשים', g:'מודעות', h:'נס גדול היה פה. ואור גדול – באנשים שלנו.',
+v:'רקע כהה עם גלי ניאון, חנוכייה זוהרת בגרדיאנט המותג. בצד: "האור הכי חזק מגיע מאנשים".',
+c:`נס גדול היה פה.
+ואור גדול – באנשים שלנו 🕎💙
+
+השנה אנחנו מדליקים נר לכל מי שמביא אור לעבודה שלנו:
+לנציגות ולנציגים,
+למפתחים ולבודקים,
+למנהלים ולרכזות הגיוס.
+
+כי האור הכי חזק מגיע מאנשים ✨
+
+חג אורים שמח!
+${SIGN_IG}
+#חנוכה #חגשמח #גבמערכות`}]],
+tt:[['טיקטוק',{ t:'דירוג סופגניות במשרד', g:'שייכות', h:'דירגנו את הסופגניות במשרד 🍩', v:'קלוז-אפים, סאונד טרנדי.',
+s:`⏱️ 25 שניות | 9:16
+🎣 הוק: שולחן עם ארבע סופגניות שונות | טקסט: דירגנו את הסופגניות במשרד 🍩
+👤 מי מצטלם/ת: 3–4 עובדים
+🎬 שוט 1: טעימה ראשונה, ציון על לוח מחיק | טקסט: ריבה קלאסית: 8/10
+🎬 שוט 2: טעימה שנייה, אבקת סוכר על הפנים | טקסט: 😂
+🎬 שוט 3: ויכוח חביב על המנצחת
+🏁 סיום: כולם מרימים סופגנייה | טקסט: חג שמח מגב מערכות 🕎
+🎵 סאונד: טרנד דירוגים`,
+c:`הוויכוח הכי חשוב של חנוכה 🍩😂 איזו אתם?
+#חנוכה #סופגניות #גבמערכות #fyp`}]],
+fb:[['פוסט',{ t:'חג אורים שמח', g:'שייכות', h:'חג אורים שמח מכל המשפחה של גב מערכות 🕎', v:'תמונה אמיתית מהדלקת הנרות במשרד.',
+c:`חג אורים שמח מכל המשפחה של גב מערכות 🕎
+
+השבוע הדלקנו נרות יחד במשרד – ונזכרנו שהאור הכי חזק מגיע מהאנשים שלנו 💙
+
+מאחלים לכם ולמשפחות שלכם חג מלא באור, בשמחה ובסופגניות 🍩
+שתפו אותנו בתגובות בתמונה מההדלקה בבית 👇
+
+${SIGN_FB}`}]],
+li:[['פוסט',{ t:'האור שמגיע מאנשים', g:'מודעות', h:'בכל חנוכה אנחנו נזכרים: האור הכי חזק מגיע מאנשים.', v:'רקע כהה, חנוכייה זוהרת.',
+c:`בכל חנוכה אנחנו נזכרים במשהו פשוט:
+האור הכי חזק מגיע מאנשים.
+
+מ-+1,200 המומחים והמומחיות שלנו, מ-+200 הלקוחות שהולכים איתנו כשותפים, ומכל מי שמביא כל יום מקצועיות, יצירתיות ומחויבות.
+
+חג אורים שמח 🕎
+
+${SIGN_LI}
+#חנוכה #גבמערכות #GAVSYSTEMS`,
+en:`Every Hanukkah we're reminded of something simple:
+the brightest light comes from people.
+
+From our 1,200+ experts, from 200+ clients who walk with us as partners, and from everyone who brings professionalism, creativity and commitment every day.
+
+Happy Hanukkah 🕎
+
+GAV SYSTEMS | We've got your back
+#Hanukkah #GAVSYSTEMS`}]]
+}},
+{ m:'זאת חנוכה', items:{ ig:[['סטורי',{ t:'נר שמיני', g:'שייכות', h:'נר שמיני. האור נשאר 💙', v:'שמונה נרות דולקים, רקע כהה.',
+c:`טקסט על המסך: נר שמיני. האור נשאר 💙
+שורה שנייה: חג שמח מגב מערכות 🕎`}]] }},
+{ m:'בלאק פריידי', items:{
+li:[['פוסט',{ t:'בלאק פריידי מתחיל במוקד', g:'לידים', h:'בלאק פריידי לא מתחיל בקופה. הוא מתחיל במוקד.', v:'רקע כהה, גרף עומס זוהר בגרדיאנט.',
+c:`בלאק פריידי לא מתחיל בקופה.
+הוא מתחיל במוקד.
+
+בעונת המבצעים כמות הפניות קופצת – והלקוחות מצפים לאותה רמת שירות, אם לא גבוהה יותר.
+איך נערכים?
+✅ תגבור כוח אדם מראש, עם הכשרה ממוקדת
+✅ ערוצים דיגיטליים ובוטים שמטפלים בשאלות שחוזרות
+✅ צוותים שיכולים לעבוד גם מהבית – לגמישות מקסימלית
+✅ מדדים בזמן אמת וקבלת החלטות מהירה
+
+ככה מתכוננים לעומס בלי לוותר על החוויה.
+
+${SIGN_LI}
+#בלאקפריידי #שירותלקוחות #callcenter #גבמערכות`,
+en:`Black Friday doesn't start at the checkout.
+It starts at the service center.
+
+During sales season inquiries spike, and customers expect the same service – or better. Staff up early with focused training, let digital channels handle repetitive questions, use remote-capable teams for flexibility, and track KPIs in real time.
+
+GAV SYSTEMS | We've got your back
+#BlackFriday #CustomerService #GAVSYSTEMS`}]],
+ig:[['סטורי',{ t:'מאחורי הקלעים של העומס', g:'שייכות', h:'ככה נראה מוקד בבלאק פריידי 🛒', v:'בומרנג מהמוקד, בלי לוגואים של לקוחות.',
+c:`טקסט על המסך: ככה נראה מוקד בבלאק פריידי 🛒🎧
+שורה שנייה: אלופים ואלופות, אתם מדהימים 💙
+סטיקר: סליידר 🔥`}]],
+tt:[['טיקטוק',{ t:'POV: בלאק פריידי במוקד', g:'גיוס', h:'POV: בלאק פריידי ואת/ה במשמרת 🎧', v:'קאטים מהירים.',
+s:`⏱️ 15 שניות | 9:16
+🎣 הוק: לוח שמראה תור ארוך (מטושטש) | טקסט: POV: בלאק פריידי ואת/ה במשמרת 🎧
+🎬 שוט 1: נציג/ה לוקח/ת נשימה עמוקה | טקסט: 😮‍💨
+🎬 שוט 2: ראש/ת צוות מביא/ה קפה וממתקים | טקסט: הצוות: ☕🍫
+🎬 שוט 3: היי-פייב בסוף המשמרת | טקסט: עשינו את זה 💪
+🏁 סיום: טקסט: יש לכם גב.
+🎵 סאונד: טרנד אינטנסיבי שמתחלף לניצחון`,
+c:`שרדנו את בלאק פריידי ביחד 💪🎧
+#בלאקפריידי #מוקד #גבמערכות #fyp`}]]
+}},
+{ m:'יום הגיבוי', items:{
+ig:[['פוסט',{ t:'יש לכם גיבוי? יש לכם גב.', g:'מודעות', h:'יש לכם גיבוי? יש לכם גב. 💾', v:'רקע כהה, ענן זוהר בגרדיאנט.',
+c:`יש לכם גיבוי?
+יש לכם גב. 💾💙
+
+היום יום הגיבוי העולמי – אז זו תזכורת לגבות את הקבצים, התמונות והטלפון.
+ולכל השאר? בשביל זה יש את גב מערכות 😉
+
+${SIGN_IG}
+#יוםהגיבוי #WorldBackupDay #גבמערכות`}]],
+li:[['פוסט',{ t:'יום הגיבוי העולמי', g:'לידים', h:'היום כולם נזכרים לגבות. ואנחנו מזכירים: המשכיות עסקית היא גם אנשים.', v:'רקע בהיר, אייקון ענן ומגן.',
+c:`היום כולם נזכרים לגבות קבצים.
+ואנחנו מזכירים: המשכיות עסקית היא גם אנשים.
+
+גיבוי טוב הוא לא רק שרת נוסף. הוא גם:
+✅ מוקד שממשיך לעבוד בחירום – גם מהבית
+✅ צוותים שיכולים לגדול בהתראה קצרה
+✅ תהליכים שעומדים בתקני אבטחת מידע מחמירים
+
+יום גיבוי שמח – ויש לכם גב.
+
+${SIGN_LI}
+#WorldBackupDay #המשכיותעסקית #גבמערכות`,
+en:`Today everyone remembers to back up their files.
+We'd add: business continuity is also about people.
+
+A real backup plan means a service center that keeps running in emergencies, teams that scale at short notice, and processes that meet strict security standards.
+
+Happy World Backup Day – we've got your back.
+
+GAV SYSTEMS
+#WorldBackupDay #BusinessContinuity #GAVSYSTEMS`}]]
+}},
+{ m:'יום האיכות', items:{
+li:[['פוסט',{ t:'יום האיכות העולמי', g:'לידים', h:'איכות היא לא שלב בתהליך. היא התהליך.', v:'רקע בהיר, וי גדול בגרדיאנט.',
+c:`איכות היא לא שלב בתהליך.
+היא התהליך.
+
+ביום האיכות העולמי אנחנו מצדיעים לצוותי הבדיקות והאוטומציה שלנו – אלה שמוצאים את הבאג לפני כולם, שואלים "ומה אם?" ודואגים שכל מערכת תגיע ללקוח מוכנה.
+
+תודה לכל אנשי ה-QA שלנו 🙏
+
+${SIGN_LI}
+#WorldQualityDay #QA #אוטומציה #גבמערכות`,
+en:`Quality isn't a stage in the process.
+It is the process.
+
+On World Quality Day we salute our QA and automation teams – the people who find the bug first, ask "what if?", and make sure every system reaches the customer ready.
+
+GAV SYSTEMS | We've got your back
+#WorldQualityDay #QA #GAVSYSTEMS`}]],
+ig:[['סטורי',{ t:'תודה לצוותי ה-QA', g:'שייכות', h:'היום חוגגים את מי שמוצאים את הבאגים לפני כולם 🔍', v:'זכוכית מגדלת זוהרת.',
+c:`טקסט על המסך: היום חוגגים את מי שמוצאים את הבאגים לפני כולם 🔍
+שורה שנייה: יום איכות שמח לצוותי ה-QA שלנו 💙`}]]
+}},
+{ m:'יום המתכנת', items:{
+ig:[['פוסט',{ t:'יום המתכנת', g:'גיוס', h:'יום 256 בשנה. היום של מי שכותבים את המחר 💻', v:'רקע כהה, "256" ענק בגרדיאנט.',
+c:`יום 256 בשנה.
+היום של מי שכותבים את המחר 💻💙
+
+למה דווקא 256? כי זה 2 בחזקת 8 – וכל מתכנת/ת יודע/ת למה זה מצחיק 😉
+
+מזל טוב לכל המפתחות והמפתחים שלנו!
+
+${SIGN_IG}
+#יוםהמתכנת #פיתוח #גבמערכות`}]],
+li:[['פוסט',{ t:'יום המתכנת הבינלאומי', g:'גיוס', h:'למה יום המתכנת נחגג ביום ה-256? כי 2 בחזקת 8.', v:'המספר 256 בגרדיאנט.',
+c:`למה יום המתכנת נחגג ביום ה-256 בשנה?
+כי 2 בחזקת 8 – המספר הגדול ביותר שאפשר לייצג בבייט אחד.
+
+ביום הזה אנחנו מצדיעים למפתחות ולמפתחים של גב מערכות, שכותבים כל יום את הקוד שמניע ארגונים מובילים.
+
+רוצים להצטרף? המשרות – בתגובה הראשונה.
+
+${SIGN_LI}
+#ProgrammersDay #פיתוח #הייטק #גבמערכות`,
+en:`Why is Programmers' Day the 256th day of the year?
+Because 2^8 – the number of values one byte can hold.
+
+Today we salute GAV SYSTEMS developers, who write the code that powers leading organizations every day.
+
+GAV SYSTEMS | We've got your back
+#ProgrammersDay #GAVSYSTEMS`}]],
+tt:[['טיקטוק',{ t:'השורה הראשונה שכתבת', g:'גיוס', h:'מה הדבר הראשון שכתבת בקוד?', v:'סדרת פנים.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק: טקסט: מה הדבר הראשון שכתבת בקוד? 💻
+🎬 שוטים 1–4: מפתחים עונים במשפט ("Hello World", "מחשבון", "אתר למעריצים"...)
+🏁 סיום: טקסט: יום מתכנת שמח! 💙
+🎵 סאונד: ביט אלקטרוני`,
+c:`ואצלכם זה היה Hello World? 😄💻
+#יוםהמתכנת #פיתוח #גבמערכות #fyp`}]]
+}},
+{ m:'שבוע השירות', len:5, items:{
+li:[['פוסט',{ t:'שבוע השירות הבינלאומי', g:'מודעות', h:'השבוע כל העולם חוגג את אנשי השירות. אנחנו חוגגים אותם כל יום.', v:'אוזניות זוהרות בגרדיאנט.',
+c:`השבוע כל העולם חוגג את אנשי השירות.
+אנחנו חוגגים אותם כל יום.
+
+נציגות ונציגי שירות הם הקו הראשון של כל ארגון: הם שומעים את הלקוחות ראשונים, פותרים, מרגיעים ומחזקים את הקשר.
+
+לכל אנשי השירות והתמיכה של גב מערכות – תודה. אתם הגב שלנו.
+
+${SIGN_LI}
+#CustomerServiceWeek #שירותלקוחות #גבמערכות`,
+en:`This week the world celebrates customer service professionals.
+We celebrate them every day.
+
+Service agents are every organization's front line – the first to hear customers, solve, reassure and strengthen the relationship.
+
+To every service and support professional at GAV SYSTEMS: thank you. You've got our back.
+#CustomerServiceWeek #GAVSYSTEMS`}]],
+ig:[['רילס',{ t:'תודה לנציגים ולנציגות', g:'שייכות', h:'השבוע הזה שלכם 🎧💙', v:'קאטים מהמוקדים.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק: אוזניות על שולחן | כתובית: השבוע הזה...
+🎬 סצנות 1–4: נציגות ונציגים מחייכים בעמדות, ראשי צוותים מחלקים שוקולד | כתובית: ...שלכם 💙
+🏁 סיום: כל הצוות מנופף | כתובית: שבוע שירות שמח! יש לכם גב.
+🎵 סאונד: פופ אופטימי`,
+c:`השבוע הזה שלכם 🎧💙
+
+שבוע השירות הבינלאומי הוא הזדמנות להגיד תודה לאנשים שעונים, פותרים ומחייכים – גם ביום הכי עמוס.
+
+אתם הגב שלנו.
+${SIGN_IG}
+#שבועהשירות #גבמערכות`}]],
+fb:[['פוסט',{ t:'תודה לאנשי השירות', g:'שייכות', h:'תודה לכל נציגי ונציגות השירות שלנו 💙', v:'אלבום תמונות מהמוקדים.',
+c:`תודה לכל נציגי ונציגות השירות שלנו 💙
+
+השבוע מציינים בכל העולם את שבוע השירות – ואנחנו רוצים להגיד תודה גדולה לאנשים שעונים לכם כל יום בסבלנות, במקצועיות ועם חיוך.
+
+מכירים מישהו שעובד בשירות? תייגו והגידו לו תודה 👇
+
+${SIGN_FB}`}]],
+tt:[['טיקטוק',{ t:'מה הכי אוהבים בשירות?', g:'גיוס', h:'מה הכי אוהבים בעבודה בשירות?', v:'סדרת פנים.',
+s:`⏱️ 20 שניות | 9:16
+🎣 הוק: טקסט: שבוע השירות! מה הכי אוהבים בעבודה בשירות? 🎧
+🎬 שוטים 1–4: נציגים עונים במשפט
+🏁 סיום: טקסט: תודה לכם 💙
+🎵 סאונד: ביט שמח`,
+c:`תודה לאנשים הכי סבלניים שיש 🎧💙
+#שבועהשירות #מוקד #גבמערכות #fyp`}]]
+}},
+{ m:'שעון', items:{
+ig:[['סטורי',{ t:'מחליפים שעון', g:'מודעות', h:'מחליפים שעון ⏰', v:'שעון מעורר זוהר, כמו בפוסט "מחליפים לזמן חורף".',
+c:`טקסט על המסך: מחליפים שעון ⏰
+שורה שנייה: [מקדימים / מזיזים] את השעון שעה [קדימה / אחורה]
+שורה שלישית: הגב נשאר אותו גב 😉💙`}]],
+tt:[['טיקטוק',{ t:'POV: שכחת להזיז את השעון', g:'מודעות', h:'POV: שכחת להזיז את השעון ⏰', v:'צילום אותנטי.',
+s:`⏱️ 12 שניות | 9:16
+🎣 הוק: עובד/ת נכנס/ת למשרד ריק | טקסט: POV: שכחת להזיז את השעון ⏰
+🎬 שוט 1: מסתכל/ת על השעון, על הטלפון, שוב על השעון | טקסט: 🤔
+🎬 שוט 2: מתיישב/ת עם קפה בחיוך | טקסט: לפחות יש קפה ☕
+🏁 סיום: טקסט: אל תשכחו להזיז! יש לכם גב.
+🎵 סאונד: טרנד מבולבל`,
+c:`תזכורת חגיגית: להזיז את השעון ⏰😂
+#שעון #גבמערכות #fyp`}]]
+}},
+{ m:'יום האישה', items:{
+ig:[['קרוסלה',{ t:'נשים בגב מערכות', g:'שייכות', h:'הן מובילות. הן מפתחות. הן מנהלות.', v:'פורטרטים במסגרת גרדיאנט (באישור כל עובדת).',
+s:`שקף 1: הן מובילות. הן מפתחות. הן מנהלות. 💜
+שקף 2–6: [פורטרט + שם + תפקיד + משפט אחד של כל עובדת]
+שקף 7: יום האישה שמח לכל הנשים של גב מערכות 💜`,
+c:`הן מובילות. הן מפתחות. הן מנהלות. 💜
+
+ביום האישה הבינלאומי אנחנו גאים להכיר לכם כמה מהנשים שמניעות את גב מערכות קדימה – מהמוקדים ועד ההנהלה.
+
+יום האישה שמח לכל העובדות שלנו!
+
+${SIGN_IG}
+#יוםהאישה #נשיםבהייטק #גבמערכות`}]],
+li:[['פוסט',{ t:'יום האישה הבינלאומי', g:'מודעות', h:'יום האישה הוא תזכורת. העשייה היא כל השנה.', v:'תמונה קבוצתית של נשים מהחברה.',
+c:`יום האישה הוא תזכורת.
+העשייה היא כל השנה.
+
+בגב מערכות נשים מובילות בכל רמה – מראשות צוותים במוקדים, דרך מפתחות ובודקות, ועד ההנהלה הבכירה.
+
+יום האישה שמח לכל העובדות שלנו – ולכל הנשים שמובילות שינוי בעולם הטכנולוגיה.
+
+${SIGN_LI}
+#InternationalWomensDay #נשיםבהייטק #גבמערכות`,
+en:`International Women's Day is a reminder.
+The work happens all year.
+
+At GAV SYSTEMS women lead at every level – from team leads in our service centers, through developers and QA engineers, to senior management.
+
+Happy Women's Day to all our colleagues.
+#IWD #WomenInTech #GAVSYSTEMS`}]],
+fb:[['פוסט',{ t:'יום האישה שמח', g:'שייכות', h:'יום האישה שמח לכל העובדות שלנו 💜', v:'פרחים במשרד ותמונה קבוצתית.',
+c:`יום האישה שמח לכל העובדות שלנו 💜
+
+אתן המנהלות, הנציגות, המפתחות, הבודקות ורכזות הגיוס – וכל יום אתן מוכיחות כמה כוח יש בנשים.
+
+תודה שאתן חלק מגב מערכות 🙏
+
+${SIGN_FB}`}]]
+}},
+{ m:'סיכום שנה', items:{
+ig:[['קרוסלה',{ t:'השנה שלנו', g:'שייכות', h:'השנה שלנו, בעשרה שקפים 📸', v:'שקף פתיחה כהה עם השנה בגרדיאנט, אחריו תמונות אמיתיות.',
+s:`שקף 1: השנה שלנו, בעשרה שקפים 📸
+שקפים 2–9: [רגעים מהשנה: פתיחות מוקדים, כנס מנהלים, אירועים, חגים, ימי כיף]
+שקף 10: תודה על שנה מדהימה. ממשיכים קדימה, יחד 💙`,
+c:`השנה שלנו, בעשרה שקפים 📸
+
+היו רגעים מרגשים, היו אתגרים, והיו בעיקר אנשים מדהימים שעשו את הכל ביחד 💙
+
+תודה לכל העובדות והעובדים, ללקוחות ולשותפים לדרך.
+ממשיכים קדימה, יחד ✨
+
+${SIGN_IG}
+#סיכוםשנה #גבמערכות`}]],
+li:[['פוסט',{ t:'סיכום שנה', g:'מודעות', h:'שנה של צמיחה. שנה של אנשים.', v:'רקע כהה, השנה בגרדיאנט.',
+c:`שנה של צמיחה.
+שנה של אנשים.
+
+כשאנחנו מסתכלים אחורה על השנה, אנחנו רואים [הישג 1], [הישג 2] ו-[הישג 3] – אבל בעיקר אנחנו רואים אנשים.
++1,200 מומחים ומומחיות ו-+200 לקוחות שהם שותפים אמיתיים לדרך.
+
+תודה על השנה. ממשיכים קדימה, יחד.
+
+${SIGN_LI}
+#סיכוםשנה #גבמערכות #GAVSYSTEMS`,
+en:`A year of growth.
+A year of people.
+
+Looking back, we see [milestone 1], [milestone 2] and [milestone 3] – but above all, we see people: 1,200+ experts and 200+ clients who are true partners.
+
+Thank you for this year. Moving forward, together.
+GAV SYSTEMS | We've got your back`}]],
+fb:[['פוסט',{ t:'תודה על השנה', g:'שייכות', h:'תודה על עוד שנה ביחד 💙', v:'אלבום תמונות מהשנה.',
+c:`תודה על עוד שנה ביחד 💙
+
+השנה היו לנו הרבה רגעים יפים – אירועים, חגים, קידומים והמון עבודה טובה.
+תודה לכל העובדים והעובדות, ולמשפחות שלהם שתומכות מאחורי הקלעים 🙏
+
+מאחלים לכולנו שנה טובה, בריאה ושקטה ✨
+
+${SIGN_FB}`}]]
+}}
+];
+
+/* ===================== תקשורת פנים-ארגונית ===================== */
+// מקור: GAV_Annual_Gantt_2027 (גאנט שנתי, מאגר אירועים, מקרא, תוכן של יובל ונטלי) – תאריכים מתוקנים לפי הלוח העברי
+const AREAS = {
+  'חגים ומועדים':   { c:'#DD3E8E', what:'סוגרים ספק, תקציב וקונספט' },
+  'מועדים ממלכתיים':{ c:'#6B7090', what:'תוכן ולוגיסטיקה' },
+  'רווחה':          { c:'#10B2C8', what:'עיצוב, אישורים והפצה' },
+  'HR':             { c:'#7547DF', what:'סקרים, הערכות ביצועים, יעדים ו-Onboarding' },
+  'תקשורת פנים':    { c:'#2D6CD3', what:'ניוזלטר חודשי ועדכוני עובדים' },
+  'בריאות':         { c:'#E06AA8', what:'מודעות ובריאות העובדים' },
+  'גיוון והכלה':    { c:'#E8913A', what:'מועדים שמחזקים שייכות וייצוג' },
+  'ימים מיוחדים':   { c:'#C9A227', what:'הזדמנות תוכן – לא חובה. לבחור רק מה שמתאים לערכי החברה' }
+};
+const AREA_ORDER = Object.keys(AREAS);
+// זמני היערכות לפי המקרא: אירועי עוגן 6–10 שבועות, בינוני 3–5, תוכן בלבד 1–2
+const LEAD = { 'קריטית':8, 'גבוהה':4, 'בינונית':2, 'נמוכה':1 };
+const INT_STATUS = ['לא התחיל','בהיערכות','בוצע'];
+
+// חגים ומועדים משותפים – המטא-דאטה הפנימי נצמד לאירוע בלוח (מופיע פעם אחת, לפנים ולחוץ)
+const HOLIDAY_META = {
+  'ט״ו בשבט': { a:'חגים ומועדים', o:'רווחה + מיתוג מעסיק', p:'בינונית' },
+  'פורים': { a:'חגים ומועדים', o:'רווחה', p:'גבוהה',
+    Y:'נשף פורים / מסיבת תחפושות כולל תחרות בין המוקדים + משלוחי מנות בין העובדים',
+    N:'שבוע אווירה לפני פורים (פיג׳מות / יום הפוך / שחור-לבן / אוזניים וכובעים), גמד ענק מוקדי, נשף ותחרות תחפושות',
+    impl:'פוסט – יובל | ארגון המסיבה – נטלי + מאשה' },
+  'ערב פסח': { a:'חגים ומועדים', o:'HR + רווחה', p:'קריטית', len:8, name:'פסח',
+    Y:'הרמת כוסית + מייל ברכה', N:'הרמת כוסית + מייל ברכה', impl:'יובל + נטלי' },
+  'ל״ג בעומר': { a:'חגים ומועדים', o:'רווחה', p:'נמוכה' },
+  'ערב שבועות': { a:'חגים ומועדים', o:'רווחה', p:'גבוהה', len:2, name:'שבועות',
+    Y:'הרמת כוסית + מייל ברכה', N:'מתכון משפחתי לרגל החג, ארוחת בוקר חלבית, קוד לבוש לבן', impl:'יובל + נטלי' },
+  'ט״ו באב': { a:'חגים ומועדים', o:'רווחה', p:'נמוכה',
+    Y:'תחרות שידוכים', N:'פינת הרווקים, קישוט באדום ולבבות. מוקדי – בינגו חברות, מכתבי אהבה אחד לשני' },
+  'ערב ראש השנה': { a:'חגים ומועדים', o:'HR + רווחה + מיתוג', p:'קריטית', len:3, name:'ראש השנה' },
+  'ערב יום כיפור': { a:'חגים ומועדים', o:'HR', p:'גבוהה', len:2, name:'יום כיפור' },
+  'ערב סוכות': { a:'חגים ומועדים', o:'HR + רווחה', p:'גבוהה', len:9, name:'סוכות ושמחת תורה',
+    Y:'קישוט המוקדים', N:'קישוט סוכה' },
+  'נר ראשון של חנוכה': { a:'חגים ומועדים', o:'רווחה', p:'גבוהה', len:9, name:'חנוכה',
+    N:'הדלקת נרות משותפת, תחרות חנוכיות',
+    note:'רעיונות למתנות: נרות ממותגים, גפרורים ממותגים, ערכת קישוט סופגנייה (מזרק ריבה, מזרק שוקולד), קופסת נרות ממותגת. קישורים לספקים בקובץ המקורי.' },
+  'יום הזיכרון לשואה ולגבורה': { a:'מועדים ממלכתיים', o:'HR + תקשורת פנים', p:'גבוהה',
+    Y:'מייל אזכור / עובד/ת עם סיפור של בן משפחה שמעוניין/ת לשתף', N:'מייל אזכור, פינת זיכרון, זיכרון בסלון',
+    impl:'יובל', note:'להתחיל לחפש עובד/ת עם סיפור אישי לפחות חודש לפני.' },
+  'יום הזיכרון לחללי מערכות ישראל ונפגעי פעולות האיבה': { a:'מועדים ממלכתיים', o:'HR + הנהלה', p:'קריטית',
+    N:'סיפור אישי של בני משפחה של עובדים, פינת זיכרון, טקסט מתאים ליום הזיכרון' },
+  'יום העצמאות': { a:'מועדים ממלכתיים', o:'רווחה + מיתוג מעסיק', p:'גבוהה',
+    N:'קישוט המוקד, קוד לבוש כחול-לבן, תחרות חידון ידיעת הארץ, מסלולים מומלצים לטיול בארץ' },
+  'יום ירושלים': { a:'מועדים ממלכתיים', o:'מיתוג מעסיק', p:'נמוכה', N:'מייל: היסטוריה בחמש דקות על העיר' },
+  'יום הזיכרון לאירועי 7 באוקטובר': { a:'מועדים ממלכתיים', o:'HR + הנהלה + תקשורת', p:'קריטית', name:'יום הזיכרון הלאומי לאירועי 7 באוקטובר ומלחמת חרבות ברזל', N:'מתכון עם זיכרון' },
+  'יום האישה הבינלאומי': { a:'גיוון והכלה', o:'HR + מיתוג מעסיק', p:'גבוהה',
+    Y:'הרצאה / פאנל נשים ב-GAV + פוסט הוקרה במייל', N:'הרצאה / פאנל נשים ב-GAV + פוסט הוקרה במייל', impl:'פוסט הוקרה במייל – יובל | הרצאה – [לקבוע אחראי/ת]' },
+  'חג הסיגד': { a:'גיוון והכלה', o:'HR + DEI', p:'בינונית' },
+  'יום המשפחה': { a:'ימים מיוחדים', o:'מיתוג מעסיק', p:'בינונית' }
+};
+
+// מועדים פנימיים לפי הלוח העברי (מחושבים מראש)
+const HEB_INTERNAL = [{"d": "2026-10-23", "n": "יום הזיכרון ליצחק רבין"}, {"d": "2026-12-31", "n": "יום השפה העברית"}, {"d": "2027-11-12", "n": "יום הזיכרון ליצחק רבין"}, {"d": "2028-01-20", "n": "יום השפה העברית"}, {"d": "2028-11-01", "n": "יום הזיכרון ליצחק רבין"}];
+const HEB_INTERNAL_META = {
+  'יום הזיכרון ליצחק רבין': { a:'מועדים ממלכתיים', o:'תקשורת פנים', p:'בינונית', social:false },
+  'יום השפה העברית': { a:'ימים מיוחדים', o:'רווחה + מיתוג מעסיק', p:'נמוכה', note:'בקובץ המקורי מופיע 20/1/2027, אבל יום השפה העברית חל בכ״א בטבת: 31/12/2026 ו-20/1/2028.' }
+};
+
+// ימים בתאריך לועזי קבוע (חוזרים כל שנה) – [חודש, יום, אורך בימים]
+const FIXED_INTERNAL = [
+  { n:'יום הפיצה הבינלאומי', md:[2,9], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום האהבה', md:[2,14], a:'ימים מיוחדים', o:'רווחה + מיתוג מעסיק', p:'נמוכה' },
+  { n:'יום השניצל הבינלאומי', md:[2,23], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום הפאי', md:[3,14], a:'ימים מיוחדים', o:'רווחה + מיתוג מעסיק', p:'נמוכה' },
+  { n:'יום המעשים הטובים', md:[3,18], a:'ימים מיוחדים', o:'רווחה + מיתוג מעסיק', p:'בינונית',
+    Y:'יום התנדבות של עובדי החברה / איסוף תרומות', N:'ימי התנדבות (עמותת רוח טובה / לקט ישראל / עמותת אלון ואלה), מכירת חיסול משרדית לתרומה',
+    note:'בקובץ מופיעים שני תאריכים: 18/3 (מאגר האירועים) ו-16/3 (התוכן של יובל ונטלי). התאריך משתנה כל שנה – לאמת מול אתר יום המעשים הטובים.', bridge:'gooddeeds' },
+  { n:'יום האושר הבינלאומי', md:[3,20], a:'ימים מיוחדים', o:'HR + רווחה', p:'בינונית', note:'בקובץ המקורי מופיע 9/02, אבל יום האושר הבינלאומי של האו״ם חל ב-20 במרץ.' },
+  { n:'אחד באפריל', md:[4,1], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום היצירתיות והחדשנות העולמי', md:[4,21], a:'ימים מיוחדים', o:'רווחה', p:'בינונית',
+    Y:'תחרות בין המוקדים לקראת היום – רעיון חדשני לשיפור או ייעול יצירתי של יום העבודה', N:'תחרות בין המוקדים לקראת היום – רעיון חדשני לשיפור או ייעול יצירתי של יום העבודה', bridge:'creativity' },
+  { n:'יום כדור הארץ', md:[4,22], a:'ימים מיוחדים', o:'מיתוג מעסיק', p:'נמוכה',
+    Y:'מייל תזכורת שכולל 5 "הידעת" על כדור הארץ', N:'יום ללא פלסטיק, תחרות אתגר המיחזור בין המוקדים', impl:'יובל', bridge:'earth' },
+  { n:'יום הספר הבינלאומי', md:[4,23], a:'ימים מיוחדים', o:'HR + רווחה', p:'בינונית',
+    Y:'מייל עם המלצות ספרים + תוכן לרשתות ששואל את העובדים מה הספר הכי טוב + ספריית החלפות קטנה', N:'המלצות על ספר אהוב, ספרייה משרדית של ספרים יד שנייה (אפשר להעביר הלאה). מוקדי – סיפור בהמשכים',
+    impl:'יובל + מדיה פקטורי + תוכנית שגרירים', bridge:'book' },
+  { n:'סינקו דה מאיו', md:[5,5], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה', N:'עמדת נאצ׳וס, גוואקמולי וטורטיות' },
+  { n:'שבוע האירוויזיון', md:[5,11], len:5, a:'ימים מיוחדים', o:'רווחה', p:'נמוכה', note:'התאריכים בקובץ הם ל-2027 – לאמת מול מועדי התחרות בכל שנה.' },
+  { n:'יום הדונאט הבינלאומי', md:[6,3], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום איכות הסביבה העולמי', md:[6,5], a:'ימים מיוחדים', o:'מיתוג מעסיק', p:'נמוכה' },
+  { n:'יום תרומות הדם העולמי', md:[6,14], a:'ימים מיוחדים', o:'רווחה + מיתוג מעסיק', p:'נמוכה' },
+  { n:'יום הסלפי הבינלאומי', md:[6,21], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום השוקולד הבינלאומי', md:[7,7], a:'ימים מיוחדים', o:'HR + רווחה', p:'בינונית',
+    Y:'הנחת שוקולד קטן לכל עובד/ת בעמדה עם פתק קטן', N:'שוקולד לכל עובד/ת, שולחן עם שוקולד ופירות / וופל בלגי / ממתקים', impl:'רווחה', bridge:'chocolate' },
+  { n:'יום הצ׳יפס הבינלאומי', md:[7,13], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום הבסטיליה', md:[7,14], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה', N:'קרואסון, קפה, שוקו וכובעי ברט' },
+  { n:'יום הגלידה הבינלאומי', md:[7,19], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום המיחזור', md:[8,12], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום הקפה הבינלאומי', md:[10,1], a:'ימים מיוחדים', o:'HR + רווחה', p:'בינונית' },
+  { n:'יום בריאות הנפש העולמי', md:[10,10], a:'ימים מיוחדים', o:'HR + רווחה', p:'בינונית' },
+  { n:'ליל כל הקדושים', md:[10,31], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'יום האדיבות הבינלאומי', md:[11,13], a:'ימים מיוחדים', o:'רווחה', p:'נמוכה' },
+  { n:'חודש הגאווה', md:[6,1], len:30, a:'גיוון והכלה', o:'HR + DEI', p:'בינונית', N:'קישוט צבעוני, דגלים, מתן מידע על האגודה' },
+  { n:'חודש המודעות לסרטן השד', md:[10,1], len:31, a:'בריאות', o:'HR + מיתוג מעסיק', p:'גבוהה',
+    Y:'פינה ורודה במוקד + עיצוב שומרי מסך + מייל להעלאת המודעות', N:'פינה ורודה במוקד + עיצוב שומרי מסך + מייל להעלאת המודעות', impl:'יובל + נטלי', bridge:'pink' },
+  // תכנון רווחה ו-HR שנתי
+  { n:'היערכות לחופשות קיץ', md:[6,15], end:[8,31], a:'רווחה', o:'HR + מנהלים', p:'גבוהה', lead:0 },
+  { n:'אירוע קיץ חברה', md:[7,1], end:[8,15], a:'רווחה', o:'רווחה + רכש', p:'קריטית', bridge:'summer' },
+  { n:'Back to School', md:[8,22], end:[9,1], a:'רווחה', o:'HR + רווחה', p:'בינונית' },
+  { n:'תכנון תקציב רווחה לשנה הבאה', md:[9,1], end:[10,15], a:'רווחה', o:'HR + כספים', p:'קריטית', lead:0 },
+  { n:'סיכום שנה והוקרת עובדים', md:[12,1], end:[12,19], a:'רווחה', o:'הנהלה + HR', p:'קריטית' }
+];
+
+// פעילויות חוזרות
+const RECURRING = [
+  { n:'ניוזלטר / אירועי החודש', a:'תקשורת פנים', o:'מיתוג מעסיק', p:'בינונית', every:'month', from:1, to:7, lead:1 },
+  { n:'יום הולדת חודשי', a:'רווחה', o:'מנהל/ת צוות מתחלף/ת', p:'גבוהה', every:'month', last:7, lead:1, bridge:'birthday',
+    note:'מפגש בחדר הישיבות בשבוע האחרון של החודש: שעה וחצי של הפסקת קפה עם עוגה ונרות לחוגגי החודש. כל אחד משתף, מכירים את שאר עובדי המוקד, ומשחק גיבוש קטן. בכל חודש מנהל/ת צוות אחר/ת מעביר/ה.' },
+  { n:'Pulse Survey', a:'HR', o:'HR', p:'גבוהה', every:'quarter', from:15, to:21, lead:2 },
+  { n:'Happy Hour / מפגש חברה', a:'רווחה', o:'רווחה', p:'בינונית', every:'quarter', from:10, to:24, lead:2, bridge:'happyhour' }
+];
+
+// גיבוש פנים-מוקדי ופעילויות כלליות (בנק רעיונות של נטלי)
+const TEAM_IDEAS = ['היום אני המנהל/ת – להתלוות למנהל/ת צוות לכמה שעות','הכל הולך – פנטומימה בלי לומר מילה','פוינטס אוף יו','לוח השראה מתמונות בגלריה','שתי אמת ושקר','מה אני לוקח/ת לאי בודד','טעימה עיוורת – מי מנחש/ת יותר טעמים','21 שאלות על דמות שכולם מכירים','קטגוריות','תחרות ביר פונג עם פטל','אתגר המרשמלו','אליאס קבוצתי','שאלון אישיות','תחרות אוריגמי','פלונטר','What do you meme על סיטואציות מוקדיות','Name that tune לפי שירים של הצוות','נחש/י את הסרט או השיר לפי אימוג׳ים','השלם/י את הציור','משחק 5 השניות (3 גיבורי על / 3 מקומות בארץ / 3 חרוזים למילה גב)','זה לא X, זה...','תאר/י את החפץ בקופסה הסגורה'];
+const GENERAL_IDEAS = ['הקרנת משחק כדורגל בערב','הקרנת הסרט הזוכה באוסקר','קפה עם שירלי לבוקר טוב','שבוע תחפושות בפורים','ככה עושים את זה – שיחות מצטיינות','אולימפיאדת משרד: מירוץ כיסאות, מגדל כוסות, הקלדה מהירה, התמונה הכי יצירתית','יום שישי הגיע – איך מציינים את סוף השבוע אצלי בבית (מתכונים, שירים, מסורת, תמונה)','Throwback Thursday – כל יום חמישי'];
+
+// גשרים: אירוע פנימי ← תוכן לרשתות (off = ימים אחרי תחילת האירוע)
+const BRIDGES = {
+purim: [
+ { p:'ig', f:'רילס', off:0, t:'נשף פורים במוקדים', g:'שייכות', h:'מי לקח את התחפושת הכי טובה? 🎭',
+   v:'קאטים מהנשף ומשבוע האווירה, כתוביות. רק עובדים שאישרו צילום.',
+   s:`⏱️ 25 שניות | 9:16
+🎣 הוק (0–2 שנ׳): דלת נפתחת לחדר מלא תחפושות | כתובית: מי לקח את התחפושת הכי טובה? 🎭
+🎬 סצנה 1: יום פיג׳מות / יום הפוך משבוע האווירה | כתובית: שבוע של אווירה
+🎬 סצנה 2: מצעד תחפושות בין המוקדים | כתובית: תחרות בין המוקדים 🏆
+🎬 סצנה 3: משלוחי מנות עוברים בין עמדות | כתובית: משלוח מנות לכל אחד ואחת
+🎬 סצנה 4: הכרזת הזוכים, צעקות שמחה | כתובית: והזוכים הם... 🥁
+🏁 סיום: לוגו + פורים שמח מגב מערכות
+🎵 סאונד: טרנד מסיבה`,
+   c:`מי לקח את התחפושת הכי טובה? 🎭
+
+שבוע אווירה, תחרות תחפושות בין המוקדים ומשלוחי מנות לכל העובדים והעובדות – ככה חוגגים פורים בגב מערכות 💙
+
+מי לדעתכם היה צריך לנצח? ספרו בתגובות 👇
+
+${SIGN_IG}
+#פורים #תחפושות #גבמערכות` },
+ { p:'tt', f:'טיקטוק', off:0, t:'מצעד התחפושות', g:'שייכות', h:'מצעד התחפושות של המוקד 🎭',
+   v:'צילום טלפון, מסלול "מסלול דוגמנות" במסדרון.',
+   s:`⏱️ 20 שניות | 9:16
+🎣 הוק (0–1 שנ׳): מסדרון ריק עם "שטיח אדום" מאולתר | טקסט: מצעד התחפושות של המוקד 🎭
+🎬 שוטים 1–6: כל עובד/ת צועד/ת בתחפושת, פוזה למצלמה | טקסט: שם התחפושת
+🏁 סיום: כל הצוות ביחד | טקסט: פורים שמח מגב מערכות!
+🎵 סאונד: טרנד מסלול דוגמנות`,
+   c:`איזו תחפושת הכי אהבתם? 😂🎭
+#פורים #משרד #גבמערכות #fyp` }],
+gooddeeds: [
+ { p:'li', f:'פוסט', off:0, t:'יום המעשים הטובים', g:'מודעות', h:'השנה ביום המעשים הטובים, האנשים שלנו יצאו מהמוקד אל הקהילה.',
+   v:'תמונות אמיתיות מיום ההתנדבות (באישור העמותה והמשתתפים).',
+   c:`השנה ביום המעשים הטובים, האנשים שלנו יצאו מהמוקד אל הקהילה.
+
+[מספר] עובדות ועובדים של גב מערכות התנדבו [איפה / עם איזו עמותה], ו[מה עשו].
+
+אנחנו מדברים הרבה על "יש לכם גב".
+היום זה היה גב לקהילה 💙
+
+תודה לכל מי שהשתתף.
+
+${SIGN_LI}
+#יוםהמעשיםהטובים #התנדבות #גבמערכות`,
+   en:`This Good Deeds Day, our people stepped out of the service center and into the community.
+
+[Number] GAV SYSTEMS employees volunteered with [organization], [what they did].
+
+We talk a lot about "we've got your back". Today, it was the community's back.
+
+GAV SYSTEMS
+#GoodDeedsDay #Volunteering #GAVSYSTEMS` },
+ { p:'fb', f:'פוסט', off:0, t:'מתנדבים ביום המעשים הטובים', g:'שייכות', h:'יום המעשים הטובים בגב מערכות 💙', v:'אלבום תמונות מיום ההתנדבות.',
+   c:`יום המעשים הטובים בגב מערכות 💙
+
+היום יצאנו להתנדב [איפה / עם איזו עמותה] – והחזרנו קצת מהגב שאנחנו מקבלים כל יום.
+תודה לכל העובדות והעובדים שלקחו חלק 🙏
+
+מצאתם את עצמכם בתמונות? תייגו 👇
+
+${SIGN_FB}` },
+ { p:'ig', f:'סטורי', off:0, t:'מתנדבים היום', g:'שייכות', h:'היום אנחנו מתנדבים 💙', v:'תמונה אמיתית מההתנדבות.',
+   c:`טקסט על המסך: היום, יום המעשים הטובים, אנחנו מתנדבים 💙
+שורה שנייה: [איפה / עם איזו עמותה]
+סטיקר: GIF של לב` }],
+summer: [
+ { p:'ig', f:'רילס', off:14, t:'אירוע הקיץ שלנו', g:'שייכות', h:'ככה נראה קיץ בגב מערכות ☀️',
+   v:'קאטים מאירוע הקיץ – לפרסם אחרי האירוע ולעדכן את התאריך בגאנט.',
+   s:`⏱️ 25 שניות | 9:16
+🎣 הוק (0–2 שנ׳): שוט רחב של המקום / הבריכה / השקיעה | כתובית: ככה נראה קיץ בגב מערכות ☀️
+🎬 סצנות 1–4: הגעה, צחוקים, פעילות מרכזית, ריקודים
+🏁 סיום: תמונה קבוצתית + לוגו | כתובית: יש לכם גב. גם בקיץ 💙
+🎵 סאונד: להיט קיץ טרנדי`,
+   c:`ככה נראה קיץ בגב מערכות ☀️💙
+
+[משפט על האירוע: איפה, מה עשינו]
+תודה לכל מי שהגיע ולצוות שהפיק את הערב המושלם הזה 🙏
+
+${SIGN_IG}
+#אירועקיץ #גבמערכות` },
+ { p:'fb', f:'פוסט', off:14, t:'אלבום אירוע הקיץ', g:'שייכות', h:'איזה ערב! ☀️', v:'אלבום תמונות מהאירוע.',
+   c:`איזה ערב! ☀️💙
+
+אירוע הקיץ של גב מערכות היה [משפט על האירוע].
+תודה לכל העובדות והעובדים שהגיעו, ולכל מי שעבד מאחורי הקלעים 🙏
+
+מצאתם את עצמכם בתמונות? תייגו 👇
+
+${SIGN_FB}` }],
+birthday: [
+ { p:'ig', f:'סטורי', off:2, t:'ילידי החודש', g:'שייכות', h:'מזל טוב לילידי החודש! 🎂',
+   v:'תמונה מהמפגש בחדר הישיבות – עוגה ונרות.',
+   c:`טקסט על המסך: מזל טוב לילידי ולילידות החודש! 🎂
+שורה שנייה: עוגה ✔️ נרות ✔️ צוות ✔️
+סטיקר: אזכור לחוגגים (באישורם) + GIF בלונים` }],
+book: [
+ { p:'ig', f:'סטורי', off:0, t:'הספר הכי טוב שקראתם?', g:'שייכות', h:'יום הספר הבינלאומי 📚',
+   v:'תמונה של מדף ספריית ההחלפות במשרד.',
+   c:`טקסט על המסך: יום הספר הבינלאומי 📚
+שורה שנייה: מה הספר הכי טוב שקראתם?
+סטיקר: תיבת שאלות – "הספר שלי:"
+סטורי המשך: ההמלצות של העובדים + תמונה של ספריית ההחלפות במשרד` }],
+chocolate: [
+ { p:'tt', f:'טיקטוק', off:0, t:'הפתעת שוקולד בעמדות', g:'שייכות', h:'POV: הגעת לעמדה ומחכה לך שוקולד 🍫',
+   v:'צילום טלפון אותנטי, קלוז-אפ על הפתק.',
+   s:`⏱️ 12 שניות | 9:16
+🎣 הוק (0–1 שנ׳): עובד/ת מתיישב/ת ומגלה שוקולד עם פתק | טקסט: POV: הגעת לעמדה ומחכה לך שוקולד 🍫
+🎬 שוט 1: קלוז-אפ על הפתק | טקסט: יום שוקולד שמח 💙
+🎬 שוט 2: חיוך גדול, ביס | טקסט: 🤤
+🏁 סיום: טקסט: יש לכם גב. ושוקולד.
+🎵 סאונד: טרנד מתוק`,
+   c:`הדברים הקטנים 🍫💙
+#יוםהשוקולד #משרד #גבמערכות #fyp` }],
+creativity: [
+ { p:'li', f:'פוסט', off:1, t:'תחרות החדשנות בין המוקדים', g:'מודעות', h:'הרעיונות הכי טובים לשיפור העבודה מגיעים מהאנשים שעושים אותה.',
+   v:'תמונה של הצוות הזוכה עם הרעיון שלו על לוח מחיק.',
+   c:`הרעיונות הכי טובים לשיפור העבודה מגיעים מהאנשים שעושים אותה.
+
+לכבוד יום היצירתיות והחדשנות העולמי קיימנו תחרות בין המוקדים: כל צוות הציע רעיון אחד לשיפור או ייעול של יום העבודה.
+
+הרעיון הזוכה: [תיאור קצר של הרעיון והצוות]
+
+כי חדשנות לא מתחילה רק בטכנולוגיה. היא מתחילה באנשים.
+
+${SIGN_LI}
+#חדשנות #יצירתיות #גבמערכות`,
+   en:`The best ideas for improving the work come from the people doing it.
+
+For World Creativity and Innovation Day, our service centers competed: each team proposed one idea to improve their workday. The winner: [short description].
+
+Innovation doesn't start with technology. It starts with people.
+
+GAV SYSTEMS | We've got your back
+#Innovation #GAVSYSTEMS` }],
+earth: [
+ { p:'ig', f:'סטורי', off:0, t:'יום כדור הארץ', g:'מודעות', h:'יום כדור הארץ 🌍',
+   v:'רקע בהיר, כדור ארץ בגרדיאנט.',
+   c:`טקסט על המסך: יום כדור הארץ 🌍
+שורה שנייה: היום אצלנו – יום בלי פלסטיק ואתגר מיחזור בין המוקדים ♻️
+סטיקר: סקר – "כבר בלי פלסטיק 💚" / "מתחילים היום"` }],
+pink: [
+ { p:'ig', f:'סטורי', off:2, t:'הפינה הוורודה', g:'שייכות', h:'הפינה הוורודה שלנו 🎗️',
+   v:'תמונה של הפינה הוורודה במוקד ושומר המסך המעוצב.',
+   c:`טקסט על המסך: הפינה הוורודה שלנו 🎗️
+שורה שנייה: אוקטובר – חודש המודעות לסרטן השד. תזכורת לקבוע בדיקה 💗` }],
+happyhour: [
+ { p:'ig', f:'סטורי', off:4, t:'מפגש החברה', g:'שייכות', h:'מפגש החברה של הרבעון 🎉',
+   v:'בומרנג מהמפגש.',
+   c:`טקסט על המסך: מפגש החברה של הרבעון 🎉
+שורה שנייה: [מה עשינו] – תודה לכל מי שהגיע 💙
+סטיקר: סליידר 🔥` }]
+};
+const BRIDGE_BY_HOLIDAY = { 'פורים':'purim' };
+
+/* ===== עזרים ===== */
+const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const MONTHS = ['בינואר','בפברואר','במרץ','באפריל','במאי','ביוני','ביולי','באוגוסט','בספטמבר','באוקטובר','בנובמבר','בדצמבר'];
+const FORMATS = ['סטורי','פוסט','קרוסלה','רילס','טיקטוק'];
+const STATUS = ['רעיון','בעבודה','פורסם'];
+const ICONS = {
+  'סטורי':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5" stroke-dasharray="4 2.2"/></svg>',
+  'פוסט':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4.5" y="4.5" width="15" height="15" rx="2.5"/></svg>',
+  'קרוסלה':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3.5" y="6" width="12" height="12" rx="2"/><path d="M18.5 7.5v9M21 9v6"/></svg>',
+  'רילס':'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
+  'טיקטוק':'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>'
+};
+const fmtKey = f => f.startsWith('קרוסלה') ? 'קרוסלה' : f;
+const isVideo = f => /רילס|טיקטוק/.test(f);
+const pad = n => String(n).padStart(2,'0');
+const iso = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parseIso = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const sundayOf = d => { const x = new Date(d.getFullYear(),d.getMonth(),d.getDate()); x.setDate(x.getDate()-x.getDay()); return x; };
+const mod = (a,n) => ((a % n) + n) % n;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ANCHOR = new Date(2026,0,4);
+const weekIndex = sun => Math.round((sun - ANCHOR) / 864e5 / 7);
+const dateLabel = d => d.getDate()+' '+MONTHS[d.getMonth()];
+
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove('on'), 2200); }
+async function copyText(txt){
+  try { await navigator.clipboard.writeText(txt); toast('הועתק'); }
+  catch(e){ const ta = document.createElement('textarea'); ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); toast('הועתק'); }catch(_){ toast('ההעתקה נחסמה בדפדפן'); } ta.remove(); }
+}
+
+/* ===== מלל למועדים כלליים ===== */
+const GREET = [
+  // [שם, ברכה, מועד מרכזי, כותרת עם משחק מילים, איחול, איחול באנגלית]
+  ['ערב ראש השנה','שנה טובה ומתוקה 🍎🍯',true,'שנה חדשה. אותו גב.','שנה טובה, מתוקה ומלאה בהצלחות','a happy and sweet New Year – Shana Tova'],
+  ['ראש השנה','שנה טובה ומתוקה 🍎🍯',false,'שנה חדשה. אותו גב.','שנה טובה ומתוקה',''],
+  ['ערב סוכות','חג סוכות שמח 🌿',true,'בסוכה, כמו בעבודה – הכול נבנה על חיבורים חזקים.','חג סוכות שמח, מלא ברגעים טובים עם המשפחה','a joyful Sukkot'],
+  ['סוכות','חג סוכות שמח 🌿',false,'חג סוכות שמח','חג סוכות שמח',''],
+  ['שמחת תורה','חג שמח',false,'חג שמח','חג שמח',''],
+  ['חג הסיגד','חג סיגד שמח',false,'חג סיגד שמח','חג סיגד שמח',''],
+  ['ט״ו בשבט','ט״ו בשבט שמח 🌳',false,'צומחים יחד 🌳','ט״ו בשבט שמח',''],
+  ['יום המשפחה','יום המשפחה שמח 👨‍👩‍👧',false,'המשפחה שמאחורי כל עובד ועובדת 💙','יום משפחה שמח',''],
+  ['פורים','פורים שמח! 🎭',false,'מתחפשים? הגב נשאר אותו גב 🎭','פורים שמח',''],
+  ['ערב פסח','חג פסח שמח וכשר 🍷',true,'חג של חירות. ושל גב חזק לדרך.','חג פסח שמח וכשר','a happy and kosher Passover'],
+  ['שביעי של פסח','חג שמח 💙',false,'חג שמח','חג שמח',''],
+  ['יום העצמאות','חג עצמאות שמח 🇮🇱',true,'גאים להיות חלק מהסיפור הישראלי 🇮🇱','חג עצמאות שמח','a happy Independence Day'],
+  ['ל״ג בעומר','ל״ג בעומר שמח 🔥',false,'מדליקים אנרגיות 🔥','ל״ג בעומר שמח',''],
+  ['יום ירושלים','יום ירושלים',false,'יום ירושלים','יום ירושלים',''],
+  ['ערב שבועות','חג שבועות שמח 🧀🌾',true,'קוצרים את מה שזרענו כל השנה 🌾','חג שבועות שמח','a happy Shavuot'],
+  ['ט״ו באב','ט״ו באב – חג האהבה 💜',false,'יש אהבות שמתחילות בעבודה... אהבה לעבודה 😉💜','ט״ו באב שמח','']
+];
+const NO_FUN = ['שמחת תורה','יום ירושלים'];
+const SOLEMN = {
+  'יום הזיכרון לשואה ולגבורה': { h:'זוכרים. לא שוכחים.', body:'ביום הזיכרון לשואה ולגבורה אנו מתייחדים עם זכר ששת המיליונים, ומרכינים ראש לזכר הנספים.\n\nזוכרים. לא שוכחים.', en:'On Holocaust Remembrance Day we stand together in memory of the six million.\n\nWe remember. We will never forget.' },
+  'יום הזיכרון לחללי מערכות ישראל ונפגעי פעולות האיבה': { h:'זוכרים את הנופלים.', body:'ביום הזיכרון לחללי מערכות ישראל ונפגעי פעולות האיבה אנו מרכינים ראש לזכר הנופלים, ומחבקים את המשפחות השכולות.\n\nיהי זכרם ברוך.', en:'On Israel\u2019s Memorial Day we bow our heads in memory of the fallen soldiers and victims of terror, and embrace the bereaved families.\n\nMay their memory be a blessing.' },
+  'יום הזיכרון לאירועי 7 באוקטובר': { h:'זוכרים.', body:'ביום הזה אנו זוכרים את הנרצחים והנופלים, מחבקים את המשפחות ונושאים תפילה לבריאות הפצועים.\n\nיהי זכרם ברוך.', en:'Today we remember those murdered and fallen, embrace their families, and pray for the recovery of the wounded.\n\nMay their memory be a blessing.' }
+};
+const SOLEMN_SILENT = ['יום כיפור','תשעה באב'];
+
+// מועדים טכנולוגיים ואזרחיים עם מלל ייעודי
+const EXTRA_IDEAS = [
+{ m:'יום הגנת המידע', items:{
+li:[['פוסט',{ t:'יום הגנת המידע', g:'לידים', h:'שירות טוב מתחיל באמון. ואמון מתחיל בהגנה על המידע.', v:'רקע כהה, מגן זוהר בגרדיאנט.',
+c:'שירות טוב מתחיל באמון.\nואמון מתחיל בהגנה על המידע.\n\nביום הגנת המידע הבינלאומי אנחנו מזכירים שכל צוות שמטפל בלקוחות שלכם נחשף למידע רגיש – ולכן אבטחת מידע היא חלק מהשירות עצמו, לא תוספת.\n\nבגב מערכות אנחנו עובדים לפי תקני אבטחת מידע מחמירים ובינלאומיים, ומספקים לצד השירותים המנוהלים גם שירותי סייבר ואבטחת מידע.\n\n'+SIGN_LI+'\n#DataPrivacyDay #אבטחתמידע #סייבר #גבמערכות',
+en:'Great service starts with trust.\nAnd trust starts with protecting data.\n\nEvery team serving your customers is exposed to sensitive information – so security is part of the service, not an add-on. GAV SYSTEMS works to strict international information-security standards and provides cyber and security services alongside its managed services.\n\nGAV SYSTEMS | We\u2019ve got your back\n#DataPrivacyDay #CyberSecurity #GAVSYSTEMS' }]],
+ig:[['סטורי',{ t:'יום הגנת המידע', g:'מודעות', h:'מתי החלפתם סיסמה בפעם האחרונה? 🔐', v:'מנעול זוהר על רקע כהה.',
+c:'טקסט על המסך: מתי החלפתם סיסמה בפעם האחרונה? 🔐\nסטיקר: סקר – "השבוע 💪" / "אממ... 😅"\nסטורי המשך: היום יום הגנת המידע – זה הזמן 😉💙' }]] }},
+{ m:'נשים ונערות במדע', items:{
+li:[['פוסט',{ t:'נשים ונערות במדע', g:'גיוס', h:'מפתחות, בודקות, מנהלות פרויקטים, אנשיות תשתיות. העתיד הטכנולוגי צריך את כולן.', v:'פורטרטים של עובדות מהתחומים הטכנולוגיים (באישור).',
+c:'מפתחות, בודקות תוכנה, מנהלות פרויקטים ומומחיות BI.\nהעתיד הטכנולוגי צריך את כולן.\n\nביום הבינלאומי לנשים ונערות במדע אנחנו גאים בנשים שמובילות בגב מערכות פרויקטים טכנולוגיים בארגונים מובילים – ומזמינים עוד נשים להצטרף.\n\nמכירות מישהי שמחפשת את התפקיד הטכנולוגי הבא? תייגו.\n\n'+SIGN_LI+'\n#WomenInScience #נשיםבהייטק #גבמערכות',
+en:'Developers, QA engineers, project managers and BI experts.\nThe tech future needs all of them.\n\nOn the International Day of Women and Girls in Science, we\u2019re proud of the women leading technology projects at GAV SYSTEMS – and we invite more to join.\n\nGAV SYSTEMS | We\u2019ve got your back\n#WomenInScience #WomenInTech #GAVSYSTEMS' }]],
+ig:[['סטורי',{ t:'נשים במדע', g:'שייכות', h:'היום חוגגים את הנשים שבונות את הטכנולוגיה 💜', v:'קולאז׳ עובדות.',
+c:'טקסט על המסך: היום חוגגים את הנשים שבונות את הטכנולוגיה 💜\nשורה שנייה: היום הבינלאומי לנשים ונערות במדע\nסטיקר: אזכור לעובדות (באישורן)' }]] }},
+{ m:'הערכת הבינה המלאכותית', items:{
+li:[['פוסט',{ t:'יום הערכת ה-AI', g:'לידים', h:'יום הערכת הבינה המלאכותית. והערכה גם לאנשים שמאמנים אותה.', v:'רקע כהה, רשת נוירונים זוהרת.',
+c:'היום מציינים את יום הערכת הבינה המלאכותית.\nאנחנו מציינים גם את האנשים שמאמנים אותה.\n\nבמוקדים, AI עובד טוב רק כשמאמנים אותו נכון: מנתחים תהליכים, מכירים את הפלטפורמות ולומדים מהנציגים המנוסים. זו מומחיות בפני עצמה – ובגב מערכות היא חלק מהשירות הדיגיטלי שלנו.\n\n'+SIGN_LI+'\n#AI #AIAppreciationDay #שירותדיגיטלי #גבמערכות',
+en:'Today is AI Appreciation Day.\nWe\u2019re also appreciating the people who train it.\n\nIn service centers, AI only works when it\u2019s trained right – process analysis, platform knowledge and learning from experienced agents. That\u2019s a discipline of its own, and part of our digital service at GAV SYSTEMS.\n\nGAV SYSTEMS | We\u2019ve got your back\n#AI #GAVSYSTEMS' }]],
+ig:[['סטורי',{ t:'AI ואנחנו', g:'מודעות', h:'AI לא מחליף אותנו. הוא נותן לנו גב 🤖💙', v:'רקע כהה, אייקון AI זוהר.',
+c:'טקסט על המסך: AI לא מחליף אותנו. הוא נותן לנו גב 🤖💙\nסטיקר: סקר – "משתמש/ת כל יום" / "עוד לא ניסיתי"' }]] }},
+{ m:'חודש המודעות לסייבר', items:{
+li:[['פוסט',{ t:'חודש המודעות לסייבר', g:'לידים', h:'אבטחת מידע היא לא מחלקה. היא הרגל של כל עובד.', v:'רקע כהה, מגן זוהר.',
+c:'אבטחת מידע היא לא מחלקה.\nהיא הרגל של כל עובד ועובדת.\n\nבחודש המודעות לסייבר אנחנו מזכירים שגם הצוותים שנותנים שירות, תמיכה ופיתוח הם קו ההגנה הראשון. לכן בגב מערכות אנחנו עובדים לפי תקני אבטחת מידע מחמירים ובינלאומיים – ומשלבים שירותי סייבר ואבטחת מידע לצד השירותים המנוהלים.\n\n'+SIGN_LI+'\n#CyberSecurityAwarenessMonth #סייבר #אבטחתמידע #גבמערכות',
+en:'Security isn\u2019t a department.\nIt\u2019s every employee\u2019s habit.\n\nThis Cybersecurity Awareness Month we\u2019re reminding everyone that service, support and development teams are the first line of defense. GAV SYSTEMS works to strict international standards and offers cyber and information-security services alongside its managed services.\n\nGAV SYSTEMS | We\u2019ve got your back\n#Cybersecurity #GAVSYSTEMS' }]],
+ig:[['סטורי',{ t:'אוקטובר: מודעות לסרטן השד', g:'שייכות', h:'אוקטובר – חודש המודעות לסרטן השד 🎗️', v:'רקע כהה, סרט ורוד זוהר (בהמשך לפוסט של השנה שעברה).',
+c:'טקסט על המסך: אוקטובר – חודש המודעות לסרטן השד 🎗️\nשורה שנייה: תזכורת קטנה, משמעות גדולה – קבעו בדיקה 💗\nסטיקר: קישור לעמוד מידע של עמותה מוכרת [לבחור]' }]] }},
+{ m:'אנשים עם מוגבלות', items:{
+ig:[['סטורי',{ t:'היום הבינלאומי לאנשים עם מוגבלות', g:'שייכות', h:'לכל אחד ואחת יש מה לתרום 💙', v:'רקע בהיר, איור קווי של אנשים מגוונים.',
+c:'טקסט על המסך: היום הבינלאומי לאנשים עם מוגבלות\nשורה שנייה: לכל אחד ואחת יש מה לתרום 💙' }]],
+fb:[['פוסט',{ t:'לכל אחד ואחת יש מה לתרום', g:'שייכות', h:'היום הבינלאומי לאנשים עם מוגבלות 💙', v:'איור קווי של אנשים מגוונים בצבעי המותג.',
+c:'היום מציינים את היום הבינלאומי לאנשים עם מוגבלות 💙\n\nאנחנו מאמינים שלכל אחד ואחת יש מה לתרום, ושמקום עבודה טוב הוא מקום שבו כל אחד מקבל הזדמנות להצליח.\n\n'+SIGN_FB }]] }},
+{ m:'סוף שנת הלימודים', items:{
+fb:[['פוסט',{ t:'מסיימי י״ב – עבודה ראשונה', g:'גיוס', h:'מזל טוב למסיימי ומסיימות י״ב! 🎓', v:'כובעי סיום באוויר + צוות צעיר במוקד.',
+c:'מזל טוב לכל מסיימי ומסיימות י״ב! 🎓💙\n\nמחפשים עבודה לפני הצבא או אחריו? בגב מערכות יש עבודה ראשונה עם הכשרה מלאה, צוות שמלווה ואפשרויות קידום.\n\nהורים – שתפו עם הבוגרים במשפחה 😉\n👇 '+JOBS+'\n\n'+SIGN_FB }]],
+ig:[['סטורי',{ t:'מסיימים י״ב?', g:'גיוס', h:'מסיימים י״ב? 🎓', v:'רקע בהיר בגרדיאנט, כובע סיום זוהר.',
+c:'טקסט על המסך: מסיימים י״ב? 🎓\nשורה שנייה: העבודה הראשונה שלכם מחכה – עם גב 💙\nסטיקר: קישור – '+JOBS }]] }},
+{ m:'פתיחת שנת הלימודים', items:{
+ig:[['סטורי',{ t:'שנה טובה לתלמידים', g:'שייכות', h:'בהצלחה לכל הילדים של העובדים שלנו! 🎒', v:'ילקוט זוהר על רקע בהיר.',
+c:'טקסט על המסך: בהצלחה לכל הילדים של העובדות והעובדים שלנו! 🎒\nשורה שנייה: שנת לימודים מוצלחת 💙\nסטיקר: תיבת שאלות – "לאיזו כיתה עולים אצלכם?"' }]],
+fb:[['פוסט',{ t:'שנת לימודים מוצלחת', g:'שייכות', h:'שנת לימודים מוצלחת! 🎒', v:'תמונות של ילדי עובדים ביום הראשון (באישור ההורים).',
+c:'שנת לימודים מוצלחת לכל הילדים של העובדות והעובדים שלנו! 🎒💙\n\nשתפו בתגובות תמונה מהבוקר הראשון – אנחנו מתים לראות 👇\n\n'+SIGN_FB }]] }},
+{ m:'השנה האזרחית', items:{
+ig:[['סטורי',{ t:'שנה אזרחית חדשה', g:'שייכות', h:'שנה חדשה. אותו גב. 🥂', v:'רקע כהה, המספר של השנה בגרדיאנט.',
+c:'טקסט על המסך: שנה חדשה. אותו גב. 🥂\nשורה שנייה: מאחלים לכם שנה של צמיחה, הצלחות ואנשים טובים 💙' }]] }}
+];
+
+/* ===== מנוע השבוע ===== */
+function eventsOverlapping(sun){
+  const sat = addDays(sun,6), res = [];
+  for (const e of EVENTS){
+    const ide = EVENT_IDEAS.find(x => e.n.includes(x.m)) || EXTRA_IDEAS.find(x => e.n.includes(x.m));
+    const len = (ide && ide.len) || 1;
+    const start = parseIso(e.d), end = addDays(start, len-1);
+    if (end < sun || start > sat) continue;
+    res.push({ ...e, ide, len, start, end,
+      s: Math.max(0, Math.round((start-sun)/864e5)),
+      t: Math.min(6, Math.round((end-sun)/864e5)),
+      inWeek: start >= sun && start <= sat,
+      day: Math.round((start-sun)/864e5) });
+  }
+  return res;
+}
+
+function slotSkeleton(sun){
+  const w = weekIndex(sun), focus = DOMAIN_ORDER[mod(w,9)], D = DOMAIN_IDEAS[focus];
+  const pick = (arr,k,off) => arr[mod(w*k+off, arr.length)];
+  const S = (day,p,f,dom,ser,idea) => ({ day, p, f, dom, ser, ...idea });
+  // 2 פריטים בשבוע לכל רשת. הפריט השני מתחלף בין שבוע זוגי לאי-זוגי
+  const odd = mod(w,2) === 1, half = Math.floor(w/2);
+  const pick2 = (arr,off) => arr[mod(half+off, arr.length)];
+  return { focus, slots: [
+    S(1,'ig',DOMAIN_FMT[focus],focus,'תחום השבוע', D.ig),
+    odd ? S(3,'ig','קרוסלה','brand','טיפים ומספרים', pick2(SERIES.igCarousel,3)) : S(3,'ig','רילס','brand','רילס אנשים ותרבות', pick2(SERIES.igReel,2)),
+    S(2,'tt','טיקטוק',focus,'תחום השבוע', D.tt),
+    S(4,'tt','טיקטוק','brand','סדרת טיקטוק', pick(SERIES.ttSeries,5,4)),
+    S(0,'li','פוסט',focus,'תחום השבוע', D.li),
+    odd ? S(3,'li','פוסט','brand','מותג וגיוס טכנולוגי', pick2(SERIES.liThu,0)) : S(3,'li','קרוסלה (PDF)',focus,'תחום השבוע', D.lic),
+    S(0,'fb','פוסט','hr','משרות', pick(SERIES.fbJobs,1,0)),
+    odd ? S(3,'fb','פוסט','brand','קהילה', pick2(SERIES.fbCommunity,4)) : S(3,'fb','פוסט',focus,'תחום השבוע', D.fb)
+  ]};
+}
+
+function eventItems(sun, evs){
+  const out = [], solemnDays = new Set(), storyDays = { ig:new Set() };
+  for (const e of evs){
+    if (!e.inWeek) continue;
+    const day = e.day, base = { day, dom:'brand', ser:'מועד: '+e.n, ev:e.k, evName:e.n, evNote:e.x };
+    if (e.k === 'solemn'){
+      solemnDays.add(day);
+      if (SOLEMN_SILENT.includes(e.n)) continue;
+      if (e.n === 'ערב יום כיפור'){
+        out.push({ ...base, p:'ig', f:'סטורי', t:'גמר חתימה טובה', h:'גמר חתימה טובה 🙏', v:'רקע כהה ושקט, טקסט לבן.', g:'שייכות', c:'טקסט על המסך: גמר חתימה טובה 🙏\nשורה שנייה: מכל הצוותים של גב מערכות' });
+        out.push({ ...base, p:'fb', f:'פוסט', t:'גמר חתימה טובה', h:'גמר חתימה טובה 🙏', v:'רקע כהה ושקט.', g:'שייכות', c:'גמר חתימה טובה 🙏\n\nמאחלים לכל העובדות והעובדים, ללקוחות ולמשפחות – צום קל ושנה של בריאות, שקט וטוב.\n\n'+SIGN_FB });
+        storyDays.ig.add(day); continue;
+      }
+      const S = SOLEMN[e.n] || { h:e.n+'.', body:e.n+'.\n\nזוכרים.', en:'We remember.' };
+      const v = 'רקע כהה ושקט, נר זיכרון. בלי גרדיאנט צבעוני, בלי אימוג׳ים ובלי קריאה לפעולה.';
+      out.push({ ...base, p:'ig', f:'פוסט', t:e.n, h:S.h, v, g:'שייכות', c:S.body+'\n\nגב מערכות | GAV SYSTEMS' });
+      out.push({ ...base, p:'ig', f:'סטורי', t:e.n, h:S.h, v, g:'שייכות', c:'טקסט על המסך: '+e.n+'\nשורה שנייה: '+S.h+'\n(בלי סטיקרים ובלי מוזיקה)' });
+      out.push({ ...base, p:'fb', f:'פוסט', t:e.n, h:S.h, v, g:'שייכות', c:S.body+'\n\n'+SIGN_FB });
+      out.push({ ...base, p:'li', f:'פוסט', t:e.n, h:S.h, v, g:'שייכות', c:S.body+'\n\nגב מערכות | GAV SYSTEMS', en:S.en+'\n\nGAV SYSTEMS' });
+      storyDays.ig.add(day); continue;
+    }
+    if (e.ide){
+      for (const p of Object.keys(e.ide.items)) for (const [f, idea] of e.ide.items[p]){
+        out.push({ ...base, p, f, ...idea }); if (f==='סטורי' && storyDays[p]) storyDays[p].add(day);
+      }
+      continue;
+    }
+    if (e.k === 'holiday'){
+      const G = GREET.find(g => e.n === g[0]) || [e.n, e.n+' שמח 💙', false, e.n+' שמח', e.n+' שמח', ''];
+      const [, gr, major, head, wish, enWish] = G, fun = !NO_FUN.includes(e.n);
+      const plain = gr.replace(/[^\u0590-\u05FF\s״׳–-]/g,'').trim();
+      out.push({ ...base, p:'ig', f:'סטורי', t:'ברכה: '+e.n, h:gr, g:'שייכות', v:'רקע כהה, אובייקט סמלי של החג זוהר בגרדיאנט, לוגו בפינה.',
+        c:'טקסט על המסך: '+gr+'\nשורה שנייה: מכל הצוותים של גב מערכות 💙' });
+      storyDays.ig.add(day);
+      if (major){
+        out.push({ ...base, p:'ig', f:'פוסט', t:e.n, h:head, g:'מודעות', v:'רקע כהה עם גלי ניאון, אובייקט סמלי של החג זוהר, הכותרת למעלה ו"'+plain+'" בכתב יד בצד – כמו בעיצוב של סוכות.',
+          c:head+'\n\nמכל המומחים והמומחיות, הנציגות והנציגים והצוותים של גב מערכות – מאחלים לכם ולמשפחות שלכם '+wish+' 💙\n\nבחג הזה, כמו בכל יום – יש לכם גב.\n\n'+SIGN_IG+'\n#חגשמח #גבמערכות' });
+        out.push({ ...base, p:'li', f:'פוסט', t:'ברכה: '+e.n, h:head, g:'מודעות', v:'אותו עיצוב כמו באינסטגרם, ביחס 1:1.',
+          c:head+'\n\nמכל הצוותים של גב מערכות – '+wish+'.\nתודה ללקוחות, לשותפים ולעובדים על הדרך המשותפת.\n\n'+SIGN_LI+'\n#חגשמח #גבמערכות #GAVSYSTEMS',
+          en:'Wishing you '+enWish+' from all of us at GAV SYSTEMS.\nThank you to our clients, partners and people for the journey together.\n\nGAV SYSTEMS | We\u2019ve got your back' });
+      }
+      out.push({ ...base, p:'fb', f:'פוסט', t:'ברכה: '+e.n, h:gr, g:'שייכות', v:'תמונה אמיתית מהמשרד או מאירוע החג.',
+        c:gr+'\n\nמאחלים לכל העובדות והעובדים, ללקוחות ולמשפחות – '+wish+' 🙏\n'+(fun?'ספרו לנו בתגובות: איך אתם חוגגים? 👇\n':'')+'\n'+SIGN_FB });
+      if (fun) out.push({ ...base, p:'tt', f:'טיקטוק', t:e.n.replace(/^ערב /,'')+' במשרד', h:'ככה חוגגים '+e.n.replace(/^ערב /,'')+' אצלנו', g:'שייכות', v:'צילום טלפון, סאונד טרנדי.',
+        s:'⏱️ 15 שניות | 9:16\n🎣 הוק (0–1 שנ׳): קישוט או סמל של החג על שולחן במשרד | טקסט: ככה חוגגים '+e.n.replace(/^ערב /,'')+' אצלנו\n👤 מי מצטלם/ת: צוות מהמשרד\n🎬 שוט 1: הכנות / קישוטים / כיבוד\n🎬 שוט 2: הצוות ביחד, צחוקים\n🎬 שוט 3: כולם מרימים כוס או מנופפים | טקסט: '+gr+'\n🏁 סיום: לוגו | טקסט: יש לכם גב.\n🎵 סאונד: טרנד שמח',
+        c:gr+'\n#חג #משרד #גבמערכות #fyp' });
+      continue;
+    }
+    if (e.k === 'tech'){
+      out.push({ ...base, p:'li', f:'פוסט', t:e.n, h:'[משפט פתיחה שמחבר את '+e.n+' לעולם של גב מערכות]', g:'מודעות', v:'רקע כהה, אייקון זוהר של הנושא.',
+        c:'[משפט פתיחה שמחבר את '+e.n+' לעולם של גב מערכות]\n\n'+e.n+' הוא הזדמנות להזכיר [תובנה אחת מהשטח].\n\n'+SIGN_LI, en:'[English version]' });
+      out.push({ ...base, p:'ig', f:'סטורי', t:e.n, h:'היום מציינים: '+e.n, g:'מודעות', v:'רקע בהיר בצבעי המותג.', c:'טקסט על המסך: היום מציינים: '+e.n+'\nשורה שנייה: [עובדה או טיפ אחד] 💙' });
+      storyDays.ig.add(day); continue;
+    }
+    out.push({ ...base, p:'ig', f:'סטורי', t:e.n, h:e.n+' 💙', g:'שייכות', v:'רקע בהיר בצבעי המותג.', c:'טקסט על המסך: '+e.n+' 💙\nשורה שנייה: [משפט שמחבר את המועד לאנשים של גב מערכות]' });
+    out.push({ ...base, p:'fb', f:'פוסט', t:e.n, h:e.n+' 💙', g:'שייכות', v:'תמונה אמיתית.', c:e.n+' 💙\n\n[2–3 משפטים חמים]\n\n'+SIGN_FB });
+    storyDays.ig.add(day);
+  }
+  return { out, solemnDays, storyDays };
+}
+
+function buildWeek(sun, aiSlots){
+  const evs = eventsOverlapping(sun);
+  const { focus, slots } = slotSkeleton(sun);
+  const { out, solemnDays, storyDays } = eventItems(sun, evs);
+  let base = (aiSlots || slots).map(s => ({ ...s }));
+  base = base.filter(s => !solemnDays.has(s.day));
+  base = base.filter(s => !(s.p==='ig' && s.f==='סטורי' && storyDays.ig.has(s.day)));
+  const br = bridgeItems(sun, solemnDays);
+  // תקרה של 2 פריטים לרשת: ימי זיכרון קודמים, אחריהם חגים ומועדים, אחריהם אירועים פנימיים, ואז התוכן הקבוע
+  const rank = it => it.ev === 'solemn' ? 0 : it.ev === 'holiday' ? 1 : it.ev ? 2 : it.br ? (/יום הולדת|Happy Hour/.test(it.ser) ? 5 : 3) : 4;
+  const fmtRank = it => it.f === 'סטורי' ? 1 : 0;
+  const items = [];
+  for (const p of Object.keys(PLATFORMS)){
+    const cand = [...base, ...out, ...br].filter(i => i.p === p).sort((a,b) => rank(a)-rank(b) || fmtRank(a)-fmtRank(b) || a.day-b.day);
+    items.push(...cand.slice(0, 2).sort((a,b) => a.day-b.day));
+  }
+  const src = aiSlots ? 'ai' : 'base';
+  items.forEach((it,i) => { if (it.br){ it.id = 'br-'+it.p+'-'+it.day+'-'+slug(it.t); return; } it.id = (it.ev ? 'ev' : src) + '-' + it.p + '-' + it.day + '-' + (it.ev ? i : slots.findIndex(s=>s.day===it.day&&s.p===it.p&&s.f===it.f)); });
+  return { key: iso(sun), sun, focus, evs, items, solemnDays };
+}
+
+/* ===== מצב ===== */
+const state = {
+  sun: sundayOf(new Date()),
+  platforms: new Set(Object.keys(PLATFORMS)),
+  formats: new Set(FORMATS),
+  view: 'titles', mode: 'week', scope: 'all', owner: '', pri: '', year: new Date().getFullYear(), istatus: {}, src: 'base', ai: {}, status: {}, db: null, sample: null, downloads: null, week: null, open: null
+};
+
+/* ===== רינדור ===== */
+function renderHead(){
+  const sun = state.sun, sat = addDays(sun,6);
+  const same = sun.getMonth() === sat.getMonth();
+  document.getElementById('weekTitle').textContent = same
+    ? sun.getDate()+'–'+sat.getDate()+' '+MONTHS[sun.getMonth()]+' '+sun.getFullYear()
+    : dateLabel(sun)+' – '+dateLabel(sat)+' '+sat.getFullYear();
+  const w = state.week, cur = sundayOf(new Date()).getTime() === sun.getTime();
+  document.getElementById('weekSub').innerHTML = (cur ? 'השבוע הנוכחי · ' : '') + 'תחום השבוע: <strong>'+esc(DOMAINS[w.focus].name)+'</strong> · '+w.items.length+' פריטים, כולם עם מלל מוכן';
+  document.getElementById('thisW').disabled = cur;
+}
+const visibleItems = () => state.week.items.filter(it => state.platforms.has(it.p) && state.formats.has(fmtKey(it.f)));
+
+function cardHtml(it, showP){
+  const pc = 'var(--p-'+it.p+')', st = state.status[state.week.key]?.[it.id] || 0;
+  const cls = 'card' + (it.ev ? (it.ev==='solemn' ? ' solemn' : ' ev') : '') + (it.br ? ' brc' : '');
+  const full = state.view === 'full';
+  let body = '<div class="tt">'+esc(it.t)+'</div>';
+  if (full){
+    body += '<div class="full">'+esc(it.c || it.h)+'</div>';
+    if (it.s) body += '<div class="full">'+esc(it.s)+'</div>';
+  } else body += '<div class="hk">'+esc(it.h)+'</div>';
+  return '<button class="'+cls+'" style="--pc:'+pc+'" data-id="'+esc(it.id)+'" aria-label="'+esc(PLATFORMS[it.p].name+', '+it.f+': '+it.t)+'">'
+    + '<span class="fm">'+(ICONS[fmtKey(it.f)]||'')+'<span>'+(showP?esc(PLATFORMS[it.p].name)+' · ':'')+esc(it.f)+'</span><span class="st s'+st+'" title="'+STATUS[st]+'"></span></span>'
+    + body + '</button>';
+}
+
+function renderGantt(){
+  const g = document.getElementById('gantt'), w = state.week, today = iso(new Date());
+  const vis = visibleItems();
+  let html = '<div class="gh"></div>', todayCol = -1;
+  for (let d=0; d<7; d++){
+    const dt = addDays(w.sun,d), isT = iso(dt) === today; if (isT) todayCol = d;
+    html += '<div class="gh'+(isT?' today':'')+'" style="grid-column:'+(d+2)+';grid-row:1"><div class="dn">'+DAYS[d]+'</div>'+dateLabel(dt)+'</div>';
+  }
+  let r = 2;
+  const sat = addDays(w.sun,6), dIdx = d => Math.round((d - w.sun)/DAYMS);
+  if (state.scope !== 'int'){
+    html += '<div class="bandlab" style="grid-column:1;grid-row:'+r+'">תחום השבוע</div>';
+    html += '<div class="bar focus" style="grid-column:2 / 9;grid-row:'+r+'">'+esc(DOMAINS[w.focus].name)+' – הדגש של השבוע בכל הרשתות</div>';
+    r++;
+  }
+  if (w.evs.length){
+    html += '<div class="bandlab" style="grid-column:1;grid-row:'+r+' / span '+w.evs.length+'">חגים ומועדים</div>';
+    for (const e of w.evs){
+      const mi = internalForYear(e.start.getFullYear()).find(i => i.ev === e.n && iso(i.s) === e.d);
+      const tag = mi ? 'button data-int="'+mi.id+'"' : 'div';
+      html += '<'+tag+' class="bar '+e.k+(mi?' clk':'')+'" title="'+esc(e.n+(e.x?' – '+e.x:'')+(mi?' · אחריות: '+mi.o:''))+'" style="grid-column:'+(e.s+2)+' / '+(e.t+3)+';grid-row:'+r+'">'+esc(e.n)+(e.x?' · '+esc(e.x):'')+(mi?' · '+esc(mi.o):'')+'</'+(mi?'button':'div')+'>';
+      r++;
+    }
+  }
+  if (state.scope !== 'ext'){
+    const ints = internalBetween(w.sun, sat).filter(i => !i.shared && i.e >= w.sun && i.s <= sat && intPass(i));
+    if (ints.length){
+      html += '<div class="bandlab" style="grid-column:1;grid-row:'+r+' / span '+ints.length+'">פנים הארגון</div>';
+      for (const i of ints){
+        const a = Math.max(0, dIdx(i.s)), b = Math.min(6, dIdx(i.e)), st = state.istatus[i.s.getFullYear()]?.[i.id] || 0;
+        html += '<button class="bar intb'+(st===2?' done':'')+'" data-int="'+i.id+'" style="--ac:'+AREAS[i.a].c+';grid-column:'+(a+2)+' / '+(b+3)+';grid-row:'+r+'" title="'+esc((i.label||i.n)+' · '+i.o+' · עדיפות '+i.p)+'">'+esc(i.label||i.n)+' · '+esc(i.o)+'</button>';
+        r++;
+      }
+    }
+    const preps = internalBetween(w.sun, addDays(sat, 75)).filter(i => i.prep && i.prep <= sat && i.s > sat && intPass(i));
+    if (preps.length){
+      html += '<div class="bandlab" style="grid-column:1;grid-row:'+r+'">בהיערכות</div><div class="prepcell" style="grid-column:2 / 9;grid-row:'+r+'">'
+        + preps.map(i => { const wk = Math.ceil((i.s - sat)/DAYMS/7); return '<button class="pchip" data-int="'+i.id+'" style="--ac:'+AREAS[i.a].c+'"><b>'+esc(i.label||i.n)+'</b> · '+(wk<=1?'בשבוע הבא':'בעוד '+wk+' שבועות')+' · '+esc(i.o)+'</button>'; }).join('') + '</div>';
+      r++;
+    }
+  }
+  if (state.scope !== 'int') for (const p of Object.keys(PLATFORMS)){
+    if (!state.platforms.has(p)) continue;
+    html += '<div class="rowlab" style="grid-column:1;grid-row:'+r+'"><span class="dot" style="background:var(--p-'+p+')"></span><div>'+PLATFORMS[p].name+'<small>'+vis.filter(i=>i.p===p).length+' פריטים</small></div></div>';
+    for (let d=0; d<7; d++){
+      const its = vis.filter(i => i.p===p && i.day===d);
+      html += '<div class="cell" style="grid-column:'+(d+2)+';grid-row:'+r+'">'+its.map(i=>cardHtml(i)).join('')+'</div>';
+    }
+    r++;
+  }
+  if (todayCol >= 0) html = '<div class="gcol-today" style="grid-column:'+(todayCol+2)+';grid-row:1 / '+r+'"></div>' + html;
+  g.innerHTML = html;
+}
+
+function renderList(){
+  const l = document.getElementById('list'), w = state.week, today = iso(new Date()), vis = visibleItems();
+  let html = '';
+  for (let d=0; d<7; d++){
+    const dt = addDays(w.sun,d), its = vis.filter(i=>i.day===d);
+    const evs = w.evs.filter(e => d>=e.s && d<=e.t);
+    html += '<section class="day'+(iso(dt)===today?' today':'')+'"><h3>'+DAYS[d]+' <span class="d">'+dateLabel(dt)+'</span></h3>';
+    if (evs.length) html += '<div class="evs">'+evs.map(e=>'<span>'+esc(e.n)+'</span>').join('')+'</div>';
+    if (state.scope !== 'ext'){
+      const ints = internalBetween(dt, dt).filter(i => !i.shared && i.s <= dt && i.e >= dt && intPass(i) && (iso(i.s)===iso(dt) || d===0));
+      if (ints.length) html += '<div class="evs">'+ints.map(i=>'<button class="pchip" data-int="'+i.id+'" style="--ac:'+AREAS[i.a].c+'">פנים: '+esc(i.label||i.n)+'</button>').join('')+'</div>';
+    }
+    if (state.scope === 'int'){ html += '</section>'; continue; }
+    html += its.length ? '<div class="cards">'+its.map(i=>cardHtml(i,true)).join('')+'</div>' : '<div class="empty">אין פרסומים מתוכננים ליום הזה.</div>';
+    html += '</section>';
+  }
+  l.innerHTML = html;
+}
+
+function renderUpcoming(){
+  const from = new Date(); from.setHours(0,0,0,0);
+  const to = addDays(from, 35);
+  const ups = EVENTS.filter(e => { const d = parseIso(e.d); return d >= from && d <= to; }).slice(0,9);
+  document.getElementById('upcoming').innerHTML = ups.length ? ups.map(e => {
+    const d = parseIso(e.d);
+    return '<li><span class="when">'+DAYS[d.getDay()]+', '+dateLabel(d)+'</span><span>'+esc(e.n)+(e.x?'<span class="x">'+esc(e.x)+'</span>':'')+'</span></li>';
+  }).join('') : '<li>אין מועדים מיוחדים בחמישה השבועות הקרובים.</li>';
+}
+
+function renderChips(){
+  document.getElementById('pChips').innerHTML = Object.entries(PLATFORMS).map(([k,v]) =>
+    '<button class="chip" data-p="'+k+'" aria-pressed="'+state.platforms.has(k)+'"><span class="dot" style="background:var(--p-'+k+')"></span>'+v.name+'</button>').join('');
+  document.getElementById('fChips').innerHTML = FORMATS.map(f =>
+    '<button class="chip" data-f="'+f+'" aria-pressed="'+state.formats.has(f)+'">'+f+'</button>').join('');
+  document.getElementById('legend').innerHTML = FORMATS.filter(f=>f!=='טיקטוק').map(f => '<span>'+ICONS[f]+f+(f==='רילס'?' / טיקטוק':'')+'</span>').join('')
+    + '<span><span class="dot" style="border:1.5px solid var(--muted)"></span>רעיון</span><span><span class="dot" style="background:#E8A93A"></span>בעבודה</span><span><span class="dot" style="background:#2BB673"></span>פורסם</span>';
+}
+
+function renderModeUi(){
+  document.body.dataset.mode = state.mode;
+  document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
+  document.querySelectorAll('#scopeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scope === state.scope)));
+  document.getElementById('ownerSel').value = state.owner; document.getElementById('priSel').value = state.pri;
+}
+function render(){
+  renderModeUi();
+  if (state.mode === 'year'){
+    const y = state.year, cur = new Date().getFullYear() === y;
+    document.getElementById('weekTitle').textContent = 'שנת '+y;
+    const n = internalForYear(y).filter(intPass).length;
+    document.getElementById('weekSub').innerHTML = (cur ? 'השנה הנוכחית · ' : '') + n + ' פעילויות פנים-ארגוניות · לחיצה על שבוע פותחת אותו';
+    document.getElementById('thisW').disabled = cur;
+    document.getElementById('thisW').textContent = 'השנה';
+    document.getElementById('prevW').lastChild.textContent = 'שנה קודמת';
+    document.getElementById('nextW').firstChild.textContent = 'שנה הבאה';
+    renderYear(); renderUpcoming();
+    return;
+  }
+  document.getElementById('thisW').textContent = 'השבוע';
+  document.getElementById('prevW').lastChild.textContent = 'שבוע קודם';
+  document.getElementById('nextW').firstChild.textContent = 'שבוע הבא';
+  const ai = state.ai[iso(state.sun)];
+  if (state.src === 'ai' && !ai) state.src = 'base';
+  state.week = buildWeek(state.sun, state.src === 'ai' ? ai.slots : null);
+  document.body.classList.toggle('fullmode', state.view === 'full');
+  renderHead(); renderGantt(); renderList(); renderChips(); renderUpcoming();
+  document.querySelectorAll('#viewSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === state.view)));
+  const seg = document.getElementById('srcSeg');
+  seg.hidden = !ai;
+  seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.src === state.src)));
+  const st = document.getElementById('aiState');
+  if (!st.dataset.busy) st.textContent = (ai && state.src==='ai') ? 'מלל שנכתב עם Claude ב-'+new Date(ai.at).toLocaleDateString('he-IL') : '';
+}
+
+/* ===== מגירת פרטים ===== */
+const BRAND_RULES = `גב מערכות (GAV SYSTEMS), סלוגן: יש לכם גב. בית תוכנה ומרכזי תמיכה ושירות. תחומים: יועצים ומומחים טכנולוגיים, מיקור חוץ ושירותים מנוהלים, טכנולוגיה ופיתוח, בדיקות ואוטומציה, מרכזי תמיכה ושירות, גב מהבית (מוקד היברידי מהבית), שירותי דיגיטל (AI, צ׳אטבוטים, VOC, IVR), ייעוץ להקמה וניהול מוקדים, גיוס ו-HR מנוהלים (סורסינג, HRBP). משרדים: מרכז אומגה, מת״ם חיפה.
+מספרים מותרים בלבד: +38 שנים (מאז 1988), +1,200 מומחים ומומחיות, +200 לקוחות, Top 10 BDI. לא ממציאים מספרים, לקוחות, שמות, ציטוטים, שכר או תאריכים – פרט חסר נכתב בסוגריים מרובעים.
+בטקסט בעברית כותבים "גב מערכות" (לא "גב אקספרט"). לא מזכירים את מטריקס, מבנה בעלות או מתחרים. לא נוקבים בשמות לקוחות.
+ערכים: האנשים הם הכוח האמיתי, שותפות (לקוחות הם שותפים לדרך), מחויבות, צמיחה, גאווה, חדשנות ו-AI.
+סגנון: שורה ראשונה קצרה וחזקה, לרוב עם נקודה. ניגודים ורשימות מקבילות בשבירות שורה. משחק מילים על גב. פסקאות קצרות. חתימה: GAV SYSTEMS | יש לכם גב.
+סדרות קיימות: טיפ של רכזת גיוס (אור ריבין, שירן אזולאי), מספרים שמספרים (+38, +200, +1,200), יש לי גב, מסלול.
+לשון: זכר ונקבה בצורות מלאות (מנהלות ומנהלים, כל אחד ואחת). שפה מכבדת תמיד – קליל ומצחיק כן, גס או לועג לא.
+אימוג׳ים בסוף פסקה; 💙 ו-💜 הם של המותג. משרות: הגשה דרך https://gav.co.il/jobs/ (באינסטגרם ובטיקטוק: לינק בביו).
+ימי זיכרון ואבל: ממלכתי, בלי הומור, בלי אימוג׳ים שמחים ובלי קריאה לפעולה מסחרית.`;
+
+function section(title, text, key, cls){
+  if (!text) return '';
+  return '<div class="sec-h"><h4>'+title+'</h4><button class="mini" data-copy="'+key+'">העתקה</button></div><div class="out'+(cls?' '+cls:'')+'">'+esc(text)+'</div>';
+}
+
+function openItem(id){
+  const it = state.week.items.find(i => i.id === id); if (!it) return;
+  state.open = it;
+  const dt = addDays(state.week.sun, it.day), key = state.week.key;
+  document.getElementById('dMeta').innerHTML = [
+    '<span style="background:color-mix(in srgb,var(--p-'+it.p+') 18%,transparent)">'+PLATFORMS[it.p].name+'</span>',
+    '<span>'+esc(it.f)+'</span>', '<span>יום '+DAYS[it.day]+', '+dateLabel(dt)+'</span>',
+    '<span>'+esc(DOMAINS[it.dom]?.name || it.dom)+'</span>', '<span>מטרה: '+esc(it.g)+'</span>'
+  ].join('');
+  document.getElementById('dTitle').textContent = it.t;
+  const st = state.status[key]?.[id] || 0;
+  const all = [it.h,it.c,it.s,it.en,it.t].join(' ');
+  const capTitle = it.f==='סטורי' ? 'הטקסט לסטורי' : (it.p==='li' ? 'הפוסט בעברית' : (isVideo(it.f) ? 'קפשן' : 'המלל לפרסום'));
+  const sTitle = fmtKey(it.f)==='קרוסלה' ? 'הטקסט בשקפים' : 'תסריט';
+  let b = '';
+  if (it.evNote) b += '<div class="flag'+(it.ev==='solemn'?' solemn':'')+'">'+esc(it.evNote)+'</div>';
+  if (/\[/.test(all)) b += '<div class="flag">יש בפריט הזה פרט בסוגריים מרובעים שצריך להשלים לפני פרסום.</div>';
+  b += section(isVideo(it.f) ? 'טקסט על המסך בפתיחה' : 'טקסט על הוויז׳ואל', it.h, 'h');
+  if (isVideo(it.f) || fmtKey(it.f)==='קרוסלה') b += section(sTitle, it.s, 's');
+  b += section(capTitle, it.c, 'c');
+  if (it.p==='li') b += section('English version', it.en, 'en', 'en');
+  b += '<h4>ויז׳ואל</h4><div>'+esc(it.v)+'</div>';
+  if (it.i) b += '<h4>הרעיון</h4><div>'+esc(it.i)+'</div>';
+  b += '<h4>הטון ב'+PLATFORMS[it.p].name+'</h4><div class="note">'+esc(PLATFORMS[it.p].tone)+'</div>';
+  b += '<h4>סטטוס</h4><div class="status" id="stBtns">'+STATUS.map((s,i)=>'<button data-st="'+i+'" aria-pressed="'+(i===st)+'">'+s+'</button>').join('')+'</div>';
+  if (state.sample && it.ev !== 'solemn'){
+    b += '<h4>רוצים גרסה אחרת?</h4><div class="note">Claude כותב גרסה נוספת בזווית אחרת, לפי כללי המותג והרשת.</div>'
+      + '<div class="row"><button class="btn primary" data-act="draft">גרסה נוספת עם Claude</button></div>'
+      + '<div class="out" id="draftOut" hidden></div><div class="row" id="draftRow" hidden><button class="btn" data-act="copyDraft">העתקת הגרסה</button></div>';
+  }
+  document.getElementById('dBody').innerHTML = b;
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('dClose').focus();
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('scrim').classList.remove('on');
+  if (state.draftCtl) state.draftCtl.abort();
+  const back = state.open && document.querySelector('.card[data-id="'+CSS.escape(state.open.id)+'"]');
+  state.open = null; if (back) back.focus();
+}
+
+async function setStatus(id, v){
+  const key = state.week.key;
+  state.status[key] = { ...(state.status[key]||{}), [id]: v };
+  render();
+  if (state.open) openItem(state.open.id);
+  if (state.db){
+    try { await state.db.doc('status/'+key).set(state.status[key]); }
+    catch(e){ toast('הסטטוס נשמר רק אצלך כרגע'); }
+  } else {
+    try { localStorage.setItem('gav-status-'+key, JSON.stringify(state.status[key])); } catch(e){}
+  }
+}
+
+async function writeDraft(){
+  const it = state.open; if (!it || !state.sample) return;
+  const out = document.getElementById('draftOut'), row = document.getElementById('draftRow');
+  out.hidden = false; out.innerHTML = '<span class="spin"></span> Claude כותב…'; row.hidden = true;
+  const btn = document.querySelector('[data-act="draft"]'); btn.disabled = true;
+  if (state.draftCtl) state.draftCtl.abort();
+  const ctl = new AbortController(); state.draftCtl = ctl;
+  const dt = addDays(state.week.sun, it.day);
+  const prompt = `את/ה כותב/ת תוכן לרשתות החברתיות של גב מערכות.
+כללי המותג:
+${BRAND_RULES}
+
+הרשת: ${PLATFORMS[it.p].name}. הטון ברשת: ${PLATFORMS[it.p].tone}
+הפורמט: ${it.f}. תאריך פרסום: יום ${DAYS[it.day]}, ${dateLabel(dt)} ${dt.getFullYear()}.
+תחום: ${DOMAINS[it.dom]?.name || ''}. סדרה: ${it.ser || ''}${it.evName ? '. מועד: '+it.evName : ''}
+הנושא: ${it.t}
+
+זו הגרסה הקיימת:
+טקסט על הוויז׳ואל: ${it.h}
+${it.s ? (fmtKey(it.f)==='קרוסלה'?'שקפים':'תסריט')+':\n'+it.s+'\n' : ''}מלל:
+${it.c}
+
+כתבו גרסה חלופית באותו נושא ובאותו פורמט, אבל בזווית אחרת באמת (משחק מילים אחר, הוק אחר). עברית טבעית ותקינה. טקסט רגיל, בלי Markdown ובלי כוכביות, במבנה:
+טקסט על הוויז׳ואל:
+...${isVideo(it.f) ? '\nתסריט:\n(אורך, הוק בשנייה הראשונה, שוטים, כתוביות, סאונד)' : ''}${fmtKey(it.f)==='קרוסלה' ? '\nשקפים:\n(שקף 1: ... שקף 2: ...)' : ''}
+מלל:
+...${it.p==='li' ? '\nEnglish version:\n(נכתבת מחדש באנגלית מקצועית של לינקדאין)' : ''}
+פרט אמיתי שחסר – בסוגריים מרובעים.`;
+  try {
+    const r = await state.sample(prompt, { signal: ctl.signal, cache: false, onText: ({text}) => { out.textContent = text; } });
+    out.textContent = r.text; row.hidden = false;
+  } catch(e){
+    if (e && e.code === 'aborted') return;
+    out.textContent = e && e.code === 'not_granted' ? 'הכתיבה עם Claude לא אושרה. המלל הקיים נשאר כמו שהוא.' :
+      e && e.code === 'rate_limited' ? 'יותר מדי בקשות ברגע. נסו שוב בעוד דקה.' : 'הגרסה לא נכתבה. נסו שוב.';
+    if (e && e.text) { out.textContent = e.text; row.hidden = false; }
+  } finally { if (btn) btn.disabled = false; }
+}
+
+/* ===== שבוע חדש עם Claude ===== */
+async function generateWeek(){
+  if (!state.sample) return;
+  const st = document.getElementById('aiState'), btn = document.getElementById('genBtn');
+  btn.disabled = true; st.dataset.busy = '1';
+  st.innerHTML = '<span class="spin"></span> Claude כותב מלל חדש לכל השבוע. זה לוקח כמה דקות…';
+  const sun = state.sun, { focus, slots } = slotSkeleton(sun);
+  const evs = eventsOverlapping(sun);
+  const solemn = new Set(evs.filter(e=>e.k==='solemn'&&e.inWeek).map(e=>e.day));
+  const skel = slots.filter(s=>!solemn.has(s.day)).map((s,i)=>({ n:i, day:s.day, dayName:DAYS[s.day], date:dateLabel(addDays(sun,s.day)), platform:s.p, format:s.f, series:s.ser, domain:s.dom }));
+  const prompt = `את/ה מנהל/ת הסושיאל של גב מערכות וכותב/ת את כל המלל לשבוע.
+כללי המותג:
+${BRAND_RULES}
+
+הטון בכל רשת:
+${Object.entries(PLATFORMS).map(([k,v])=>k+' ('+v.name+'): '+v.tone).join('\n')}
+
+השבוע: ${dateLabel(sun)} עד ${dateLabel(addDays(sun,6))} ${sun.getFullYear()}.
+תחום השבוע: ${DOMAINS[focus].name}. משבצות עם domain "${focus}" עוסקות בתחום הזה; משבצות "brand" – מותג, תרבות, אנשים וגיוס.
+מועדים השבוע (מכוסים בנפרד – אל תכתבו עליהם ברכות): ${evs.length ? evs.map(e=>e.n).join(', ') : 'אין'}.
+domain keys: ${Object.entries(DOMAINS).map(([k,v])=>k+'='+v.name).join(', ')}.
+
+כתבו לכל משבצת תוכן חדש ומקורי, מוכן לפרסום, שמתאים לרשת, לפורמט וליום (ביום ראשון בבוקר – פתיחת שבוע ובוקר טוב בסטורי ובטיקטוק; ביום שישי – שבת שלום). אל תמציאו עובדות.
+המשבצות:
+${JSON.stringify(skel)}
+
+החזירו JSON בלבד, בלי טקסט נוסף ובלי גדרות קוד:
+{"items":[{"n":0,"title":"כותרת קצרה (עד 6 מילים)","hook":"טקסט על הוויז׳ואל או על המסך","copy":"המלל המלא לפרסום: קפשן לפוסט/רילס/טיקטוק (עם חתימה ו-3–5 האשטגים), או טקסט על המסך + סטיקר לסטורי","script":"לקרוסלה: שקף 1: ... שקף 2: ... | לרילס ולטיקטוק: תסריט מלא עם אורך, הוק, שוטים, כתוביות וסאונד | אחרת ריק","en":"ללינקדאין בלבד: גרסה באנגלית שנכתבה מחדש; אחרת ריק","visual":"מה רואים","goal":"לידים|גיוס|מודעות|שייכות"}]}
+פריט אחד לכל משבצת, לפי n. ב-JSON השתמשו ב-\\n לשבירת שורה.`;
+  try {
+    const res = await state.sample.json(prompt, { modelTier: 'default', cache: false });
+    const arr = Array.isArray(res?.items) ? res.items : [];
+    if (!arr.length) throw { code:'empty' };
+    const S = (x,n) => typeof x === 'string' ? x.slice(0,n) : '';
+    const filled = skel.map(s => {
+      const a = arr.find(x => x && Number(x.n) === s.n) || {};
+      const orig = slots.find(o => o.day===s.day && o.p===s.platform && o.f===s.format);
+      const ok = a.copy && a.title;
+      return { day:s.day, p:s.platform, f:s.format, dom:s.domain, ser:s.series,
+        t: ok ? S(a.title,80) : orig.t, h: ok ? S(a.hook,400) : orig.h, c: ok ? S(a.copy,3500) : orig.c,
+        s: ok ? (S(a.script,3000) || undefined) : orig.s, en: ok ? (S(a.en,2500) || undefined) : orig.en,
+        v: ok ? S(a.visual,400) : orig.v, g:['לידים','גיוס','מודעות','שייכות'].includes(a.goal)?a.goal:orig.g };
+    });
+    const rec = { slots: filled, at: Date.now() };
+    state.ai[iso(sun)] = rec; state.src = 'ai';
+    delete st.dataset.busy; render(); toast('נכתב מלל חדש לכל השבוע');
+    if (state.db){ try { await state.db.doc('weeks/'+iso(sun)).set(rec); } catch(e){ toast('המלל החדש נשמר רק אצלך כרגע'); } }
+  } catch(e){
+    delete st.dataset.busy;
+    st.textContent = e && e.code === 'not_granted' ? 'הכתיבה עם Claude לא אושרה. המלל הקבוע ממשיך לעבוד כרגיל.' :
+      e && e.code === 'rate_limited' ? 'יותר מדי בקשות ברגע. נסו שוב בעוד דקה.' : 'המלל החדש לא נכתב. נסו שוב.';
+  } finally { btn.disabled = false; }
+}
+
+/* ===== ייצוא ===== */
+function weekText(){
+  const w = state.week, lines = ['גאנט תוכן – גב מערכות | '+document.getElementById('weekTitle').textContent, 'תחום השבוע: '+DOMAINS[w.focus].name, ''];
+  for (let d=0; d<7; d++){
+    const its = visibleItems().filter(i=>i.day===d); if (!its.length) continue;
+    lines.push('════════ יום '+DAYS[d]+' – '+dateLabel(addDays(w.sun,d))+' ════════', '');
+    for (const i of its){
+      lines.push('▶ '+PLATFORMS[i.p].name+' | '+i.f+' | '+i.t);
+      lines.push('טקסט על הוויז׳ואל: '+i.h);
+      if (i.s) lines.push((fmtKey(i.f)==='קרוסלה'?'שקפים':'תסריט')+':\n'+i.s);
+      lines.push('מלל:\n'+(i.c||''));
+      if (i.en) lines.push('English:\n'+i.en);
+      lines.push('ויז׳ואל: '+i.v, '');
+    }
+  }
+  return lines.join('\n');
+}
+async function downloadCsv(){
+  const w = state.week, q = s => '"'+String(s??'').replace(/"/g,'""')+'"';
+  const rows = [['תאריך','יום','רשת','פורמט','תחום','סדרה','כותרת','טקסט על הוויז׳ואל','שקפים / תסריט','מלל לפרסום','English','ויז׳ואל','מטרה','סטטוס']];
+  for (const i of visibleItems().sort((a,b)=>a.day-b.day)){
+    rows.push([iso(addDays(w.sun,i.day)), DAYS[i.day], PLATFORMS[i.p].name, i.f, DOMAINS[i.dom]?.name||'', i.ser||'', i.t, i.h, i.s||'', i.c||'', i.en||'', i.v, i.g, STATUS[state.status[w.key]?.[i.id]||0]]);
+  }
+  const csv = '\ufeff' + rows.map(r=>r.map(q).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv'}), name = 'gav-content-'+w.key+'.csv';
+  if (!state.downloads){
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500); return;
+  }
+  try { await state.downloads.save({ filename: name, data: blob }); }
+  catch(e){ if (!(e && (e.code==='declined'||e.code==='cancelled'))) toast('ההורדה לא הושלמה'); }
+}
+
+/* ===== טעינת שבוע ===== */
+async function loadWeekData(){
+  const key = iso(state.sun);
+  await Promise.all([loadYearStatus(state.sun.getFullYear()), loadYearStatus(addDays(state.sun,6).getFullYear())]);
+  if (!state.db){
+    try { const s = localStorage.getItem('gav-status-'+key); if (s) state.status[key] = JSON.parse(s); } catch(e){}
+    return;
+  }
+  try {
+    const [a, s] = await Promise.all([ state.db.doc('weeks/'+key).get(), state.db.doc('status/'+key).get() ]);
+    if (a.exists){ const d = a.data(); if (Array.isArray(d.slots) && d.slots.every(x => x && x.c)) state.ai[key] = d; }
+    if (s.exists) state.status[key] = { ...(s.data()||{}) };
+  } catch(e){}
+}
+async function goWeek(sun){
+  state.sun = sun; state.src = 'base'; state.mode = 'week';
+  render();
+  await loadWeekData();
+  if (iso(state.sun) === iso(sun)){ if (state.ai[iso(sun)]) state.src = 'ai'; render(); }
+}
+
+
+/* ===================== מנוע פנים-ארגוני ===================== */
+const DAYMS = 864e5;
+const _intCache = {};
+const slug = s => s.replace(/[^\u0590-\u05FFA-Za-z0-9]+/g,'-');
+function mkInt(o, s, e){
+  const lead = o.lead !== undefined ? o.lead : (LEAD[o.p] || 1);
+  return { id:'i-'+slug(o.n)+'-'+iso(s), n:o.n, a:o.a, o:o.o, p:o.p, s, e, lead,
+    prep: lead ? addDays(s, -lead*7) : null, Y:o.Y, N:o.N, impl:o.impl, note:o.note, bridge:o.bridge,
+    shared:!!o.shared, ev:o.ev, social:o.social !== false };
+}
+function internalForYear(y){
+  if (_intCache[y]) return _intCache[y];
+  const out = [];
+  for (const e of EVENTS){
+    const m = HOLIDAY_META[e.n]; if (!m) continue;
+    const s = parseIso(e.d); if (s.getFullYear() !== y) continue;
+    out.push(mkInt({ ...m, n:m.name || e.n, shared:true, ev:e.n, bridge:BRIDGE_BY_HOLIDAY[e.n] }, s, addDays(s,(m.len||1)-1)));
+  }
+  for (const h of HEB_INTERNAL){
+    const s = parseIso(h.d); if (s.getFullYear() !== y) continue;
+    out.push(mkInt({ n:h.n, ...HEB_INTERNAL_META[h.n] }, s, s));
+  }
+  for (const f of FIXED_INTERNAL){
+    const s = new Date(y, f.md[0]-1, f.md[1]);
+    const e = f.end ? new Date(y, f.end[0]-1, f.end[1]) : addDays(s, (f.len||1)-1);
+    out.push(mkInt(f, s, e));
+  }
+  for (const r of RECURRING){
+    const months = r.every === 'month' ? [0,1,2,3,4,5,6,7,8,9,10,11] : [0,3,6,9];
+    for (const m of months){
+      let s, e;
+      if (r.last){ e = new Date(y, m+1, 0); s = addDays(e, -(r.last-1)); }
+      else { s = new Date(y, m, r.from); e = new Date(y, m, r.to); }
+      const tag = r.every === 'month' ? (MONTHS[m].slice(1)) : ('Q'+(m/3+1));
+      const it = mkInt(r, s, e); it.label = r.n+' – '+tag; out.push(it);
+    }
+  }
+  out.sort((a,b) => a.s - b.s);
+  return (_intCache[y] = out);
+}
+function internalBetween(from, to){
+  const ys = new Set([from.getFullYear(), to.getFullYear()]);
+  let all = []; ys.forEach(y => { all = all.concat(internalForYear(y)); });
+  return all;
+}
+const OWNER_TOKENS = ['יובל','נטלי','HR','רווחה','מיתוג','הנהלה','תקשורת','DEI','כספים','רכש','מנהל'];
+const intPass = it => (!state.owner || (it.o+' '+(it.impl||'')).includes(state.owner)) && (!state.pri || it.p === state.pri);
+const findInt = id => { for (const y of Object.keys(_intCache)) { const f = _intCache[y].find(i => i.id === id); if (f) return f; } return null; };
+const fmtD = d => d.getDate()+'/'+(d.getMonth()+1);
+const rangeLabel = it => +it.s === +it.e ? fmtD(it.s)+'/'+it.s.getFullYear() : fmtD(it.s)+'–'+fmtD(it.e)+'/'+it.e.getFullYear();
+
+// גשרים לשבוע: אירוע פנימי ← פריטים לרשתות
+function bridgeItems(sun, solemnDays){
+  const sat = addDays(sun, 6), out = [];
+  for (const it of internalBetween(sun, sat)){
+    if (!it.bridge || !BRIDGES[it.bridge]) continue;
+    for (const b of BRIDGES[it.bridge]){
+      let d = addDays(it.s, b.off || 0); if (d.getDay() === 6) d = addDays(d, 1);
+      if (d < sun || d > sat) continue;
+      const day = Math.round((d - sun)/DAYMS);
+      if (solemnDays.has(day)) continue;
+      const { off, ...rest } = b;
+      out.push({ ...rest, day, dom:'brand', ser:'מאירוע פנימי: '+(it.label || it.n), br:it.id });
+    }
+  }
+  return out;
+}
+
+/* ===================== תצוגה שנתית ===================== */
+function renderYear(){
+  const y = state.year, wrap = document.getElementById('yearGrid');
+  const start = sundayOf(new Date(y,0,1)), endD = addDays(sundayOf(new Date(y,11,31)), 6);
+  const nDays = Math.round((endD - start)/DAYMS) + 1;
+  const col = d => Math.round((d - start)/DAYMS) + 2;
+  const clampCol = d => Math.max(2, Math.min(nDays+1, col(d)));
+  wrap.style.gridTemplateColumns = '210px repeat('+nDays+', minmax(4px,1fr))';
+  let h = '', r = 1;
+  // חודשים
+  h += '<div class="ylab yhead" style="grid-row:1 / span 2">פעילות</div>';
+  for (let m=0; m<12; m++){
+    const a = new Date(y,m,1), b = new Date(y,m+1,0);
+    h += '<div class="ymonth" style="grid-row:1;grid-column:'+clampCol(a)+' / '+(clampCol(b)+1)+'">'+MONTHS[m].slice(1)+'</div>';
+  }
+  // שבועות
+  const curSun = iso(sundayOf(new Date()));
+  for (let d = new Date(start); d <= endD; d = addDays(d,7)){
+    const k = iso(d);
+    h += '<button class="ywk'+(k===curSun?' cur':'')+'" data-week="'+k+'" title="מעבר לשבוע '+fmtD(d)+'–'+fmtD(addDays(d,6))+'" style="grid-row:2;grid-column:'+col(d)+' / span 7">'+d.getDate()+'</button>';
+  }
+  r = 3;
+  const rowLab = (txt, sub, cls, color) => '<div class="ylab '+(cls||'')+'" style="grid-row:'+r+(color?';--ac:'+color:'')+'" title="'+String(txt).replace(/<[^>]+>/g,'')+(sub?' · '+String(sub).replace(/<[^>]+>/g,''):'')+'"><div class="yl1">'+txt+'</div>'+(sub?'<small>'+sub+'</small>':'')+'</div>';
+  const fullRow = cls => '<div class="'+cls+'" style="grid-row:'+r+';grid-column:2 / -1"></div>';
+  if (state.scope !== 'ext'){
+    const items = internalForYear(y).filter(intPass);
+    for (const a of AREA_ORDER){
+      const its = items.filter(i => i.a === a); if (!its.length) continue;
+      h += rowLab(a, AREAS[a].what, 'yarea', AREAS[a].c) + fullRow('yarea-line'); r++;
+      const groups = []; const byName = {};
+      for (const it of its){ if (!byName[it.n]){ byName[it.n] = []; groups.push(it.n); } byName[it.n].push(it); }
+      for (const n of groups){
+        const g = byName[n], f = g[0];
+        h += rowLab('<span class="pri p-'+f.p+'" title="עדיפות '+f.p+'"></span>'+esc(n), esc(f.o), '', AREAS[a].c) + fullRow('yrow-line');
+        for (const it of g){
+          const st = state.istatus[y]?.[it.id] || 0;
+          if (it.prep){
+            const ps = it.prep < start ? start : it.prep;
+            if (ps < it.s) h += '<div class="yprep" style="grid-row:'+r+';grid-column:'+clampCol(ps)+' / '+clampCol(it.s)+';--ac:'+AREAS[a].c+'" title="היערכות: '+esc(n)+'"></div>';
+          }
+          const one = +it.s === +it.e;
+          h += '<button class="ybar'+(one?' one':'')+(st===2?' done':'')+'" data-int="'+it.id+'" style="grid-row:'+r+';grid-column:'+clampCol(it.s)+' / '+(clampCol(it.e)+1)+';--ac:'+AREAS[a].c+'" title="'+esc((it.label||n)+' · '+rangeLabel(it)+' · '+it.o)+'" aria-label="'+esc((it.label||n)+', '+rangeLabel(it))+'"></button>';
+        }
+        r++;
+      }
+    }
+  }
+  if (state.scope !== 'int'){
+    h += rowLab('רשתות חברתיות', 'אינסטגרם, טיקטוק, לינקדאין ופייסבוק', 'yarea', 'var(--purple)') + fullRow('yarea-line'); r++;
+    h += rowLab('תחום השבוע', 'מתחלף כל שבוע', '', '') + fullRow('yrow-line');
+    const dc = { centers:'#10B2C8', dev:'#2D6CD3', home:'#4F55D8', qa:'#7547DF', digital:'#0C9EB1', consult:'#9B4BD0', hr:'#DD3E8E', advisory:'#C9A227', outsrc:'#E8913A' };
+    for (let d = new Date(start); d <= endD; d = addDays(d,7)){
+      const f = DOMAIN_ORDER[mod(weekIndex(d),9)];
+      h += '<button class="ydom" data-week="'+iso(d)+'" style="grid-row:'+r+';grid-column:'+col(d)+' / span 7;--ac:'+dc[f]+'" title="'+esc(DOMAINS[f].name)+'"></button>';
+    }
+    r++;
+    const covered = new Set(Object.keys(HOLIDAY_META));
+    const ext = EVENTS.filter(e => parseIso(e.d).getFullYear() === y && !covered.has(e.n));
+    h += rowLab('מועדי תוכן', 'מועדים שיש להם מלל ברשתות', '', '') + fullRow('yrow-line');
+    for (const e of ext){
+      const d = parseIso(e.d);
+      h += '<button class="ydot '+e.k+'" data-week="'+iso(sundayOf(d))+'" style="grid-row:'+r+';grid-column:'+col(d)+'" title="'+esc(e.n+' · '+fmtD(d))+'"></button>';
+    }
+    r++;
+  }
+  const t = new Date(); t.setHours(0,0,0,0);
+  if (t >= start && t <= endD) h += '<div class="ytoday" style="grid-row:1 / '+r+';grid-column:'+col(t)+'" title="היום"></div>';
+  wrap.innerHTML = h;
+  const td = wrap.querySelector('.ytoday') || wrap.querySelector('.ywk.cur');
+  if (td && !state._yScrolled){ state._yScrolled = true; requestAnimationFrame(() => { const W = wrap.parentElement, rect = td.getBoundingClientRect(), wr = W.getBoundingClientRect(); W.scrollLeft += (rect.left - wr.left) - W.clientWidth/2; }); }
+}
+
+function openInternal(id){
+  const it = findInt(id); if (!it) return;
+  state.open = { int:it };
+  const y = it.s.getFullYear(), st = state.istatus[y]?.[it.id] || 0;
+  document.getElementById('dMeta').innerHTML = [
+    '<span style="background:color-mix(in srgb,'+AREAS[it.a].c+' 22%,transparent)">'+esc(it.a)+'</span>',
+    '<span dir="ltr">'+esc(rangeLabel(it))+'</span>', '<span>אחריות: '+esc(it.o)+'</span>', '<span>עדיפות: '+esc(it.p)+'</span>'
+  ].join('');
+  document.getElementById('dTitle').textContent = it.label || it.n;
+  let b = '';
+  if (it.note) b += '<div class="flag">'+esc(it.note)+'</div>';
+  if (it.prep) b += '<h4>מתי מתחילים להיערך</h4><div>מיום '+DAYS[it.prep.getDay()]+', '+dateLabel(it.prep)+' – '+it.lead+' '+(it.lead===1?'שבוע':'שבועות')+' מראש (עדיפות '+esc(it.p)+'). מה עושים: '+esc(AREAS[it.a].what)+'.</div>';
+  if (it.Y) b += '<h4>הרעיון של יובל</h4><div class="out">'+esc(it.Y)+'</div>';
+  if (it.N) b += '<h4>הרעיון של נטלי</h4><div class="out">'+esc(it.N)+'</div>';
+  if (!it.Y && !it.N) b += '<h4>רעיון</h4><div class="note">עוד אין רעיון לביצוע. אפשר להוסיף אותו בגאנט האקסל או לבקש ממני.</div>';
+  if (it.impl) b += '<h4>מי מבצע</h4><div>'+esc(it.impl)+'</div>';
+  if (/יום הולדת|Happy Hour/.test(it.n)) b += '<h4>בנק רעיונות לגיבוש (של נטלי)</h4><div class="note">'+TEAM_IDEAS.map(esc).join(' · ')+'</div><h4>פעילויות כלליות</h4><div class="note">'+GENERAL_IDEAS.map(esc).join(' · ')+'</div>';
+  const br = it.bridge && BRIDGES[it.bridge];
+  if (br) b += '<h4>מה זה נותן לרשתות</h4><div>'+br.map(x => '• '+esc(PLATFORMS[x.p].name+' | '+x.f+': '+x.t)+(x.off?' ('+x.off+' ימים אחרי ההתחלה)':'')).join('<br>')+'</div><div class="note">הפריטים נכנסים לבד לגאנט השבועי, עם מלל מלא.</div>';
+  else if (it.shared) b += '<h4>ברשתות</h4><div class="note">המועד הזה כבר מופיע בגאנט השבועי עם מלל לרשתות.</div>';
+  else if (it.social === false) b += '<h4>ברשתות</h4><div class="note">מועד פנימי בלבד – לא מפרסמים עליו ברשתות.</div>';
+  b += '<h4>סטטוס</h4><div class="status" id="iStBtns">'+INT_STATUS.map((s,i)=>'<button data-ist="'+i+'" aria-pressed="'+(i===st)+'">'+s+'</button>').join('')+'</div>';
+  b += '<div class="row"><button class="btn" data-week="'+iso(sundayOf(it.s))+'">לשבוע של האירוע</button></div>';
+  document.getElementById('dBody').innerHTML = b;
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('dClose').focus();
+}
+async function setIntStatus(it, v){
+  const y = it.s.getFullYear();
+  state.istatus[y] = { ...(state.istatus[y]||{}), [it.id]: v };
+  render(); openInternal(it.id);
+  if (state.db){ try { await state.db.doc('internal/'+y).set(state.istatus[y]); } catch(e){ toast('הסטטוס נשמר רק אצלך כרגע'); } }
+  else { try { localStorage.setItem('gav-int-'+y, JSON.stringify(state.istatus[y])); } catch(e){} }
+}
+async function loadYearStatus(y){
+  if (state.istatus[y] !== undefined && state._ylo?.[y]) return;
+  state._ylo = { ...(state._ylo||{}), [y]:true };
+  if (!state.db){ try { const s = localStorage.getItem('gav-int-'+y); if (s) state.istatus[y] = JSON.parse(s); } catch(e){} return; }
+  try { const s = await state.db.doc('internal/'+y).get(); if (s.exists) state.istatus[y] = { ...(s.data()||{}) }; } catch(e){}
+}
+document.getElementById('yLegend').innerHTML = AREA_ORDER.map(a => '<span><i style="background:'+AREAS[a].c+'"></i>'+a+'</span>').join('')
+  + '<span><i style="background:repeating-linear-gradient(-45deg,#7547DF88 0 3px,transparent 3px 6px)"></i>זמן היערכות</span>'
+  + '<span><i style="background:#E5484D;width:8px;height:8px;border-radius:50%"></i>קריטית</span><span><i style="background:#E8913A;width:8px;height:8px;border-radius:50%"></i>גבוהה</span><span><i style="background:#C9A227;width:8px;height:8px;border-radius:50%"></i>בינונית</span>';
+
+/* ===== אירועים ===== */
+document.addEventListener('click', e => {
+  const c = e.target.closest('.card'); if (c){ openItem(c.dataset.id); return; }
+  const ib = e.target.closest('[data-int]'); if (ib){ openInternal(ib.dataset.int); return; }
+  const ist = e.target.closest('#iStBtns [data-ist]'); if (ist && state.open && state.open.int){ setIntStatus(state.open.int, Number(ist.dataset.ist)); return; }
+  const wk = e.target.closest('[data-week]'); if (wk){ if (document.getElementById('drawer').classList.contains('on')) closeDrawer(); goWeek(parseIso(wk.dataset.week)); window.scrollTo({top:0}); return; }
+  const md = e.target.closest('#modeSeg [data-mode]'); if (md){ state.mode = md.dataset.mode; if (state.mode==='year'){ state.year = state.sun.getFullYear(); loadYearStatus(state.year).then(render); } render(); return; }
+  const sc = e.target.closest('#scopeSeg [data-scope]'); if (sc){ state.scope = sc.dataset.scope; render(); return; }
+  const pc = e.target.closest('[data-p]'); if (pc){ const k = pc.dataset.p; state.platforms.has(k) ? state.platforms.delete(k) : state.platforms.add(k); if (!state.platforms.size) state.platforms.add(k); render(); return; }
+  const fc = e.target.closest('[data-f]'); if (fc){ const k = fc.dataset.f; state.formats.has(k) ? state.formats.delete(k) : state.formats.add(k); if (!state.formats.size) state.formats.add(k); render(); return; }
+  const vw = e.target.closest('#viewSeg [data-view]'); if (vw){ state.view = vw.dataset.view; render(); return; }
+  const sb = e.target.closest('#stBtns [data-st]'); if (sb && state.open){ setStatus(state.open.id, Number(sb.dataset.st)); return; }
+  const sg = e.target.closest('#srcSeg [data-src]'); if (sg){ state.src = sg.dataset.src; render(); return; }
+  const cp = e.target.closest('[data-copy]'); if (cp && state.open){ copyText(state.open[cp.dataset.copy] || ''); return; }
+  const a = e.target.closest('[data-act]');
+  if (a && state.open){
+    if (a.dataset.act === 'draft') writeDraft();
+    if (a.dataset.act === 'copyDraft') copyText(document.getElementById('draftOut').textContent);
+  }
+});
+const yearGo = y => { state.year = y; render(); loadYearStatus(y).then(render); };
+document.getElementById('prevW').onclick = () => state.mode==='year' ? yearGo(state.year-1) : goWeek(addDays(state.sun,-7));
+document.getElementById('nextW').onclick = () => state.mode==='year' ? yearGo(state.year+1) : goWeek(addDays(state.sun,7));
+document.getElementById('thisW').onclick = () => state.mode==='year' ? yearGo(new Date().getFullYear()) : goWeek(sundayOf(new Date()));
+document.getElementById('ownerSel').onchange = e => { state.owner = e.target.value; render(); };
+document.getElementById('priSel').onchange = e => { state.pri = e.target.value; render(); };
+document.getElementById('ownerSel').innerHTML = '<option value="">כל האחראים</option>' + OWNER_TOKENS.map(o=>'<option value="'+o+'">'+o+'</option>').join('');
+document.getElementById('priSel').innerHTML = '<option value="">כל העדיפויות</option>' + Object.keys(LEAD).map(p=>'<option value="'+p+'">'+p+'</option>').join('');
+document.getElementById('dClose').onclick = closeDrawer;
+document.getElementById('scrim').onclick = closeDrawer;
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.open) closeDrawer(); });
+document.getElementById('copyWeek').onclick = () => copyText(weekText());
+document.getElementById('genBtn').onclick = generateWeek;
+document.getElementById('csvBtn').onclick = downloadCsv;
+
+// מעבר אוטומטי לשבוע החדש כשהדף פתוח ביום ראשון
+let lastSun = iso(sundayOf(new Date()));
+setInterval(() => { const s = sundayOf(new Date()); if (iso(s) !== lastSun){ const wasCur = iso(state.sun) === lastSun; lastSun = iso(s); if (wasCur) goWeek(s); } }, 60000);
+
+/* ===== גלי נקודות בכותרת ===== */
+(function(){
+  let s = '';
+  for (let row=0; row<5; row++) for (let i=0; i<=80; i++){
+    const x = i*15, y = 30 + row*5 + Math.sin(i/7 + row*.6)*14 - row*2;
+    s += '<circle cx="'+x+'" cy="'+y.toFixed(1)+'" r="'+(0.9+row*.2).toFixed(2)+'"/>';
+  }
+  document.getElementById('dots').innerHTML = s;
+})();
+
+/* ===== הפעלה ===== */
+goWeek(state.sun);
+(async () => {
+  if (!window.claude || !window.claude.use){ document.getElementById('csvBtn').hidden = false; return; }
+  const [db, sample, downloads] = await Promise.all([ claude.use('db'), claude.use('sample'), claude.use('downloads') ]);
+  state.db = db; state.sample = sample; state.downloads = downloads;
+  document.getElementById('genBtn').hidden = !sample;
+  document.getElementById('csvBtn').hidden = !downloads;
+  if (db) await goWeek(state.sun);
+})();
+
+</script>
+</body>
+</html>
