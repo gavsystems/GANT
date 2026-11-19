@@ -120,7 +120,7 @@ body.fullmode .gantt{grid-template-columns:118px repeat(7,minmax(230px,1fr));min
 .empty{color:var(--muted);font-size:13px;padding:4px 2px}
 
 /* Upcoming */
-.side{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.side{margin-top:22px;display:grid;grid-template-columns:1fr;gap:18px;max-width:720px}
 @media (max-width:820px){.side{grid-template-columns:1fr}}
 .panel{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
 .panel h2{font-family:"Secular One",sans-serif;font-weight:400;font-size:19px;margin:0 0 8px}
@@ -156,6 +156,40 @@ body.fullmode .gantt{grid-template-columns:118px repeat(7,minmax(230px,1fr));min
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
+/* ===== נייד ===== */
+@media (max-width:820px){
+  .brand > span:last-child, .brand .rule{display:none}
+  header.top svg.waves{display:none}
+  .head-inner{padding:14px 14px 12px;gap:10px}
+  h1{font-size:30px}
+  .sub{font-size:13px;margin-top:4px}
+  .head-inner > .nav{width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:8px}
+  #modeSeg{grid-column:1 / -1;display:flex}
+  #modeSeg button{flex:1}
+  #prevW,#nextW{font-size:0;padding:8px 14px}
+  #prevW svg,#nextW svg{width:20px;height:20px}
+  #thisW{justify-content:center}
+  .wrap{padding:0 12px 40px}
+  .toolbar{padding:10px 0 4px;gap:8px}
+  .toolbar.filters{display:grid;grid-template-columns:1fr}
+  #scopeSeg{display:flex}
+  #scopeSeg button{flex:1}
+  .toolbar label.sel{font-size:0;width:100%;gap:0}
+  .toolbar label.sel select{font-size:13px;width:100%;min-height:38px}
+  .toolbar.weekonly{display:grid;grid-template-columns:1fr}
+  .toolbar.weekonly > .nav:first-child{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #copyWeek,#csvBtn{display:none!important}
+  .day{padding:10px;margin:10px 0 4px}
+  .day .card{padding:9px 11px}
+  .prepbox h3{font-size:14px}
+  .ylab{font-size:11.5px;padding:3px 6px}
+  .ygrid .ylab small{display:none}
+  .ywrap{max-height:72vh}
+  .side{max-width:none}
+  .drawer{width:100%}
+}
+.gh .bo{font-size:11px;color:var(--muted);margin-top:2px}
+.gh.blk{background:repeating-linear-gradient(-45deg,transparent 0 6px,color-mix(in srgb,var(--muted) 10%,transparent) 6px 12px)}
 .ai-state{font-size:13px;color:var(--muted)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -227,17 +261,14 @@ body.fullmode .gantt{grid-template-columns:118px repeat(7,minmax(230px,1fr));min
 <main class="wrap">
   <div class="toolbar filters">
     <div class="seg" id="scopeSeg" aria-label="מה מציגים"><button data-scope="all" aria-pressed="true">הכל</button><button data-scope="int" aria-pressed="false">פנים הארגון</button><button data-scope="ext" aria-pressed="false">רשתות</button></div>
-    <label class="sel">אחריות <select id="ownerSel"></select></label>
     <label class="sel">עדיפות <select id="priSel"></select></label>
   </div>
   <div class="toolbar weekonly">
-    <div class="chips" id="pChips" aria-label="סינון לפי רשת"></div>
-    <div class="chips" id="fChips" aria-label="סינון לפי פורמט"></div>
     <div class="nav">
-      <div class="seg" id="viewSeg" aria-label="תצוגה">
-        <button data-view="titles" aria-pressed="true">כותרות</button>
-        <button data-view="full" aria-pressed="false">מלל מלא</button>
-      </div>
+      <label class="sel">רשת <select id="pSel"></select></label>
+      <label class="sel">פורמט <select id="fSel"></select></label>
+    </div>
+    <div class="nav">
       <div class="seg" id="srcSeg" hidden>
         <button data-src="base" aria-pressed="true">מלל קבוע</button>
         <button data-src="ai" aria-pressed="false">מלל מ-Claude</button>
@@ -258,11 +289,6 @@ body.fullmode .gantt{grid-template-columns:118px repeat(7,minmax(230px,1fr));min
     <section class="panel">
       <h2>מה מגיע בחודש הקרוב</h2>
       <ul class="up" id="upcoming"></ul>
-    </section>
-    <section class="panel">
-      <h2>איך זה עובד</h2>
-      <p class="note" style="margin-top:0">הגאנט מחבר את הרשתות החברתיות עם התקשורת הפנים-ארגונית. בתצוגת <b>שבוע</b> רואים כל יום ברשתות עם מלל מוכן, ומעליו מה קורה בפנים הארגון ומה בהיערכות. בתצוגת <b>שנה</b> רואים את כל הפעילויות לפי תחום, עם פס מקווקו של זמן ההיערכות לפני כל אירוע. לחיצה על שבוע בשנה פותחת אותו. אירוע פנימי שמסומן כשווה תוכן מכניס לבד פריטים עם מלל לגאנט של הרשתות (מסומנים בפס צבעוני).</p>
-      <div class="legend" id="legend"></div>
     </section>
   </div>
 </main>
@@ -2592,6 +2618,7 @@ function eventsOverlapping(sun){
     const len = (ide && ide.len) || 1;
     const start = parseIso(e.d), end = addDays(start, len-1);
     if (end < sun || start > sat) continue;
+    if (inBlackout(start)) continue;
     res.push({ ...e, ide, len, start, end,
       s: Math.max(0, Math.round((start-sun)/864e5)),
       t: Math.min(6, Math.round((end-sun)/864e5)),
@@ -2681,6 +2708,38 @@ function eventItems(sun, evs){
   return { out, solemnDays, storyDays };
 }
 
+/* ===== עדכונים ידניים: מה שפורסם בפועל, העברות ותקופות ללא פרסומים ===== */
+const BLACKOUTS = [['2026-11-24','2026-11-30']];
+function inBlackout(d){ const k = iso(d); return BLACKOUTS.some(([a,b]) => k >= a && k <= b); }
+const MANUAL_ADD = [
+  { mid:'2026-11-19-ig-tip', date:'2026-11-19', replaces:'2026-11-18', p:'ig', f:'פוסט', dom:'hr', ser:'פורסם בפועל', pub:true, g:'גיוס',
+    t:'טיפ של רכזת גיוס', h:'טיפ של רכזת גיוס', v:'תבנית “טיפ של רכזת גיוס”', c:'פורסם בפועל ביום חמישי, 19 בנובמבר.' },
+  { mid:'2026-11-19-li-experts', date:'2026-11-19', replaces:'2026-11-18', p:'li', f:'פוסט', dom:'hr', ser:'פורסם בפועל', pub:true, g:'גיוס',
+    t:'לוחמים להייטק', h:'לוחמים להייטק', v:'כפי שפורסם', c:'פורסם בפועל ביום חמישי, 19 בנובמבר.' }
+];
+// רישומים ידניים בפנים הארגון (st: 0 לא התחיל, 1 בהיערכות, 2 בוצע)
+const MANUAL_INTERNAL = [
+  { d:'2026-11-19', n:'היערכות לחנוכה – הכנסת פרסומים להרמות כוסית', a:'חגים ומועדים', o:'תקשורת פנים + רווחה', p:'גבוהה', lead:0, st:1,
+    note:'נרשם ב-19 בנובמבר. הפרסומים להרמות הכוסית של חנוכה (החג מתחיל בערב יום שישי, 4 בדצמבר).' }
+];
+// פעילויות שלא מציגים להן תזכורת היערכות
+const NO_PREP = [ { n:'ניוזלטר / אירועי החודש', d:'2026-12-01' } ];
+const MANUAL_MOVE = [ { from:'2026-11-19', p:'tt', to:'2026-11-22' } ];
+function applyManual(sun, list){
+  const sat = addDays(sun,6), dayOf = k => Math.round((parseIso(k) - sun)/864e5);
+  const inWeek = k => { const d = parseIso(k); return d >= sun && d <= sat; };
+  const dm = k => parseInt(k.slice(8),10)+'/'+parseInt(k.slice(5,7),10);
+  let res = list.filter(it => it.ev || it.br || !MANUAL_MOVE.some(m => m.p === it.p && iso(addDays(sun,it.day)) === m.from));
+  for (const a of MANUAL_ADD) if (a.replaces && inWeek(a.replaces)) res = res.filter(it => it.ev || it.br || !(it.p === a.p && it.day === dayOf(a.replaces)));
+  for (const m of MANUAL_MOVE) if (inWeek(m.to)){
+    const fs = sundayOf(parseIso(m.from)), fd = Math.round((parseIso(m.from) - fs)/864e5);
+    const src = slotSkeleton(fs).slots.find(s => s.p === m.p && s.day === fd);
+    if (src) res.push({ ...src, day:dayOf(m.to), manual:true, mid:'move-'+m.p+'-'+m.from, ser:(src.ser||'')+' · הועבר מ-'+dm(m.from) });
+  }
+  for (const a of MANUAL_ADD) if (inWeek(a.date)) res.push({ ...a, day:dayOf(a.date), manual:true });
+  return res.filter(it => !inBlackout(addDays(sun, it.day)));
+}
+
 function buildWeek(sun, aiSlots){
   const evs = eventsOverlapping(sun);
   const { focus, slots } = slotSkeleton(sun);
@@ -2690,15 +2749,15 @@ function buildWeek(sun, aiSlots){
   base = base.filter(s => !(s.p==='ig' && s.f==='סטורי' && storyDays.ig.has(s.day)));
   const br = bridgeItems(sun, solemnDays);
   // תקרה של 2 פריטים לרשת: ימי זיכרון קודמים, אחריהם חגים ומועדים, אחריהם אירועים פנימיים, ואז התוכן הקבוע
-  const rank = it => it.ev === 'solemn' ? 0 : it.ev === 'holiday' ? 1 : it.ev ? 2 : it.br ? (/יום הולדת|Happy Hour/.test(it.ser) ? 5 : 3) : 4;
+  const rank = it => it.manual ? -1 : it.ev === 'solemn' ? 0 : it.ev === 'holiday' ? 1 : it.ev ? 2 : it.br ? (/יום הולדת|Happy Hour/.test(it.ser) ? 5 : 3) : 4;
   const fmtRank = it => it.f === 'סטורי' ? 1 : 0;
   const items = [];
   for (const p of Object.keys(PLATFORMS)){
-    const cand = [...base, ...out, ...br].filter(i => i.p === p).sort((a,b) => rank(a)-rank(b) || fmtRank(a)-fmtRank(b) || a.day-b.day);
+    const cand = applyManual(sun, [...base, ...out, ...br]).filter(i => i.p === p).sort((a,b) => rank(a)-rank(b) || fmtRank(a)-fmtRank(b) || a.day-b.day);
     items.push(...cand.slice(0, 2).sort((a,b) => a.day-b.day));
   }
   const src = aiSlots ? 'ai' : 'base';
-  items.forEach((it,i) => { if (it.br){ it.id = 'br-'+it.p+'-'+it.day+'-'+slug(it.t); return; } it.id = (it.ev ? 'ev' : src) + '-' + it.p + '-' + it.day + '-' + (it.ev ? i : slots.findIndex(s=>s.day===it.day&&s.p===it.p&&s.f===it.f)); });
+  items.forEach((it,i) => { if (it.manual){ it.id = 'm-'+it.mid; return; } if (it.br){ it.id = 'br-'+it.p+'-'+it.day+'-'+slug(it.t); return; } it.id = (it.ev ? 'ev' : src) + '-' + it.p + '-' + it.day + '-' + (it.ev ? i : slots.findIndex(s=>s.day===it.day&&s.p===it.p&&s.f===it.f)); });
   return { key: iso(sun), sun, focus, evs, items, solemnDays };
 }
 
@@ -2724,7 +2783,7 @@ function renderHead(){
 const visibleItems = () => state.week.items.filter(it => state.platforms.has(it.p) && state.formats.has(fmtKey(it.f)));
 
 function cardHtml(it, showP){
-  const pc = 'var(--p-'+it.p+')', st = state.status[state.week.key]?.[it.id] || 0;
+  const pc = 'var(--p-'+it.p+')', st = state.status[state.week.key]?.[it.id] ?? (it.pub ? 2 : 0);
   const cls = 'card' + (it.ev ? (it.ev==='solemn' ? ' solemn' : ' ev') : '') + (it.br ? ' brc' : '');
   const full = state.view === 'full';
   let body = '<div class="tt">'+esc(it.t)+'</div>';
@@ -2743,7 +2802,7 @@ function renderGantt(){
   let html = '<div class="gh"></div>', todayCol = -1;
   for (let d=0; d<7; d++){
     const dt = addDays(w.sun,d), isT = iso(dt) === today; if (isT) todayCol = d;
-    html += '<div class="gh'+(isT?' today':'')+'" style="grid-column:'+(d+2)+';grid-row:1"><div class="dn">'+DAYS[d]+'</div>'+dateLabel(dt)+'</div>';
+    html += '<div class="gh'+(isT?' today':'')+(inBlackout(dt)?' blk':'')+'" style="grid-column:'+(d+2)+';grid-row:1"><div class="dn">'+DAYS[d]+'</div>'+dateLabel(dt)+(inBlackout(dt)?'<div class="bo">ללא פרסומים</div>':'')+'</div>';
   }
   let r = 2;
   const sat = addDays(w.sun,6), dIdx = d => Math.round((d - w.sun)/DAYMS);
@@ -2766,7 +2825,7 @@ function renderGantt(){
     if (ints.length){
       html += '<div class="bandlab" style="grid-column:1;grid-row:'+r+' / span '+ints.length+'">פנים הארגון</div>';
       for (const i of ints){
-        const a = Math.max(0, dIdx(i.s)), b = Math.min(6, dIdx(i.e)), st = state.istatus[i.s.getFullYear()]?.[i.id] || 0;
+        const a = Math.max(0, dIdx(i.s)), b = Math.min(6, dIdx(i.e)), st = state.istatus[i.s.getFullYear()]?.[i.id] ?? (i.defSt || 0);
         html += '<button class="bar intb'+(st===2?' done':'')+'" data-int="'+i.id+'" style="--ac:'+AREAS[i.a].c+';grid-column:'+(a+2)+' / '+(b+3)+';grid-row:'+r+'" title="'+esc((i.label||i.n)+' · '+i.o+' · עדיפות '+i.p)+'">'+esc(i.label||i.n)+' · '+esc(i.o)+'</button>';
         r++;
       }
@@ -2794,6 +2853,11 @@ function renderGantt(){
 function renderList(){
   const l = document.getElementById('list'), w = state.week, today = iso(new Date()), vis = visibleItems();
   let html = '';
+  if (state.scope !== 'ext'){
+    const sat = addDays(w.sun,6);
+    const preps = internalBetween(w.sun, addDays(sat, 75)).filter(i => i.prep && i.prep <= sat && i.s > sat && intPass(i));
+    if (preps.length) html += '<section class="day prepbox"><h3>בהיערכות</h3><div class="evs">'+preps.map(i => { const wk = Math.ceil((i.s - sat)/DAYMS/7); return '<button class="pchip" data-int="'+i.id+'" style="--ac:'+AREAS[i.a].c+'"><b>'+esc(i.label||i.n)+'</b> · '+(wk<=1?'בשבוע הבא':'בעוד '+wk+' שבועות')+'</button>'; }).join('')+'</div></section>';
+  }
   for (let d=0; d<7; d++){
     const dt = addDays(w.sun,d), its = vis.filter(i=>i.day===d);
     const evs = w.evs.filter(e => d>=e.s && d<=e.t);
@@ -2821,19 +2885,22 @@ function renderUpcoming(){
 }
 
 function renderChips(){
-  document.getElementById('pChips').innerHTML = Object.entries(PLATFORMS).map(([k,v]) =>
-    '<button class="chip" data-p="'+k+'" aria-pressed="'+state.platforms.has(k)+'"><span class="dot" style="background:var(--p-'+k+')"></span>'+v.name+'</button>').join('');
-  document.getElementById('fChips').innerHTML = FORMATS.map(f =>
-    '<button class="chip" data-f="'+f+'" aria-pressed="'+state.formats.has(f)+'">'+f+'</button>').join('');
-  document.getElementById('legend').innerHTML = FORMATS.filter(f=>f!=='טיקטוק').map(f => '<span>'+ICONS[f]+f+(f==='רילס'?' / טיקטוק':'')+'</span>').join('')
-    + '<span><span class="dot" style="border:1.5px solid var(--muted)"></span>רעיון</span><span><span class="dot" style="background:#E8A93A"></span>בעבודה</span><span><span class="dot" style="background:#2BB673"></span>פורסם</span>';
+  const ps = document.getElementById('pSel'), fs = document.getElementById('fSel');
+  if (!ps.options.length){
+    ps.innerHTML = '<option value="">כל הרשתות</option>' + Object.entries(PLATFORMS).map(([k,v]) => '<option value="'+k+'">'+v.name+'</option>').join('');
+    fs.innerHTML = '<option value="">כל הפורמטים</option>' + FORMATS.map(f => '<option value="'+f+'">'+f+'</option>').join('');
+    ps.onchange = e => { const v = e.target.value; state.platforms = new Set(v ? [v] : Object.keys(PLATFORMS)); render(); };
+    fs.onchange = e => { const v = e.target.value; state.formats = new Set(v ? [v] : FORMATS); render(); };
+  }
+  ps.value = state.platforms.size === 1 ? [...state.platforms][0] : '';
+  fs.value = state.formats.size === 1 ? [...state.formats][0] : '';
 }
 
 function renderModeUi(){
   document.body.dataset.mode = state.mode;
   document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
   document.querySelectorAll('#scopeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scope === state.scope)));
-  document.getElementById('ownerSel').value = state.owner; document.getElementById('priSel').value = state.pri;
+  document.getElementById('priSel').value = state.pri;
 }
 function render(){
   renderModeUi();
@@ -2891,7 +2958,7 @@ function openItem(id){
     '<span>'+esc(DOMAINS[it.dom]?.name || it.dom)+'</span>', '<span>מטרה: '+esc(it.g)+'</span>'
   ].join('');
   document.getElementById('dTitle').textContent = it.t;
-  const st = state.status[key]?.[id] || 0;
+  const st = state.status[key]?.[id] ?? (it.pub ? 2 : 0);
   const all = [it.h,it.c,it.s,it.en,it.t].join(' ');
   const capTitle = it.f==='סטורי' ? 'הטקסט לסטורי' : (it.p==='li' ? 'הפוסט בעברית' : (isVideo(it.f) ? 'קפשן' : 'המלל לפרסום'));
   const sTitle = fmtKey(it.f)==='קרוסלה' ? 'הטקסט בשקפים' : 'תסריט';
@@ -2985,7 +3052,7 @@ async function generateWeek(){
   const sun = state.sun, { focus, slots } = slotSkeleton(sun);
   const evs = eventsOverlapping(sun);
   const solemn = new Set(evs.filter(e=>e.k==='solemn'&&e.inWeek).map(e=>e.day));
-  const skel = slots.filter(s=>!solemn.has(s.day)).map((s,i)=>({ n:i, day:s.day, dayName:DAYS[s.day], date:dateLabel(addDays(sun,s.day)), platform:s.p, format:s.f, series:s.ser, domain:s.dom }));
+  const skel = slots.filter(s=>!solemn.has(s.day) && !inBlackout(addDays(sun,s.day))).map((s,i)=>({ n:i, day:s.day, dayName:DAYS[s.day], date:dateLabel(addDays(sun,s.day)), platform:s.p, format:s.f, series:s.ser, domain:s.dom }));
   const prompt = `את/ה מנהל/ת הסושיאל של גב מערכות וכותב/ת את כל המלל לשבוע.
 כללי המותג:
 ${BRAND_RULES}
@@ -3051,7 +3118,7 @@ async function downloadCsv(){
   const w = state.week, q = s => '"'+String(s??'').replace(/"/g,'""')+'"';
   const rows = [['תאריך','יום','רשת','פורמט','תחום','סדרה','כותרת','טקסט על הוויז׳ואל','שקפים / תסריט','מלל לפרסום','English','ויז׳ואל','מטרה','סטטוס']];
   for (const i of visibleItems().sort((a,b)=>a.day-b.day)){
-    rows.push([iso(addDays(w.sun,i.day)), DAYS[i.day], PLATFORMS[i.p].name, i.f, DOMAINS[i.dom]?.name||'', i.ser||'', i.t, i.h, i.s||'', i.c||'', i.en||'', i.v, i.g, STATUS[state.status[w.key]?.[i.id]||0]]);
+    rows.push([iso(addDays(w.sun,i.day)), DAYS[i.day], PLATFORMS[i.p].name, i.f, DOMAINS[i.dom]?.name||'', i.ser||'', i.t, i.h, i.s||'', i.c||'', i.en||'', i.v, i.g, STATUS[state.status[w.key]?.[i.id] ?? (i.pub ? 2 : 0)]]);
   }
   const csv = '\ufeff' + rows.map(r=>r.map(q).join(',')).join('\r\n');
   const blob = new Blob([csv], {type:'text/csv'}), name = 'gav-content-'+w.key+'.csv';
@@ -3122,6 +3189,9 @@ function internalForYear(y){
       const it = mkInt(r, s, e); it.label = r.n+' – '+tag; out.push(it);
     }
   }
+  for (const m of MANUAL_INTERNAL){ const s = parseIso(m.d); if (s.getFullYear() !== y) continue; const it = mkInt(m, s, m.end ? parseIso(m.end) : s); it.defSt = m.st; out.push(it); }
+  for (const it of out) if (NO_PREP.some(x => x.n === it.n && x.d === iso(it.s))) it.prep = null;
+  for (let k = out.length-1; k >= 0; k--) if (inBlackout(out[k].s) && inBlackout(out[k].e)) out.splice(k,1);
   out.sort((a,b) => a.s - b.s);
   return (_intCache[y] = out);
 }
@@ -3160,7 +3230,7 @@ function renderYear(){
   const nDays = Math.round((endD - start)/DAYMS) + 1;
   const col = d => Math.round((d - start)/DAYMS) + 2;
   const clampCol = d => Math.max(2, Math.min(nDays+1, col(d)));
-  wrap.style.gridTemplateColumns = '210px repeat('+nDays+', minmax(4px,1fr))';
+  wrap.style.gridTemplateColumns = (matchMedia('(max-width:820px)').matches ? '118px' : '210px')+' repeat('+nDays+', minmax(4px,1fr))';
   let h = '', r = 1;
   // חודשים
   h += '<div class="ylab yhead" style="grid-row:1 / span 2">פעילות</div>';
@@ -3188,7 +3258,7 @@ function renderYear(){
         const g = byName[n], f = g[0];
         h += rowLab('<span class="pri p-'+f.p+'" title="עדיפות '+f.p+'"></span>'+esc(n), esc(f.o), '', AREAS[a].c) + fullRow('yrow-line');
         for (const it of g){
-          const st = state.istatus[y]?.[it.id] || 0;
+          const st = state.istatus[y]?.[it.id] ?? (it.defSt || 0);
           if (it.prep){
             const ps = it.prep < start ? start : it.prep;
             if (ps < it.s) h += '<div class="yprep" style="grid-row:'+r+';grid-column:'+clampCol(ps)+' / '+clampCol(it.s)+';--ac:'+AREAS[a].c+'" title="היערכות: '+esc(n)+'"></div>';
@@ -3210,7 +3280,7 @@ function renderYear(){
     }
     r++;
     const covered = new Set(Object.keys(HOLIDAY_META));
-    const ext = EVENTS.filter(e => parseIso(e.d).getFullYear() === y && !covered.has(e.n));
+    const ext = EVENTS.filter(e => parseIso(e.d).getFullYear() === y && !covered.has(e.n) && !inBlackout(parseIso(e.d)));
     h += rowLab('מועדי תוכן', 'מועדים שיש להם מלל ברשתות', '', '') + fullRow('yrow-line');
     for (const e of ext){
       const d = parseIso(e.d);
@@ -3222,13 +3292,13 @@ function renderYear(){
   if (t >= start && t <= endD) h += '<div class="ytoday" style="grid-row:1 / '+r+';grid-column:'+col(t)+'" title="היום"></div>';
   wrap.innerHTML = h;
   const td = wrap.querySelector('.ytoday') || wrap.querySelector('.ywk.cur');
-  if (td && !state._yScrolled){ state._yScrolled = true; requestAnimationFrame(() => { const W = wrap.parentElement, rect = td.getBoundingClientRect(), wr = W.getBoundingClientRect(); W.scrollLeft += (rect.left - wr.left) - W.clientWidth/2; }); }
+  if (td && !state._yScrolled){ state._yScrolled = true; setTimeout(() => { const t2 = wrap.querySelector('.ytoday') || wrap.querySelector('.ywk.cur'); if (!t2) return; const W = wrap.parentElement, rect = t2.getBoundingClientRect(), wr = W.getBoundingClientRect(); W.scrollLeft += (rect.left - wr.left) - W.clientWidth/2 + rect.width/2; }, 150); }
 }
 
 function openInternal(id){
   const it = findInt(id); if (!it) return;
   state.open = { int:it };
-  const y = it.s.getFullYear(), st = state.istatus[y]?.[it.id] || 0;
+  const y = it.s.getFullYear(), st = state.istatus[y]?.[it.id] ?? (it.defSt || 0);
   document.getElementById('dMeta').innerHTML = [
     '<span style="background:color-mix(in srgb,'+AREAS[it.a].c+' 22%,transparent)">'+esc(it.a)+'</span>',
     '<span dir="ltr">'+esc(rangeLabel(it))+'</span>', '<span>אחריות: '+esc(it.o)+'</span>', '<span>עדיפות: '+esc(it.p)+'</span>'
@@ -3276,7 +3346,7 @@ document.addEventListener('click', e => {
   const ib = e.target.closest('[data-int]'); if (ib){ openInternal(ib.dataset.int); return; }
   const ist = e.target.closest('#iStBtns [data-ist]'); if (ist && state.open && state.open.int){ setIntStatus(state.open.int, Number(ist.dataset.ist)); return; }
   const wk = e.target.closest('[data-week]'); if (wk){ if (document.getElementById('drawer').classList.contains('on')) closeDrawer(); goWeek(parseIso(wk.dataset.week)); window.scrollTo({top:0}); return; }
-  const md = e.target.closest('#modeSeg [data-mode]'); if (md){ state.mode = md.dataset.mode; if (state.mode==='year'){ state.year = state.sun.getFullYear(); loadYearStatus(state.year).then(render); } render(); return; }
+  const md = e.target.closest('#modeSeg [data-mode]'); if (md){ state.mode = md.dataset.mode; if (state.mode==='year'){ state._yScrolled = false; state.year = state.sun.getFullYear(); loadYearStatus(state.year).then(render); } render(); return; }
   const sc = e.target.closest('#scopeSeg [data-scope]'); if (sc){ state.scope = sc.dataset.scope; render(); return; }
   const pc = e.target.closest('[data-p]'); if (pc){ const k = pc.dataset.p; state.platforms.has(k) ? state.platforms.delete(k) : state.platforms.add(k); if (!state.platforms.size) state.platforms.add(k); render(); return; }
   const fc = e.target.closest('[data-f]'); if (fc){ const k = fc.dataset.f; state.formats.has(k) ? state.formats.delete(k) : state.formats.add(k); if (!state.formats.size) state.formats.add(k); render(); return; }
@@ -3294,9 +3364,8 @@ const yearGo = y => { state.year = y; render(); loadYearStatus(y).then(render); 
 document.getElementById('prevW').onclick = () => state.mode==='year' ? yearGo(state.year-1) : goWeek(addDays(state.sun,-7));
 document.getElementById('nextW').onclick = () => state.mode==='year' ? yearGo(state.year+1) : goWeek(addDays(state.sun,7));
 document.getElementById('thisW').onclick = () => state.mode==='year' ? yearGo(new Date().getFullYear()) : goWeek(sundayOf(new Date()));
-document.getElementById('ownerSel').onchange = e => { state.owner = e.target.value; render(); };
 document.getElementById('priSel').onchange = e => { state.pri = e.target.value; render(); };
-document.getElementById('ownerSel').innerHTML = '<option value="">כל האחראים</option>' + OWNER_TOKENS.map(o=>'<option value="'+o+'">'+o+'</option>').join('');
+
 document.getElementById('priSel').innerHTML = '<option value="">כל העדיפויות</option>' + Object.keys(LEAD).map(p=>'<option value="'+p+'">'+p+'</option>').join('');
 document.getElementById('dClose').onclick = closeDrawer;
 document.getElementById('scrim').onclick = closeDrawer;
